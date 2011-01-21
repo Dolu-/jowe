@@ -1,0 +1,98 @@
+<!--
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+NOTICE:
+- I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able
+  to run this code properly. IE is really slow on displaying map, and even after
+  loading, moving takes too much time to be usable. See you with IE 9 ;)
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Map Object Generator ~ Demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="heightmap.js"></script>
+        <script type="text/javascript" src="managegrid.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+        <style type="text/css">
+            body{font: 12px Tahoma;}
+            .inputtext{float: right; width: 50px; text-align: right;font-size: 11px;}
+            .label{float: left; margin: 4px 3px; width: 100px;border: 1px red solid;}
+            .w160left{width: 160px;float: left;border: 1px black solid;}
+            .right{float: right;border: 1px yellow solid;}
+            #dInfo{width: 800px;height: 80px;float: left;border: 1px indigo solid;}
+        </style>
+    </head>
+    <body>
+
+    <div id="dGrid" tabindex="100">
+    <canvas id="cGrid" width="1000" height="500" tabindex="101">
+        <p>I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
+            IE is really slow on displaying map, and even after loading, moving takes too much time to be usable. See you with IE 9 ;)<br/>
+            Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.
+        </p>
+    </canvas>
+    </div>
+
+    <div id="gridOptions">
+        <div id="optGenerate" class="w160left">
+            <input id="btnGenerate" class="w160left" type="button" value="Generate Map" />
+
+            <div class="label"><label id="lblGridWidth" for="txtGridHeight">Grid width :</label></div>
+            <input id="txtGridWidth" class="inputtext" type="text" value="300" />
+
+            <div class="label"><label id="lblGridheight" for="txtGridWidth">Grid height :</label></div>
+            <input id="txtGridHeight" class="inputtext" type="text" value="150" />
+
+        </div>
+
+        <div id="optCanvas" class="w160left">
+            <input id="btnCanvas" class="w160left" type="button" value="Update Canvas" />
+
+            <label id="lblCanvasWidth" class="label" for="txtCanvasWidth">Canvas width :</label>
+            <input id="txtCanvasWidth" class="inputtext" type="text" value="1200" />
+
+            <label id="lblCanvasHeight" class="label" for="txtCanvasHeight">Canvas height :</label>
+            <input id="txtCanvasHeight" class="inputtext" type="text" value="500" />
+        </div>
+
+        <div id="optDisplay" class="w160left">
+            <input id="btnDisplay" class="w160left" type="button" value="Update Grid" />
+
+            <label id="lblCellSize" class="label" for="txtCellSize">Cell X-size :</label>
+            <input id="txtCellSize" class="inputtext" type="text" value="54" />
+
+            <label id="lblCursor" class="label" for="chkCursor">Display cursor</label>
+            <input id="chkCursor" class="right" type="checkbox" />
+        </div>
+
+      </div>
+    <div id="dInfo"></div>
+</body>
+</html>

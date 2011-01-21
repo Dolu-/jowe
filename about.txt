@@ -1,0 +1,46 @@
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+
+This project is "work in progress"...
+I didn't even find a proper name to it.
+
+The main purpose for this project is to realize a complex economical and strategical game.
+The generation of a random heightmap is the really first step.  
+As I've been far enough, I realize that this first step could be useful for someone else purpose.
+I think that this kind of map can be used for any other game.
+
+Why Javascript ?
+Why not ? Well, I'm really curious about everything, and I wanted to have a really dynamic map.
+I'm not a Javascript expert, so I'm trying to do my best in coding it. See it like a way for me to learn javascript.
+I'm convinced that there are a lot of optimization to bring to this project, so feel free to tell my about it.
+
+What's missing for this project to be completly done ?
+There is much more to do to finalize this project, here are the main next steps :
+- Create all required tools to manipulate a map (that's where I am for now)
+- Add cities inside a map
+- Add population attribute (within cities)
+- Add fertility attribute to each cell
+- Add temperature/rainfalls ranges to a map
