@@ -1,0 +1,124 @@
+<!--
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+Icons used in demo are from : "Silk icon set 1.3" by Mark James
+http://www.famfamfam.com/lab/icons/silk/
+This work is licensed under a Creative Commons Attribution 2.5 License.
+[ http://creativecommons.org/licenses/by/2.5/ ]
+Any other questions about this icon set please contact mjames@gmail.com
+
+********************************************************************************
+
+This is the HTML demo file of the jOWE project.
+
+NOTICE:
+- I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able
+  to run this code properly. IE is really slow on displaying map, and even after
+  loading, moving takes too much time to be usable. See you with IE 9 ;)
+
+About jQuery :
+I'm using jQuery to manage the user interface. The whole process can be done with
+another framework. It means that "heightmap.js" and "managegrid.js" don't need it.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>jOWE ~ Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="heightmap.js"></script>
+    <script type="text/javascript" src="managegrid.js"></script>
+    <script type="text/javascript" src="jowe-demo.js"></script>
+    <style type="text/css">
+        body{font: 12px Tahoma;}
+        
+        #dInfo{width: 600px;height: 60px;float: left;border: 1px indigo solid;}
+        #dToolbar{background-color:#F0F0F0;border:1px gray dotted;height:22px;width:400px;margin:1px;}
+        
+        .button{
+        border:1px #F0F0F0 solid;width:20px;height:20px;float:left;text-align:center;
+        background-color:lightgray;background-position:center center;background-repeat:no-repeat;
+        }
+        .labelbutton{
+        border:1px #F0F0F0 solid;height:16px;float:left;text-align:left;font-size:11px;
+        margin:1px;padding-top:2px;
+        }
+        .inputbutton{
+        border:1px lightgray solid;width:35px;height:20px;float:left;text-align:right;font-size:11px;
+        margin:1px;
+        }
+        .separator{
+        border:1px #F0F0F0 solid;width:5px;height:20px;float:left;
+        }
+        
+        #bCreateGrid{background-image:url(images/map.png);}
+        #bUpdateGrid{background-image:url(images/arrow_refresh.png);}
+        #bShowCursor{background-image:url(images/shading.png);}
+        #bZoomIn{background-image:url(images/zoom_in.png);}
+        #bZoomOut{background-image:url(images/zoom_out.png);}
+    </style>
+</head>
+<body>
+
+<!--
+The toolbar with all the buttons and input text.
+//-->
+<div id="dToolbar">
+
+  <label id="lblGridWidth" class="labelbutton" for="txtGridHeight">&nbsp;Grid:</label>
+  <input id="txtGridWidth" class="inputbutton" type="text" value="50" />
+  <label id="lblGridheight" class="labelbutton" for="txtGridWidth">x</label>
+  <input id="txtGridHeight" class="inputbutton" type="text" value="50" />
+  <div id="bCreateGrid" class="button"></div>
+  <label id="lblCanvasWidth" class="labelbutton" for="txtCanvasWidth">&nbsp;Canvas:</label>
+  <input id="txtCanvasWidth" class="inputbutton" type="text" value="600" maxlength="4" />
+  <label id="lblCanvasHeight" class="labelbutton" for="txtCanvasHeight">x</label>
+  <input id="txtCanvasHeight" class="inputbutton" type="text" value="400" maxlength="4" />
+  <div id="bUpdateGrid" class="button"></div>
+  <div id="bSeparator02" class="separator"></div>
+  <div id="bShowCursor" class="button"></div>
+  <div id="bSeparator03" class="separator"></div>
+  <div id="bZoomOut" class="button"></div>
+  <div id="bZoomLabel" class="button"></div>
+  <div id="bZoomIn" class="button"></div>
+  
+</div>
+
+<div id="dGrid" tabindex="100">
+  <canvas id="cGrid" width="600" height="400" tabindex="101">
+      <p>I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
+          IE is really slow on displaying map, and even after loading, moving takes too much time to be usable. See you with IE 9 ;)<br/>
+          Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.
+      </p>
+  </canvas>
+</div>
+
+  <div id="dInfo"></div>
+
+</body>
+</html>

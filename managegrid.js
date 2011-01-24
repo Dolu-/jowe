@@ -33,7 +33,6 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 - Use of javascript prototype to make functions as methods and encapsulate properties.
   The main purpose of this is to have a "class" to manage grid.
 - Optimize management of the "drawcursor" function.
-- Fix cursor (show/hide), when moving grid.
 - Include an option management linked to user interface to modify usefull properties.
 - In "drawGrid", I'm quite sure it's possible to reduce the offset in the calculation
   of startX and startY. Well, I was too lazy to review the code, so I put higher limits
@@ -55,9 +54,15 @@ var Grid;
 var Cells = null;
 
 // (Half) Size of cell in pixel (beware of the 2D perspective).
-var xSize = 25;
-var ySize = 12;
-var hSize = 8;
+var xSize = 24;
+
+// How much the cell will be flattened (and so the map will look).
+var yRate = 2.0;
+var ySize = xSize / yRate;
+
+// Rate used to display the height (if less than 2, could "hide" cells behind).
+var hRate = 3.0;
+var hSize = xSize / hRate;
 
 // To show the grid (stroke).
 var bgColor = 0;
@@ -66,13 +71,6 @@ var canvasWidth = 0;
 
 var loopX = 0;
 var loopY = 0;
-
-// How much the cell will be flattened (and so the map will look).
-var yRate = 2;
-
-// Rate used to display the height.
-// If less than 2, could "hide" cells behind.
-var hRate = 3.0;
 
 // (Left,Top) coordinates of the area used to display the grid.
 var xOffset = 0;
@@ -105,13 +103,14 @@ function generateGrid(w, h)
     // We'll exclude all the border lines to avoid weird point,
     // so we enlarge the map size with (width+2) and (height+2).
 
-    var date1 = new Date();
+    // For debug purpose, time of grid generation.
+    //var date1 = new Date();
 
     var Map = doHeightMap(w + (2 * Crop), h + (2 * Crop));
     
-    var date2 = new Date();
-
-    dInfo.html((date2.getTime() - date1.getTime()));
+    // For debug purpose, time of grid generation.
+    //var date2 = new Date();
+    //dInfo.html((date2.getTime() - date1.getTime()));
 
     // Crop the working map to get the requested map.
     Cells = [];
@@ -407,30 +406,33 @@ function drawCell(cX, cY)
             Grid.lineTo(Cells[cX+1][cY+1].x   - xOffset, Cells[cX+1][cY+1].y - yOffset);
             Grid.fill();
         }
+
+        // For debug purpose, display (x,y) of each cell into it.
+        //Grid.fillStyle = "rgba(240,0,0,0.95)";
+        //Grid.fillText(cX + "," + cY, Cells[cX][cY+1].x - xOffset + hSize, Cells[cX][cY+1].y - yOffset);
     }
 }
 
 /*
  * Loop through every cell to draw the grid.
- * The function draws the grid column by column, every column is drawn
- * alternatively from top to bottom and bottom to top (cell by cell).
+ * The function draws the grid column by column.
+ * 
  */
 function drawGrid()
 {
-    // The "sign" indicates the direction if the drawing.
-    //  1 : from top to bottom.
-    // -1 : from bottom to top.
+    // The "sign" is used to calculate the first cell of the column.
     var sign = 1;
-
+    var x = 0, y = 0;
+    
     // Estimate from which cell we have to start displaying the grid, the formula
     // doesn't include the height, so the result may not be accurate. That's why
     // we decrease the "start.X" to be sure having all cells well drawn (avoid black holes).
-    // Below, the offset is arbitrary set to "-2", but it is dependant of the
-    // maximum elevation of the map and the hSize value. It would be better to
-    // calculate it at first initialization.
+    // Below, the offset is arbitrary set to "-3" (the same for Y with "-2"),
+    // but it is dependant of the maximum elevation of the map and the hSize value.
+    // It would be better to calculate it at first initialization.
     var start = {
-        X : Math.floor((1 / 2) * ((yOffset / ySize ) + (xOffset / xSize) - Cells[0].length + 1)) - 2,
-        Y : Math.floor((1 / 2) * ((yOffset / ySize ) - (xOffset / xSize) + Cells[0].length - 1))
+        X : Math.floor((1 / 2) * ((yOffset / ySize ) + (xOffset / xSize) - Cells[0].length + 1)) - 3,
+        Y : Math.floor((1 / 2) * ((yOffset / ySize ) - (xOffset / xSize) + Cells[0].length - 1)) - 2
     };
 
     // Reset the canvas (draw the background).
@@ -438,72 +440,34 @@ function drawGrid()
     Grid.fillRect(0, 0, canvasWidth, canvasHeight);
 
     // We do all loops needed to be sure to fill the whole grid.
-    for(var x = 0; x <= loopX; x++)
+    while (x <= loopX)
     {
-        for(var y = Math.min(0,sign); y <= loopY; y++)
-        {
-            //            if ((cX >= 0) && (cX < (MapWidth - 1)) && (cY >= 0) && (cY < (MapHeight - 1)))
-            //            {
-            //                if (((Cell[cX+1][cY+1].x >0) || (Cell[cX][cY].x < CanvasHeight)) &&
-            //                    ((Cell[cX][cY+1].y > CanvasHeight) || (Cell[cX+1][cY].y > 0)))
-            drawCell(start.X + y, start.Y + y);
-        //            }
-        }
-        if (sign < 0) {
-            start.Y -= 1;
+        if ((start.X < 0) || (start.Y < 0)) {
+          y = -Math.min(start.X, start.Y);
         } else {
-            start.X += 1;
+          y = 0;
         }
-        sign *= -1;
-    }
-}
-
-
-/*
- * Loop through every cell to draw the grid.
- * The function draws the grid column by column, every column is drawn
- * alternatively from top to bottom and bottom to top (cell by cell).
- */
-function newdrawGrid()
-{
-    var sign = 1;
-
-    // Estimate from which cell we have to start displaying the grid, the formula
-    // doesn't include the height, so the result may not be accurate. That's why
-    // we decrease the "start.X" to be sure having all cells well drawn (avoid black holes).
-    // Below, the offset is arbitrary set to "-2", but it is dependant of the
-    // maximum elevation of the map and the hSize value. It would be better to
-    // calculate it at first initialization.
-    var cX = Math.floor((1 / 2) * ((yOffset / ySize ) + (xOffset / xSize) - Cells[0].length + 1)) - 2;
-    var cY = Math.floor((1 / 2) * ((yOffset / ySize ) - (xOffset / xSize) + Cells[0].length - 1));
-
-    // Reset the canvas (draw the background).
-    Grid.fillStyle = "rgb(0,0,0)";
-    Grid.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    while (Cell[cX][cY+1].y < CanvasHeight) {
-    //
-        
-    }
-
-    // We do all loops needed to be sure to fill the whole grid.
-    for(var x = 0; x <= loopX; x++)
-    {
-        for(var y = Math.min(0,sign); y <= loopY; y++)
+    
+        while (((start.X + y) < (Cells.length - 1))
+            && ((start.Y + y) < (Cells[0].length - 1))
+            && ((Cells[start.X + y][start.Y + y].y - yOffset) < canvasHeight))
         {
-            if ((cX >= 0) && (cX < (Cells.length - 1)) && (cY >= 0) && (cY < (Cells[0].length - 1)))
+            if ((Cells[start.X + y + 1][start.Y + y + 1].y - yOffset) >= 0)
             {
-                if (((Cell[cX+1][cY+1].x > 0) || (Cell[cX][cY].x < CanvasWidth)) &&
-                    ((Cell[cX][cY+1].y < CanvasHeight) || (Cell[cX+1][cY].y > 0)))
-                    drawCell(start.X + y, start.Y + y);
+              drawCell(start.X + y,start.Y + y);
             }
+            y++;
         }
-        if (sign < 0) {
-            start.Y -= 1;
-        } else {
+        
+        // When "sign" changes, we go to the next column on the right.
+        if (sign > 0) {
             start.X += 1;
+        } else {
+            start.Y -= 1;
         }
         sign *= -1;
+        
+        x++;
     }
 }
 
@@ -664,23 +628,52 @@ function hideCursor()
  */
 function moveGrid(x_offset, y_offset)
 {
-    if ((xOffset + x_offset) < -xSize) {
-        xOffset = -xSize;
-    } else if ((xOffset + x_offset) > (Cells[Cells.length - 1][0].x + xSize - canvasWidth)) {
-        xOffset = (Cells[Cells.length - 1][0].x + xSize - canvasWidth);
-    } else {
-        xOffset += x_offset;
+    if (Cells[Cells.length - 1][0].x > canvasWidth) {
+      if ((xOffset + x_offset) < -xSize) {
+          xOffset = -xSize;
+      } else if ((xOffset + x_offset) > (Cells[Cells.length - 1][0].x + xSize - canvasWidth)) {
+          xOffset = (Cells[Cells.length - 1][0].x + xSize - canvasWidth);
+      } else {
+          xOffset += x_offset;
+      }
     }
-
-    if ((yOffset + y_offset) < -ySize) {
-        yOffset = -ySize;
-    } else if ((yOffset + y_offset) > (Cells[Cells.length - 1][Cells[0].length - 1].y + ySize - canvasHeight)) {
-        yOffset = (Cells[Cells.length - 1][Cells[0].length - 1].y + ySize - canvasHeight);
-    } else {
-        yOffset += y_offset;
+    if (Cells[Cells.length - 1][Cells[0].length - 1].y > canvasHeight) {
+      if ((yOffset + y_offset) < -ySize) {
+          yOffset = -ySize;
+      } else if ((yOffset + y_offset) > (Cells[Cells.length - 1][Cells[0].length - 1].y + ySize - canvasHeight)) {
+          yOffset = (Cells[Cells.length - 1][Cells[0].length - 1].y + ySize - canvasHeight);
+      } else {
+          yOffset += y_offset;
+      }
     }
-
+    // Refresh grid.
     drawGrid();
+}
+
+/*
+ * Toggle cursor state (enabled/disabled).
+ */
+function gridToggleCursor()
+{
+  if(!displayCursor) {
+    displayCursor = true;
+    drawCursor(-1, -1, true);
+  } else {
+    displayCursor = false;
+    hideCursor();
+  }
+}
+/*
+ * Set new size for cells.
+ */
+function gridSetZoom(iZoom)
+{
+  xSize = iZoom * 6.0;
+  ySize = xSize / yRate;
+  hSize = xSize / hRate;
+  
+  if (Cells != null)
+      initializeCells();
 }
 
 /*
