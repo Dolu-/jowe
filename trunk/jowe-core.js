@@ -43,10 +43,13 @@ ________________________________________________________________________________
 |                         | Firefox 4.0b9     |   100   |   400   |   1500    |   6000    |
 |                         | Firefox 3.6       |    -    |    -    |     -     |     -     |
 
+NOTICE :
+- Basically, the only function to be called here is "doHeightMap".
+  It could be placed or duplicated (and renamed) elsewhere (it will probably happen in a
+  next release).
+  Every other piece of code in here is only for the HeightMap object.
+
 TODO :
-- Remove the references to "Map" and other things that don't belong specifically
-  to the "HeightMap" object.
-  This file could be included in other projects without any addition nor removal of code.
 - Not quite satisfied with the "N^2" restriction for the dimension of the map.
   Have to be replaced with something cleaner.
 - Probably have to add "rise" and "sink" functions.
@@ -60,12 +63,11 @@ Random Height Map Generator Object.
 
 */
 
-function HeightMap(width, height) {
-
+function HeightMap() {
     // Size of the current map [0 .. _Height], [0 .. _Width].
-    // Always have to be N^2 x N^2.
-    this.width = width;
-    this.height = height;
+    // Always have to be N^2 x N^2 ("diamond square" algorithm. Better looking results with squares).
+    this.width = 128;
+    this.height = 128;
     
     // Maximum elevation for current map [0 .. _Pitch].
     this.pitch = 8;
@@ -76,14 +78,26 @@ function HeightMap(width, height) {
     // it allows to obtain very different types of map.
     this.ratio = 5.5;
 
-    var x, y;
+    // Array with the world map.
     this.item = [];
-    this.item.length = width;
-    for (x = 0; x < width; x++) {
+}
+
+/*
+ * Initialize the array.
+ * h is the default height.
+ */
+HeightMap.prototype.initializeMap = function(h) {
+    var x, y;
+    if ((h === undefined) || (h === null)) {
+      h = -1;
+    }
+    this.item = [];
+    this.item.length = this.width;
+    for (x = 0; x < this.width; x++) {
         this.item[x] = [];
-        this.item[x].length = height;
-        for (y = 0; y < height; y++) {
-            this.item[x][y] = -1;
+        this.item[x].length = this.height;
+        for (y = 0; y < this.height; y++) {
+            this.item[x][y] = h;
         }
     }
 }
@@ -191,14 +205,14 @@ HeightMap.prototype.smoothMap = function() {
 }
 
 /*
- * Request to build a map.
+ * Build a map and return the item array.
  *
  * Size is 0 based.
- * doHeightMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
+ * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
  * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
+ * 
  */
-function doHeightMap(width, height)
-{
+ HeightMap.prototype.doMap = function(width, height) {
     // Default values if none provided.
     // It also limits size to 2048x2048, to avoid big generation time.
     if ((width == null) || (height == null) ||
@@ -220,20 +234,53 @@ function doHeightMap(width, height)
 
     // Create new map object.
     // At this stage, working size will be (Math.pow(2, n) x Math.pow(2, n))
-    var _Map = new HeightMap(Math.pow(2, n), Math.pow(2, n));
+    this.width = Math.pow(2, n);
+    this.height = Math.pow(2, n);
+    // Initialize height.
+    this.initializeMap();
 
     // Initialize corners.
-    _Map.fillCorners(true);
+    this.fillCorners(true);
 
     // Do map!
-    _Map.generateMap(0, 0, _Map.width - 1, _Map.height - 1,
-        Math.floor((_Map.width - 1) / this.ratio),
-        Math.floor((_Map.width - 1) / 2),
-        Math.floor((_Map.height - 1) / 2));
+    this.generateMap(0, 0, this.width - 1, this.height - 1,
+        Math.floor((this.width - 1) / this.ratio),
+        Math.floor((this.width - 1) / 2),
+        Math.floor((this.height - 1) / 2));
 
     // Smooth map to remove weird points.
-    _Map.smoothMap();
+    this.smoothMap();
 
-    // Return height map array.
-    return _Map.item;
+    // Return height map array (the array of cells, not the "HeightMap" object).
+    return this.item;
+}
+
+/*
+ * Return a random array of cells (world map), with the requested size.
+ */
+function doHeightMap(width, height)
+{
+    // Create new map object.
+    var myMap = new HeightMap();
+
+    // Borders of the working height map to exclude from final result.
+    var Crop = 1;
+
+    // We'll exclude all the border lines to avoid weird point,
+    // so we enlarge the map size with (width+2) and (height+2).
+    myMap.doMap(width + (2 * Crop), height + (2 * Crop));
+    
+    // Crop the working map to get the requested map.
+    var Result = [];
+    Result.length = width;
+    for(var x = Crop; x < (width + Crop); x++) {
+        Result[x - Crop] = [];
+        Result[x - Crop].length = height;
+        for(var y = Crop; y < (height + Crop); y++) {
+            Result[x - Crop][y - Crop] = myMap.item[x][y];
+        }
+    }
+    
+    // Return height map array (the array of cells, not the "HeightMap" object).
+    return Result;
 }

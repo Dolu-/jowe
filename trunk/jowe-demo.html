@@ -51,14 +51,14 @@ another framework. It means that "heightmap.js" and "managegrid.js" don't need i
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="heightmap.js"></script>
-    <script type="text/javascript" src="managegrid.js"></script>
+    <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-ui.js"></script>
     <script type="text/javascript" src="jowe-demo.js"></script>
     <style type="text/css">
         body{font: 12px Tahoma;}
         
-        #dInfo{width: 600px;height: 60px;float: left;border: 1px indigo solid;}
-        #dToolbar{background-color:#F0F0F0;border:1px gray dotted;height:22px;width:400px;margin:1px;}
+        .info{width: 598px;height: 90px;float: left;border: 1px indigo solid;}
+        #dToolbar{background-color:#F0F0F0;border:1px gray dotted;height:22px;width:420px;margin:1px;}
         
         .button{
         border:1px #F0F0F0 solid;width:20px;height:20px;float:left;text-align:center;
@@ -79,6 +79,7 @@ another framework. It means that "heightmap.js" and "managegrid.js" don't need i
         #bCreateGrid{background-image:url(images/map.png);}
         #bUpdateGrid{background-image:url(images/arrow_refresh.png);}
         #bShowCursor{background-image:url(images/shading.png);}
+        #bWaterDetails{background-image:url(images/layers.png);}
         #bZoomIn{background-image:url(images/zoom_in.png);}
         #bZoomOut{background-image:url(images/zoom_out.png);}
     </style>
@@ -102,6 +103,7 @@ The toolbar with all the buttons and input text.
   <div id="bUpdateGrid" class="button"></div>
   <div id="bSeparator02" class="separator"></div>
   <div id="bShowCursor" class="button"></div>
+  <div id="bWaterDetails" class="button"></div>
   <div id="bSeparator03" class="separator"></div>
   <div id="bZoomOut" class="button"></div>
   <div id="bZoomLabel" class="button"></div>
@@ -118,7 +120,19 @@ The toolbar with all the buttons and input text.
   </canvas>
 </div>
 
-  <div id="dInfo"></div>
+  <div id="dHelp" class="info">
+    <img align="absmiddle" src="images/map.png">
+    create a random world with the size entered in the "grid" textboxes (width x height).<br />
+    <img align="absmiddle" src="images/arrow_refresh.png">
+    update the canvas size with new values (width x height).<br />
+    <img align="absmiddle" src="images/shading.png">
+    show/hide cursor in grid (that follow the mouse).<br />
+    <img align="absmiddle" src="images/layers.png">
+    show/hide water levels detail.<br />
+    <img align="absmiddle" src="images/zoom_in.png">
+    <img align="absmiddle" src="images/zoom_out.png">
+    zoom in/zoom out<br />
+  </div>
 
 </body>
 </html>
