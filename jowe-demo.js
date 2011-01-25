@@ -29,9 +29,6 @@ This is the Javscript demo file of the jOWE project.
 TODO :
 - All stuff related to Grid dragging should probably be located elsewhere.
   Not sure it has to be in the "managegrid.js" file.
-- When dragging the grid with cursor activated, at cursor removal, sometimes
-  the cell containing which contained the cursor is displayed with bad color.
-  (to fix, "hide" cursor before starting a drag process).
 
   */
 
@@ -44,9 +41,11 @@ TODO :
  *       (Needed to capture keyboard inputs as the canvas don't capture key stroke)
  */
 
-var dInfo;
+//var dInfo;
 var cGrid;
 var dGrid;
+
+var joweGrid;
 
 /*
  * Local variables.
@@ -103,12 +102,14 @@ function gridOnMouseMove(event)
     if (bDrag === true) {
         if ((Math.abs(x - xDrag) > 10) || (Math.abs(y - yDrag) > 10) )
         {
-            moveGrid((x - xDrag), (y - yDrag));
+            joweGrid.move((x - xDrag), (y - yDrag));
             xDrag = x;
             yDrag = y;
         }
     } else {
-        drawCursor(x, y);
+        if (joweGrid.displayCursor === true) {
+            joweGrid.drawCursor(x, y);
+        }
     }
 }
 
@@ -123,34 +124,36 @@ function gridOnMouseUp(event)
     // End of grid dragging.
     bDrag = false;
     // If cursor is visible, refresh its state.
-    if(displayCursor === true) {
-        drawCursor(-1, -1, true);
+    if (joweGrid.displayCursor === true) {
+        joweGrid.drawCursor(-1, -1, true);
     }
 }
 
-function btnGenerate_onClick()
+function bCreateGrid_onClick()
 {
     var w = $("#txtGridWidth").val() * 1;
     var h = $("#txtGridHeight").val() * 1;
 
-    generateGrid(w, h);
+    joweGrid.initializeGrid(doHeightMap(w, h));
 
-    btnCanvas_onClick();
+    bUpdateGrid_onClick();
 }
 
-function btnCanvas_onClick()
+function bUpdateGrid_onClick()
 {
     var w = $("#txtCanvasWidth").val() * 1;
     var h = $("#txtCanvasHeight").val() * 1;
-    if ((canvasWidth !== w) || (canvasHeight !== h)) {
+    if ((joweGrid.canvasWidth !== w) || (joweGrid.canvasHeight !== h)) {
         $("#cGrid").attr({
             width: w,
             height: h
         });
+        joweGrid.canvasWidth = w;
+        joweGrid.canvasHeight = h;
     }
 
-    initializeGrid("cGrid", w, h, 0);
-    initializeCells();
+    joweGrid.initializeCells();
+    joweGrid.draw();
 }
 
 /*
@@ -160,14 +163,14 @@ function btnZoom(i)
 {
   iZoom += i;
   $("#bZoomLabel").html(iZoom);
-  gridSetZoom(iZoom);
+  joweGrid.setZoom(iZoom);
 }
 
 $(
 function()
 {
   // Initialize objects.
-  dInfo = $("#dInfo");
+  //dInfo = $("#dInfo");
   cGrid = $("#cGrid");
   dGrid = $("#dGrid");
 
@@ -179,11 +182,11 @@ function()
   $("#txtCanvasHeight").val(h);
 
   // Try to initialize grid (only if "canvas" is supported by the browser).
-  if (initializeGrid("cGrid", w, h, 0)) {
+  if (joweGrid = new jowe_grid("cGrid", w, h, 0)) {
 
       // Set initial zoom.
       $("#bZoomLabel").html(iZoom);
-      gridSetZoom(iZoom);
+      joweGrid.setZoom(iZoom);
   
       cGrid.mousedown(gridOnMouseDown);
       cGrid.mousemove(gridOnMouseMove);
@@ -191,13 +194,15 @@ function()
 
       dGrid.keypress(gridOnKeyPress);
 
-      $("#bCreateGrid").click(btnGenerate_onClick);
-      $("#bUpdateGrid").click(btnCanvas_onClick);
       
       // Assign action to toolbar buttons.
-      $("#bShowCursor").click(gridToggleCursor);
+      $("#bCreateGrid").click(bCreateGrid_onClick);
+      $("#bUpdateGrid").click(bUpdateGrid_onClick);
+      $("#bShowCursor").click(function () {joweGrid.toggleCursor();});
+      $("#bWaterDetails").click(function () {joweGrid.waterDetails = !joweGrid.waterDetails; bUpdateGrid_onClick();});
       $("#bZoomIn").click(function () {if (iZoom < 15) btnZoom(1);});
       $("#bZoomOut").click(function () {if (iZoom > 1) btnZoom(-1);});
+
   }
 }
 );
