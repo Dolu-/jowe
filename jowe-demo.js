@@ -39,27 +39,34 @@ TODO :
  * cGrid is the canvas object.
  * dGrid is the div which contains the canvas tag.
  *       (Needed to capture keyboard inputs as the canvas don't capture key stroke)
+ * lblZoom is the label which display the zoom level.
  */
 
-//var dInfo;
+var dInfo;
 var cGrid;
 var dGrid;
 
+var lblZoom;
+var txtGridWidth, txtGridHeight;
+var txtCanvasWidth, txtCanvasHeight;
+
 var joweGrid;
+
+// For debug purpose only - speed tests.
+//var dbg_date = [];
 
 /*
  * Local variables.
  */
 
-var iZoom = 5;
+var iZoom = 1;
  
 /*
  * Global variables to manage grid dragging.
  */
 
 var bDrag = false;
-var xDrag = 0;
-var yDrag = 0;
+var xDrag = 0, yDrag = 0;
 
 /*
  *
@@ -131,29 +138,63 @@ function gridOnMouseUp(event)
 
 function bCreateGrid_onClick()
 {
-    var w = $("#txtGridWidth").val() * 1;
-    var h = $("#txtGridHeight").val() * 1;
+    // For debug purpose.
+    //dbg_date[0] = new Date();
+    //dInfo.html("");
 
-    joweGrid.initializeGrid(doHeightMap(w, h));
+    var w = txtGridWidth.val() * 1;
+    var h = txtGridHeight.val() * 1;
+    
+    doHeightMap(w, h);
 
+    // For debug purpose.
+    //dbg_date[11] = new Date();
+    
+    joweGrid.initializeGrid(myMap.item);
+    
+    // For debug purpose.
+    //dbg_date[12] = new Date();
+    
     bUpdateGrid_onClick();
+
+    // For debug purpose.
+    //dbg_date[100] = new Date();
+    // dInfo.append("start=" + (dbg_date[2].getTime() - dbg_date[1].getTime()) + "<br />");
+    // dInfo.append("initialize=" + (dbg_date[3].getTime() - dbg_date[2].getTime()) + "<br />");
+    // dInfo.append("generate=" + (dbg_date[4].getTime() - dbg_date[3].getTime()) + "<br />");
+    // dInfo.append("smooth=" + (dbg_date[5].getTime() - dbg_date[4].getTime()) + "<br />");
+    // dInfo.append("crop=" + (dbg_date[6].getTime() - dbg_date[5].getTime()) + "<br />");
+    // dInfo.append("doHeightMap (Total)=" + (dbg_date[6].getTime() - dbg_date[1].getTime()) + "<br />");
+    // dInfo.append("initializeGrid=" + (dbg_date[12].getTime() - dbg_date[11].getTime()) + "<br />");
+    // dInfo.append("initializeCells=" + (dbg_date[14].getTime() - dbg_date[13].getTime()) + "<br />");
+    // dInfo.append("draw=" + (dbg_date[15].getTime() - dbg_date[14].getTime()) + "<br />");
+    // dInfo.append("bUpdateGrid_onClick (Total)=" + (dbg_date[100].getTime() - dbg_date[12].getTime()) + "<br />");
+    // dInfo.append("bCreateGrid_onClick (Total)=" + (dbg_date[100].getTime() - dbg_date[0].getTime()) + "<br />");
 }
 
 function bUpdateGrid_onClick()
 {
-    var w = $("#txtCanvasWidth").val() * 1;
-    var h = $("#txtCanvasHeight").val() * 1;
+    var w = txtCanvasWidth.val() * 1;
+    var h = txtCanvasHeight.val() * 1;
     if ((joweGrid.canvasWidth !== w) || (joweGrid.canvasHeight !== h)) {
-        $("#cGrid").attr({
-            width: w,
-            height: h
-        });
+        cGrid.attr({ width: w, height: h });
         joweGrid.canvasWidth = w;
         joweGrid.canvasHeight = h;
     }
 
+    // For debug purpose.
+    //dbg_date[13] = new Date();
+    
     joweGrid.initializeCells();
+    
+    // For debug purpose.
+    //dbg_date[14] = new Date();
+    
     joweGrid.draw();
+    
+    // For debug purpose.
+    //dbg_date[15] = new Date();
+
 }
 
 /*
@@ -162,7 +203,7 @@ function bUpdateGrid_onClick()
 function btnZoom(i)
 {
   iZoom += i;
-  $("#bZoomLabel").html(iZoom);
+  lblZoom.html(iZoom);
   joweGrid.setZoom(iZoom);
 }
 
@@ -170,30 +211,34 @@ $(
 function()
 {
   // Initialize objects.
-  //dInfo = $("#dInfo");
+  dInfo = $("#dHelp");
   cGrid = $("#cGrid");
   dGrid = $("#dGrid");
+  lblZoom = $("#bZoomLabel");
+  txtGridWidth = $("#txtGridWidth");
+  txtGridHeight = $("#txtGridHeight");
+  txtCanvasWidth = $("#txtCanvasWidth");
+  txtCanvasHeight = $("#txtCanvasHeight");
 
   // Get the canvas size.
   var w = cGrid.attr("width") * 1;
   var h = cGrid.attr("height") * 1;
   // Set the input values.
-  $("#txtCanvasWidth").val(w);
-  $("#txtCanvasHeight").val(h);
+  txtCanvasWidth.val(w);
+  txtCanvasHeight.val(h);
 
   // Try to initialize grid (only if "canvas" is supported by the browser).
   if (joweGrid = new jowe_grid("cGrid", w, h, 0)) {
 
       // Set initial zoom.
-      $("#bZoomLabel").html(iZoom);
-      joweGrid.setZoom(iZoom);
+      iZoom = lblZoom.html() * 1;
+      btnZoom(0);
   
       cGrid.mousedown(gridOnMouseDown);
       cGrid.mousemove(gridOnMouseMove);
       cGrid.mouseup(gridOnMouseUp);
 
       dGrid.keypress(gridOnKeyPress);
-
       
       // Assign action to toolbar buttons.
       $("#bCreateGrid").click(bCreateGrid_onClick);

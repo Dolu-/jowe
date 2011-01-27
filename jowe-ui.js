@@ -40,7 +40,7 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 - In "drawGrid", I'm quite sure it's possible to reduce the offset in the calculation
   of startX and startY. Well, I was too lazy to review the code, so I put higher limits
   than really needed. Not a big issue, but I think we can win some loops.
-- Change the color management: more colors, reduce size of the 'rgba' string.
+- Have to finish changes in color management...
 - Option to change orientation of the display (North/South/East/West).
 - Add tool to rise/sink a cell.
 - Add function to save/load map to/from a file.
@@ -109,7 +109,7 @@ function jowe_grid(canvasGridId, width, height, backgroundcolor) {
         this.canvasWidth = width;
         this.canvasHeight = height;
 
-        this.Grid.fillStyle = "rgb(0,0,0)";
+        this.Grid.fillStyle = "#000";
         this.Grid.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         return true;
@@ -123,249 +123,103 @@ function jowe_grid(canvasGridId, width, height, backgroundcolor) {
  */
 jowe_grid.prototype.initializeGrid = function (item) {
 
-    // Build the array of cells with all needed properties.
-    this.Cells = [];
-    this.Cells.length = item.length;
-    for(var x = 0; x < item.length; x++) {
-        this.Cells[x] = [];
-        this.Cells[x].length = item[x].length;
-        for(var y = 0; y < item[x].length; y++) {
-            this.Cells[x][y] = {
-                x: 0, y: 0,
-                h: item[x][y],  // Color (based on current height).
-                Q: true,        // Is quad?
-                c1: '0,0,0,0.',  // Color for quad, or for left triangle (if vertical) or for top triangle (if horizontal)
-                a1: 80,          // Alpha value for color c1
-                c2: '0,0,0,0.',  // Color for right or bottom triangle
-                a2: 80,          // Alpha value for color c2
-                V: true         // Is vertical? (for triangle only)
-            };
+    var x, y, aX = [], iLength = item.length, ixLength = item[0].length;
+    if ((this.Cells != null) && (this.Cells.length == iLength) && (this.Cells[0].length == ixLength))
+    {
+        for(x = 0; x < iLength; x++)
+            for(y = 0; y < ixLength; y++) {
+                this.Cells[x][y].h = item[x][y];
+                this.Cells[x][y].Q = this.Cells[x][y].V = true;
+            }
+
+    } else {
+        // Build the array of cells with all needed properties.
+        this.Cells = [];
+        this.Cells.length = iLength;
+        
+        for(x = 0; x < iLength; x++) {
+            this.Cells[x] = [];
+            this.Cells[x].length = ixLength;
+            aX = this.Cells[x];
+            for(y = 0; y < ixLength; y++) {
+                aX[y] = { x: 0, y: 0,
+                           h: item[x][y],  // Height/Color (based on current height).
+                           Q: true,        // Is quad?
+                           c1: '#000000',   // Color for quad, or for left triangle (if vertical) or for top triangle (if horizontal)
+                           c2: '#000000',   // Color for right or bottom triangle
+                           V: true         // Is vertical? (for triangle only)
+                };
+            }
         }
     }
 }
 
+var c = [];
+//      light off,  normal,  light on
+c[0] = ['#FAFAFA','#DADADA','#BABABA']; // white (snow)
+c[1] = ['#707070','#505050','#303030']; // gray (mountain)
+c[2] = ['#20F220','#10D210','#00B200']; // green (plain)
+c[3] = ['#2020E8','#1010C8','#0000A8']; // blue (sea/coast)
+c[4] = ['#20209C','#10107C','#00005C']; // dark blue (ocean)
+    
 /*
  * Return the color from the height.
  */
-jowe_grid.prototype.getColor = function(x, y) {
-    var c = '0,0,0,0.';
-    if (this.Cells[x][y].h > 7) {
-        c = '250,250,250,0.'; // white
-    } else if (this.Cells[x][y].h > 6) {
-        c = '80,80,80,0.'; // gray
-    } else if (this.Cells[x][y].h > 2) {
-        c = '0,210,0,0.'; // green
-    } else if (this.Cells[x][y].h > 1) {
-        c = '0,0,200,0.'; // blue => alpha value is forced to have soft transition with lower level
-        if (!this.waterDetails) c += '80';
+jowe_grid.prototype.getColor = function(h, a) {
+    var r = '#000000';
+    if (h > 7) {
+        r = c[0][a];
+    } else if (h > 6) {
+        r = c[1][a];
+    } else if (h > 2) {
+        r = c[2][a];
+    } else if (h > 1) {
+        if (!this.waterDetails) {
+          r = c[3][1];
+        } else {
+          r = c[3][a];
+        }
     } else {
-        c = '0,0,140,0.'; // dark blue => alpha value is forced to have soft transition with lower level
-        if (!this.waterDetails) c += '80';
+        if (!this.waterDetails) {
+          r = c[4][1];
+        } else {
+          r = c[4][a];
+        }
     }
-    return c;
+    return r;
 }
 
 /*
  * Initialize the cells properties.
  */
-jowe_grid.prototype.initializeCells = function () {
+jowe_grid.prototype.initializeCells = function (fromZoom) {
+
+    if (this.Cells == null) {
+        return false;
+    }
     // Main offset to display the map.
     // (calculated to have no coordinate less than 0 neither X nor Y)
     var FromX = (this.xSize * (this.Cells[0].length - 1));
     var FromY = (this.hSize * this.Cells[0][0].h);
-
+    var aX = [];
+    
+    
     // First stage, calculate (x, y) coordinates.
     for(var x = 0; x < this.Cells.length; x++ )
     {
+        aX = this.Cells[x];
         // Create an object for each cell with (x,y) coordinate to display it.
         // Height is added as property (not used for now).
         for(var y = 0; y < this.Cells[0].length; y++ )
         {
-            this.Cells[x][y].x = FromX + ((x - y) * this.xSize);
-            if ((!this.waterDetails) && (this.Cells[x][y].h < 2))  {
-                this.Cells[x][y].y = FromY + ((x + y) * this.ySize) - (2 * this.hSize);
+            aX[y].x = FromX + ((x - y) * this.xSize);
+            if ((!this.waterDetails) && (aX[y].h < 2))  {
+                aX[y].y = FromY + ((x + y) * this.ySize) - (2 * this.hSize);
             } else {
-                this.Cells[x][y].y = FromY + ((x + y) * this.ySize) - (this.Cells[x][y].h * this.hSize);
+                aX[y].y = FromY + ((x + y) * this.ySize) - (aX[y].h * this.hSize);
             }
         }
     }
-    // Second stage, calculate display type and colors.
-    for(var cX = 0; cX < (this.Cells.length - 1); cX++)
-        for(var cY = 0; cY < (this.Cells[0].length - 1); cY++)
-        {
-            if ((this.Cells[cX][cY].h === this.Cells[cX+1][cY].h) &&
-                (this.Cells[cX][cY].h === this.Cells[cX][cY+1].h) &&
-                (this.Cells[cX][cY].h === this.Cells[cX+1][cY+1].h)) {
-
-                // All same height.
-                this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-
-            } else if (((this.Cells[cX][cY].h === this.Cells[cX+1][cY].h)
-                && (this.Cells[cX][cY+1].h === this.Cells[cX+1][cY+1].h)
-                && (this.Cells[cX][cY].h !== this.Cells[cX+1][cY+1].h))
-            || ((this.Cells[cX][cY].h === this.Cells[cX][cY+1].h)
-                && (this.Cells[cX+1][cY].h === this.Cells[cX+1][cY+1].h)
-                && (this.Cells[cX][cY].h !== this.Cells[cX+1][cY+1].h))) {
-
-                //  2x2 same height (opposite side).
-                if (this.Cells[cX][cY].h > this.Cells[cX+1][cY+1].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a1 = 99;
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX+1, cY+1);
-                    this.Cells[cX][cY].a1 = 60;
-                }
-
-            } else if ((this.Cells[cX][cY].h === this.Cells[cX+1][cY+1].h)
-                && (this.Cells[cX][cY].h === this.Cells[cX+1][cY].h)) {
-
-                // 3 same height.
-                //   =
-                // # - =
-                //   =
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].c2 = this.getColor(cX, cY);
-
-                if (this.Cells[cX][cY].h > this.Cells[cX][cY+1].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a1 = 99;
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY+1);
-                    this.Cells[cX][cY].a1 = 60;
-                }
-
-            } else if ((this.Cells[cX][cY].h === this.Cells[cX+1][cY+1].h) && (this.Cells[cX][cY].h === this.Cells[cX][cY+1].h)) {
-
-                // 3 same height.
-                //   =
-                // = - #
-                //   =
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-
-                if (this.Cells[cX][cY].h > this.Cells[cX+1][cY].h) {
-                    this.Cells[cX][cY].c2 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a2 = 60;
-                } else {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY);
-                    this.Cells[cX][cY].a2 = 99;
-                }
-
-            } else if ((this.Cells[cX][cY].h === this.Cells[cX][cY+1].h)
-                && (this.Cells[cX][cY].h === this.Cells[cX+1][cY].h)) {
-
-                // 3 same height.
-                //   =
-                // = - =
-                //   #
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].V = false;
-                this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-
-                if (this.Cells[cX][cY].h > this.Cells[cX+1][cY+1].h) {
-                    this.Cells[cX][cY].c2 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a2 = 99;
-                } else {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY+1);
-                    this.Cells[cX][cY].a2 = 60;
-                }
-
-            } else if ((this.Cells[cX+1][cY].h === this.Cells[cX+1][cY+1].h)
-                && (this.Cells[cX][cY+1].h === this.Cells[cX+1][cY+1].h)) {
-
-                // 3 same height.
-                //   #
-                // = - =
-                //   =
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].V = false;
-                this.Cells[cX][cY].c2 = this.getColor(cX+1, cY+1);
-
-                if (this.Cells[cX][cY].h > this.Cells[cX+1][cY+1].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a1 = 99;
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX+1, cY+1);
-                    this.Cells[cX][cY].a1 = 60;
-                }
-
-            } else if (this.Cells[cX][cY].h === this.Cells[cX+1][cY+1].h) {
-
-                //  2 same height (cross side) and 2 other #
-                //   =                 [cX][cY]
-                // # - #      [cX][cY+1]      [cX+1][cY]
-                //   =               [cX+1][cY+1]
-                this.Cells[cX][cY].Q = false;
-
-                if (this.Cells[cX][cY].h > this.Cells[cX][cY+1].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a1 = 99;        // go up
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY+1);
-                    this.Cells[cX][cY].a1 = 60;        // go down
-                }
-
-                if (this.Cells[cX][cY].h > this.Cells[cX+1][cY].h) {
-                    this.Cells[cX][cY].c2 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a2 = 60;        // go down
-                } else {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY);
-                    this.Cells[cX][cY].a2 = 99;        // go up
-                }
-
-            } else if (this.Cells[cX][cY+1].h === this.Cells[cX+1][cY].h) {
-
-                //  2 same height (cross side) and 2 other #
-                //   #                [cX][cY]
-                // = - =     [cX][cY+1]      [cX+1][cY]
-                //   #              [cX+1][cY+1]
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].V = false;
-
-                if (this.Cells[cX+1][cY].h > this.Cells[cX+1][cY+1].h) {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY);    // Go up
-                    this.Cells[cX][cY].a2 = 99;
-                } else {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY+1);  // Go down
-                    this.Cells[cX][cY].a2 = 60;
-                }
-
-                if (this.Cells[cX+1][cY].h > this.Cells[cX][cY].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX+1, cY);    // Go down
-                    this.Cells[cX][cY].a1 = 60;
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);      // Go up
-                    this.Cells[cX][cY].a1 = 99;
-                }
-            } else {
-
-                //  2x2 same height (same side)  and 2 other #
-                //  (4 variations)
-                //   =
-                // # - =
-                //   #
-                
-                this.Cells[cX][cY].Q = false;
-                this.Cells[cX][cY].V = false;
-
-                if (this.Cells[cX+1][cY].h > this.Cells[cX+1][cY+1].h) {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY);
-                    this.Cells[cX][cY].a2 = 99;
-                }
-                else {
-                    this.Cells[cX][cY].c2 = this.getColor(cX+1, cY+1);
-                    this.Cells[cX][cY].a2 = 60;
-                }
-
-                if (this.Cells[cX+1][cY].h > this.Cells[cX][cY].h) {
-                    this.Cells[cX][cY].c1 = this.getColor(cX+1, cY);
-                    this.Cells[cX][cY].a1 = 99;
-                } else {
-                    this.Cells[cX][cY].c1 = this.getColor(cX, cY);
-                    this.Cells[cX][cY].a1 = 60;
-                }
-            }
-        }
 
     // Set global offset to have grid centered on the canvas.
     this.xOffset = Math.floor((this.Cells[this.Cells.length - 1][0].x - this.canvasWidth) / 2);
@@ -375,10 +229,161 @@ jowe_grid.prototype.initializeCells = function () {
     // We add some more loop to both to take account of height gap.
     this.loopX = Math.floor(this.canvasWidth  / this.xSize) + 3;
 
-    // First display!
-    this.draw();
-}
+    if (fromZoom) return;
+    
+    // Second stage, calculate display type and colors.
+    //   =                 [cX][cY]
+    // = - =      [cX][cY+1]      [cX+1][cY]
+    //   =               [cX+1][cY+1]
+    var cTop, cBottom, cLeft, cRight;
+    for(var cX = 0; cX < (this.Cells.length - 1); cX++) {
+        aX = this.Cells[cX];
+        for(var cY = 0; cY < (aX.length - 1); cY++) {
+            cTop = aX[cY].h;
+            cBottom = this.Cells[cX+1][cY+1].h;
+            cLeft = aX[cY+1].h;
+            cRight = this.Cells[cX+1][cY].h;
+        
+            if ((cTop === cRight) && (cTop === cLeft) && (cTop === cBottom)) {
 
+                // All same height.
+                aX[cY].c1 = this.getColor(cTop, 1);
+
+            } else if ((cTop !== cBottom)
+                       && (((cTop === cRight) && (cLeft === cBottom))
+                        || ((cTop === cLeft) && (cRight === cBottom)))) {
+
+                //  2x2 same height (opposite side).
+                if (cTop > cBottom) {
+                    aX[cY].c1 = this.getColor(cTop, 0);
+                } else {
+                    aX[cY].c1 = this.getColor(cBottom, 2);
+                }
+
+            } else if ((cTop === cBottom) && (cTop === cRight)) {
+
+                // 3 same height.
+                //   =
+                // # - =
+                //   =
+                aX[cY].Q = false;
+                aX[cY].c2 = this.getColor(cTop, 1);
+
+                if (cTop > cLeft) {
+                    aX[cY].c1 = this.getColor(cTop, 0);
+                } else {
+                    aX[cY].c1 = this.getColor(cLeft, 2);
+                }
+
+            } else if ((cTop === cBottom) && (cTop === cLeft)) {
+
+                // 3 same height.
+                //   =
+                // = - #
+                //   =
+                aX[cY].Q = false;
+                aX[cY].c1 = this.getColor(cTop, 1);
+
+                if (cTop > cRight) {
+                    aX[cY].c2 = this.getColor(cTop, 2);
+                } else {
+                    aX[cY].c2 = this.getColor(cRight, 0);
+                }
+
+            } else if ((cTop === cLeft) && (cTop === cRight)) {
+
+                // 3 same height.
+                //   =
+                // = - =
+                //   #
+                aX[cY].Q = aX[cY].V = false;
+                aX[cY].c1 = this.getColor(cTop, 1);
+
+                if (cTop > cBottom) {
+                    aX[cY].c2 = this.getColor(cTop, 0);
+                } else {
+                    aX[cY].c2 = this.getColor(cBottom, 2);
+                }
+
+            } else if ((cRight === cBottom) && (cLeft === cBottom)) {
+
+                // 3 same height.
+                //   #
+                // = - =
+                //   =
+                aX[cY].Q = aX[cY].V = false;
+                aX[cY].c2 = this.getColor(cBottom, 1);
+
+                if (cTop > cBottom) {
+                    aX[cY].c1 = this.getColor(cTop, 0);
+                } else {
+                    aX[cY].c1 = this.getColor(cBottom, 2);
+                }
+
+            } else if (cTop === cBottom) {
+
+                //  2 same height (cross side) and 2 other #
+                //   =                 [cX][cY]
+                // # - #      [cX][cY+1]      [cX+1][cY]
+                //   =               [cX+1][cY+1]
+                aX[cY].Q = false;
+
+                if (cTop > cLeft) {
+                    aX[cY].c1 = this.getColor(cTop, 0);        // go up
+                } else {
+                    aX[cY].c1 = this.getColor(cLeft, 2);      // go down
+                }
+
+                if (cTop > cRight) {
+                    aX[cY].c2 = this.getColor(cTop, 2);        // go down
+                } else {
+                    aX[cY].c2 = this.getColor(cRight, 0);      // go up
+                }
+
+            } else if (cLeft === cRight) {
+
+                //  2 same height (cross side) and 2 other #
+                //   #                [cX][cY]
+                // = - =     [cX][cY+1]      [cX+1][cY]
+                //   #              [cX+1][cY+1]
+                aX[cY].Q = aX[cY].V = false;
+
+                if (cRight > cBottom) {
+                    aX[cY].c2 = this.getColor(cRight, 0);    // Go up
+                } else {
+                    aX[cY].c2 = this.getColor(cBottom, 2);  // Go down
+                }
+
+                if (cRight > cTop) {
+                    aX[cY].c1 = this.getColor(cRight, 2);    // Go down
+                } else {
+                    aX[cY].c1 = this.getColor(cTop, 0);      // Go up
+                }
+            } else {
+
+                //  2x2 same height (same side)  and 2 other #
+                //  (4 variations)
+                //   =
+                // # - =
+                //   #
+                
+                aX[cY].Q = aX[cY].V = false;
+
+                if (cRight > cBottom) {
+                    aX[cY].c2 = this.getColor(cRight, 0);
+                } else {
+                    aX[cY].c2 = this.getColor(cBottom, 2);
+                }
+
+                if (cRight > cTop) {
+                    aX[cY].c1 = this.getColor(cRight, 0);
+                } else {
+                    aX[cY].c1 = this.getColor(cTop, 2);
+                }
+            }
+        }
+    }
+}
 
 /*
  * Loop through every cell to draw the grid.
@@ -386,9 +391,19 @@ jowe_grid.prototype.initializeCells = function () {
  * 
  */
 jowe_grid.prototype.draw = function () {
+
+    // Reset the canvas (fill the background with default color).
+    this.Grid.width = this.Grid.width;
+    this.Grid.fillStyle = "#000";
+    this.Grid.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+    if (this.Cells == null) {
+        return false;
+    }
+    
     // The "sign" is used to calculate the first cell of the column.
-    var sign = 1;
-    var x = 0, y = 0;
+    var sign = 1, w = this.Cells.length - 1, h = this.Cells[0].length - 1;
+    var x = 0, y = 0, heightOffset = this.canvasHeight + this.yOffset;
     
     // Estimate from which cell we have to start displaying the grid, the formula
     // doesn't include the height, so the result may not be accurate. That's why
@@ -396,47 +411,46 @@ jowe_grid.prototype.draw = function () {
     // Below, the offset is arbitrary set to "-3" (the same for Y with "-2"),
     // but it is dependant of the maximum elevation of the map and the hSize value.
     // It would be better to calculate it at first initialization.
-    var start = {
-        X : Math.floor((1 / 2) * ((this.yOffset / this.ySize ) + (this.xOffset / this.xSize) - this.Cells[0].length + 1)) - 3,
-        Y : Math.floor((1 / 2) * ((this.yOffset / this.ySize ) - (this.xOffset / this.xSize) + this.Cells[0].length - 1)) - 2
-    };
-
-    // Reset the canvas (draw the background).
-    this.Grid.fillStyle = "rgb(0,0,0)";
-    this.Grid.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-
+    var startX = Math.floor((1 / 2) * ((this.yOffset / this.ySize ) + (this.xOffset / this.xSize) - this.Cells[0].length + 1)) - 3;
+    var startY = Math.floor((1 / 2) * ((this.yOffset / this.ySize ) - (this.xOffset / this.xSize) + this.Cells[0].length - 1)) - 2;
+    var cellX, cellY;
+    
+    // Set translation to the offset point.
+    this.Grid.translate(-this.xOffset, -this.yOffset);
+            
     // We do all loops needed to be sure to fill the whole grid.
     while (x <= this.loopX)
     {
-        if ((start.X < 0) || (start.Y < 0)) {
-          y = -Math.min(start.X, start.Y);
+        if ((startX < 0) || (startY < 0)) {
+          y = startX < startY ? -startX : -startY;
         } else {
           y = 0;
         }
     
-        while (((start.X + y) < (this.Cells.length - 1))
-            && ((start.Y + y) < (this.Cells[0].length - 1))
-            && ((this.Cells[start.X + y][start.Y + y].y - this.yOffset) < this.canvasHeight))
-        {
-            if ((this.Cells[start.X + y + 1][start.Y + y + 1].y - this.yOffset) >= 0)
-            {
-              this.drawCell(start.X + y,start.Y + y);
+        cellX = startX + y;
+        cellY = startY + y;
+        while ((cellX < w) && (cellY < h) && (this.Cells[cellX][cellY].y < heightOffset)) {
+            if (this.Cells[cellX + 1][cellY + 1].y >= this.yOffset) {
+              this.drawCell(cellX,cellY);
             }
-            y++;
+            cellX++;
+            cellY++;
         }
         
         // When "sign" changes, we go to the next column on the right.
         if (sign > 0) {
-            start.X += 1;
+            startX++;
         } else {
-            start.Y -= 1;
+            startY--;
         }
         sign *= -1;
         
         x++;
     }
+    
+    // Restore the position.
+    this.Grid.translate(this.xOffset, this.yOffset);
 }
-
 
 /*
  * Draw cell at (cX, cY) coordinates.
@@ -448,53 +462,52 @@ jowe_grid.prototype.drawCell =  function (cX, cY, isCursor) {
         {
             // set color.
             if (isCursor) {
-                this.Grid.fillStyle = "rgb(0,0,0)";
+                this.Grid.fillStyle = "#000";
             } else {
-                this.Grid.fillStyle = "rgba(" + this.Cells[cX][cY].c1 + this.Cells[cX][cY].a1 + ")";
+                this.Grid.fillStyle = this.Cells[cX][cY].c1;
             }
 
             // Draw cell.
             this.Grid.beginPath();
-
-            this.Grid.moveTo(this.Cells[cX][cY].x     - this.xOffset, this.Cells[cX][cY].y     - this.yOffset);
-            this.Grid.lineTo(this.Cells[cX][cY+1].x   - this.xOffset, this.Cells[cX][cY+1].y   - this.yOffset);
-            this.Grid.lineTo(this.Cells[cX+1][cY+1].x - this.xOffset, this.Cells[cX+1][cY+1].y - this.yOffset);
-            this.Grid.lineTo(this.Cells[cX+1][cY].x   - this.xOffset, this.Cells[cX+1][cY].y   - this.yOffset);
+            this.Grid.moveTo(this.Cells[cX][cY].x     , this.Cells[cX][cY].y     );
+            this.Grid.lineTo(this.Cells[cX][cY+1].x   , this.Cells[cX][cY+1].y   );
+            this.Grid.lineTo(this.Cells[cX+1][cY+1].x , this.Cells[cX+1][cY+1].y );
+            this.Grid.lineTo(this.Cells[cX+1][cY].x   , this.Cells[cX+1][cY].y   );
 
             this.Grid.fill();
 
         } else {
 
             // Set color for first triangle.
-            this.Grid.fillStyle = "rgba(" + this.Cells[cX][cY].c1 + this.Cells[cX][cY].a1 + ")";
+            this.Grid.fillStyle = this.Cells[cX][cY].c1;
             this.Grid.beginPath();
 
-            this.Grid.moveTo(this.Cells[cX][cY].x     - this.xOffset, this.Cells[cX][cY].y     - this.yOffset);
-            this.Grid.lineTo(this.Cells[cX][cY+1].x   - this.xOffset, this.Cells[cX][cY+1].y   - this.yOffset);
+            this.Grid.moveTo(this.Cells[cX][cY].x     , this.Cells[cX][cY].y     );
+            this.Grid.lineTo(this.Cells[cX][cY+1].x   , this.Cells[cX][cY+1].y   );
 
             if (this.Cells[cX][cY].V) {
                 // Draw left triangle.
-                this.Grid.lineTo(this.Cells[cX+1][cY+1].x - this.xOffset, this.Cells[cX+1][cY+1].y - this.yOffset);
+                this.Grid.lineTo(this.Cells[cX+1][cY+1].x , this.Cells[cX+1][cY+1].y );
 
             } else {
                 // Draw top triangle.
-                this.Grid.lineTo(this.Cells[cX+1][cY].x   - this.xOffset, this.Cells[cX+1][cY].y   - this.yOffset);
+                this.Grid.lineTo(this.Cells[cX+1][cY].x   , this.Cells[cX+1][cY].y   );
             }
             this.Grid.fill();
 
             // Set color for second triangle.
-            this.Grid.fillStyle = "rgba(" + this.Cells[cX][cY].c2 + this.Cells[cX][cY].a2 + ")";
+            this.Grid.fillStyle = this.Cells[cX][cY].c2;
             this.Grid.beginPath();
 
-            this.Grid.moveTo(this.Cells[cX+1][cY].x     - this.xOffset, this.Cells[cX+1][cY].y   - this.yOffset);
+            this.Grid.moveTo(this.Cells[cX+1][cY].x     , this.Cells[cX+1][cY].y   );
             if (this.Cells[cX][cY].V) {
                 // Draw right triangle.
-                this.Grid.lineTo(this.Cells[cX][cY].x   - this.xOffset, this.Cells[cX][cY].y     - this.yOffset);
+                this.Grid.lineTo(this.Cells[cX][cY].x   , this.Cells[cX][cY].y     );
             } else {
                 // Draw bottom triangle.
-                this.Grid.lineTo(this.Cells[cX][cY+1].x - this.xOffset, this.Cells[cX][cY+1].y   - this.yOffset);
+                this.Grid.lineTo(this.Cells[cX][cY+1].x , this.Cells[cX][cY+1].y   );
             }
-            this.Grid.lineTo(this.Cells[cX+1][cY+1].x   - this.xOffset, this.Cells[cX+1][cY+1].y - this.yOffset);
+            this.Grid.lineTo(this.Cells[cX+1][cY+1].x   , this.Cells[cX+1][cY+1].y );
             this.Grid.fill();
         }
 
@@ -504,7 +517,6 @@ jowe_grid.prototype.drawCell =  function (cX, cY, isCursor) {
     }
 }
 
-
 /*
  * Set new size for cells.
  */
@@ -513,8 +525,10 @@ jowe_grid.prototype.setZoom = function(iZoom) {
   this.ySize = this.xSize / this.yRate;
   this.hSize = this.xSize / this.hRate;
   
-  if (this.Cells != null)
-      this.initializeCells();
+  if (this.Cells != null) {
+      this.initializeCells(true);
+      this.draw();
+  }
 }
 
 /*
