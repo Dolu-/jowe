@@ -186,7 +186,7 @@ function HeightMap(arg_pitch, arg_ratio) {
 
         // Set a random height for the middle of the current square.
         // addDelta is called with the average height of the 4 points.
-        if (0 > a[xm][ym]) a[xm][ym] = addDelta((a[x1][y1] + a[x1][y2] + a[x2][y2] + a[x2][y1]) >> 2, delta);
+        a[xm][ym] = addDelta((a[x1][y1] + a[x1][y2] + a[x2][y2] + a[x2][y1]) >> 2, delta);
       
         // Set a random height for the middle of the hypotenuse of each triangle.
         // addDelta is called with the average height of the 3 points.
@@ -324,6 +324,8 @@ function doHeightMap(width, height)
     // For debug purpose.
     // dbg_date[6] = new Date();
 }
+
+/**********************************************************************************/
 
 // From http://baagoe.com/en/RandomMusings/javascript/
 // Johannes Baagøe <baagoe@baagoe.com>, 2010

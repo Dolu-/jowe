@@ -45,15 +45,18 @@ TODO :
 var dInfo;
 var cGrid;
 var dGrid;
+var cMini;
+var dMini;
 
 var lblZoom;
 var txtGridWidth, txtGridHeight;
 var txtCanvasWidth, txtCanvasHeight;
 
 var joweGrid;
+var joweMinimap;
 
 // For debug purpose only - speed tests.
-//var dbg_date = [];
+// var dbg_date = [];
 
 /*
  * Local variables.
@@ -139,8 +142,8 @@ function gridOnMouseUp(event)
 function bCreateGrid_onClick()
 {
     // For debug purpose.
-    //dbg_date[0] = new Date();
-    //dInfo.html("");
+    // dbg_date[0] = new Date();
+    // dInfo.html("");
 
     var w = txtGridWidth.val() * 1;
     var h = txtGridHeight.val() * 1;
@@ -148,24 +151,24 @@ function bCreateGrid_onClick()
     doHeightMap(w, h);
 
     // For debug purpose.
-    //dbg_date[11] = new Date();
+    // dbg_date[11] = new Date();
     
-    joweGrid.initializeGrid(myMap.item);
+    joweGrid.initialize(myMap.item);
     
     // For debug purpose.
-    //dbg_date[12] = new Date();
+    // dbg_date[12] = new Date();
     
     bUpdateGrid_onClick();
 
     // For debug purpose.
-    //dbg_date[100] = new Date();
+    // dbg_date[100] = new Date();
     // dInfo.append("start=" + (dbg_date[2].getTime() - dbg_date[1].getTime()) + "<br />");
     // dInfo.append("initialize=" + (dbg_date[3].getTime() - dbg_date[2].getTime()) + "<br />");
     // dInfo.append("generate=" + (dbg_date[4].getTime() - dbg_date[3].getTime()) + "<br />");
     // dInfo.append("smooth=" + (dbg_date[5].getTime() - dbg_date[4].getTime()) + "<br />");
     // dInfo.append("crop=" + (dbg_date[6].getTime() - dbg_date[5].getTime()) + "<br />");
     // dInfo.append("doHeightMap (Total)=" + (dbg_date[6].getTime() - dbg_date[1].getTime()) + "<br />");
-    // dInfo.append("initializeGrid=" + (dbg_date[12].getTime() - dbg_date[11].getTime()) + "<br />");
+    // dInfo.append("initialize=" + (dbg_date[12].getTime() - dbg_date[11].getTime()) + "<br />");
     // dInfo.append("initializeCells=" + (dbg_date[14].getTime() - dbg_date[13].getTime()) + "<br />");
     // dInfo.append("draw=" + (dbg_date[15].getTime() - dbg_date[14].getTime()) + "<br />");
     // dInfo.append("bUpdateGrid_onClick (Total)=" + (dbg_date[100].getTime() - dbg_date[12].getTime()) + "<br />");
@@ -183,17 +186,17 @@ function bUpdateGrid_onClick()
     }
 
     // For debug purpose.
-    //dbg_date[13] = new Date();
+    // dbg_date[13] = new Date();
     
     joweGrid.initializeCells();
     
     // For debug purpose.
-    //dbg_date[14] = new Date();
+    // dbg_date[14] = new Date();
     
     joweGrid.draw();
     
     // For debug purpose.
-    //dbg_date[15] = new Date();
+    // dbg_date[15] = new Date();
 
 }
 
@@ -207,6 +210,11 @@ function btnZoom(i)
   joweGrid.setZoom(iZoom);
 }
 
+function bShowMinimap_onClick() {
+    dMini.toggle();
+    joweMinimap.resize(60, 60);
+}
+
 $(
 function()
 {
@@ -214,6 +222,8 @@ function()
   dInfo = $("#dHelp");
   cGrid = $("#cGrid");
   dGrid = $("#dGrid");
+  cMini = $("#cMini");
+  dMini = $("#dMini");
   lblZoom = $("#bZoomLabel");
   txtGridWidth = $("#txtGridWidth");
   txtGridHeight = $("#txtGridHeight");
@@ -247,7 +257,17 @@ function()
       $("#bWaterDetails").click(function () {joweGrid.waterDetails = !joweGrid.waterDetails; bUpdateGrid_onClick();});
       $("#bZoomIn").click(function () {if (iZoom < 15) btnZoom(1);});
       $("#bZoomOut").click(function () {if (iZoom > 1) btnZoom(-1);});
+      //$("#bRotateLeft").click(function () {joweGrid.rotate(-1);});
+      //$("#bRotateRight").click(function () {joweGrid.rotate(1);});
 
   }
+
+  /*
+  joweMinimap = new jowe_minimap("cMini", 0, 0, "#000", joweGrid);
+  if (joweMinimap) {
+      $("#bShowMinimap").click(bShowMinimap_onClick);
+  }
+  */
+  
 }
 );
