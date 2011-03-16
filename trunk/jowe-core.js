@@ -86,35 +86,35 @@ Random Height Map Generator Object.
 
 */
 
-// Create new map object (as global).
-var myMap = new HeightMap();
-
-// Random object/class.
-var rand = new Alea('');
-
 function HeightMap(arg_pitch, arg_ratio) {
 
     // Size of the current map [0 .. side], [0 .. side].
     // Always have to be (N^2)+1 x (N^2)+1 ("diamond square" algorithm. Better looking results with squares).
     // We only need to store it once (side = width = height).
-    var side = 129;
-    // Set minimum and maximum size for a side
-    var minSide = 4, maxSide = 2040;
+    var side = 129,
     
-    // Maximum elevation for current map [0 .. _Pitch].
-    // You will have to adjust the color managment in "jowe-ui" to fit your elevation.
-    var pitch = 8;
-    if ((arg_pitch != undefined) && (arg_pitch != null)) pitch = arg_pitch;
+        // Set minimum and maximum size for a side
+        minSide = 4, maxSide = 2040,
+        
+        // Maximum elevation for current map [0 .. _Pitch].
+        // You will have to adjust the color managment in "jowe-ui" to fit your elevation.
+        pitch = 8,
+        
+        // Indicates how much height difference between 2 points we can have.
+        // Only used in function "generate"
+        // By the way, combined with "pitch" (previous property),
+        // it allows to obtain very different types of map.
+        // For now 3.1 is around the minimum value to use, below that you
+        // could obtain strange map (unmanaged cell display).
+        // If you put an higher value, your map will look flattened.
+        ratio = 3.1;
 
-    // Indicates how much height difference between 2 points we can have.
-    // Only used in function "generate"
-    // By the way, combined with "pitch" (previous property),
-    // it allows to obtain very different types of map.
-    // For now 3.1 is around the minimum value to use, below that you
-    // could obtain strange map (unmanaged cell display).
-    // If you put an higher value, your map will look flattened.
-    var ratio = 3.1;
-    if ((arg_ratio != undefined) && (arg_ratio != null)) ratio = arg_ratio;
+    if ((arg_pitch !== undefined) && (arg_pitch !== null)) {
+        pitch = arg_pitch;
+    }
+    if ((arg_ratio !== undefined) && (arg_ratio !== null)) {
+        ratio = arg_ratio;
+    }
 
     // Array with the world map.
     this.item = [];
@@ -125,13 +125,13 @@ function HeightMap(arg_pitch, arg_ratio) {
      * Initialize the array.
      * h = default height.
      */
-    this.initialize = function(h) {
+    this.initialize = function (h) {
         var x = side, a = this.item, b = [];
         a.length = b.length = side;
         while (x) b[--x] = h;
         x = side;
         while (x) a[--x] = b.slice();
-    }
+    };
         
     /*
      * [Private method] randomMinMax
@@ -149,16 +149,20 @@ function HeightMap(arg_pitch, arg_ratio) {
      * Set random height for each corner (initialize the map).
      * (called once at initialization)
      */
-    this.fillCorners = function(overwrite) {
-        if (overwrite || (0 > this.item[0][0]))
+    this.fillCorners = function (overwrite) {
+        if (overwrite || (0 > this.item[0][0])) {
             this.item[0][0] = randomMinMax(0, pitch);
-        if (overwrite || (0 > this.item[side - 1][0]))
+        }
+        if (overwrite || (0 > this.item[side - 1][0])) {
             this.item[side - 1][0] = randomMinMax(0, pitch);
-        if (overwrite || (0 > this.item[side - 1][side - 1]))
-            this.item[side - 1][side - 1] = randomMinMax(0,pitch);
-        if (overwrite || (0 > this.item[0][side - 1]))
+        }
+        if (overwrite || (0 > this.item[side - 1][side - 1])) {
+            this.item[side - 1][side - 1] = randomMinMax(0, pitch);
+        }
+        if (overwrite || (0 > this.item[0][side - 1])) {
             this.item[0][side - 1] = randomMinMax(0, pitch);
-    }
+        }
+    };
 
     /*
      * [Private method] addDelta
@@ -170,7 +174,7 @@ function HeightMap(arg_pitch, arg_ratio) {
      */
     function addDelta(avg, delta) {
         if (0 < delta) avg += (rand() * ((delta << 1) + 1)) - delta;
-        return (pitch < avg) ? pitch : (0 > avg) ? 0 : ~~avg ;
+        return (pitch < avg) ? pitch : (0 > avg) ? 0 : ~~avg;
     }
 
     
@@ -180,7 +184,7 @@ function HeightMap(arg_pitch, arg_ratio) {
      * Generate a random map.
      * Parameters indicates "top/left" and "right/bottom" limits.
      */
-    this.generate = function(x1, y1, x2, y2, xm, ym) {
+    this.generate = function (x1, y1, x2, y2, xm, ym) {
         
         var delta = ~~((x2 - xm) / ratio), a = this.item;
 
@@ -197,30 +201,30 @@ function HeightMap(arg_pitch, arg_ratio) {
 
         if (((x2 - x1) > 2) || ((y2 - y1) > 2)) {
             delta = (xm - x1) >> 1;
-            var xm1 = xm - delta, xm2 = xm + delta;
-            var ymi = ym + delta;
+            var xm1 = xm - delta, xm2 = xm + delta,
+                ymi = ym + delta;
             this.generate(xm, ym, x2, y2, xm2, ymi);
             this.generate(x1, ym, xm, y2, xm1, ymi);
             ymi = ym - delta;
             this.generate(x1, y1, xm, ym, xm1, ymi);
             this.generate(xm, y1, x2, ym, xm2, ymi);
         }
-    }
+    };
 
     /*
      * [Privileged method] smooth
      *
      * Set cells height to be closer to other adjacent cells.
      */
-    this.smooth = function() {
+    this.smooth = function () {
         var x, y, sum, a = this.item, s = side - 1, xm1 = [], xp1 = [];
         for (x = 1; x < s ; x++) {
-            xm1 = a[x-1];
+            xm1 = a[x - 1];
             sum = a[x][1];
-            xp1 = a[x+1];
+            xp1 = a[x + 1];
             for (y = 1; y < s ; y++) {
 
-                sum +=  xm1[y-1] + xm1[y] + xm1[y+1] + a[x][y] + a[x][y+1] + xp1[y-1] + xp1[y] + xp1[y+1];
+                sum +=  xm1[y - 1] + xm1[y] + xm1[y + 1] + a[x][y] + a[x][y + 1] + xp1[y - 1] + xp1[y] + xp1[y + 1];
                 
                 sum = 4 < (sum % 9) ? (sum / 9) + 1 : sum / 9;
                 sum = ~~sum;
@@ -229,20 +233,19 @@ function HeightMap(arg_pitch, arg_ratio) {
                 a[x][y] = sum;
             }
         }
-    }
+    };
 
     /*
      * [Privileged method] crop
      *
      * Crop current map according to specific size.
      */
-    this.crop = function(width, height, cropsize) {
-        var a =this.item.slice(cropsize, width + cropsize);
-        var x = a.length;
+    this.crop = function (width, height, cropsize) {
+        var a = this.item.slice(cropsize, width + cropsize),
+            x = a.length;
         while (x--) a[x] = a[x].slice(cropsize, height + cropsize);
         this.item = a;
-    }
-
+    };
 
     /*
      * [Privileged method] doMap
@@ -252,11 +255,11 @@ function HeightMap(arg_pitch, arg_ratio) {
      * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
      * 
      */
-     this.doMap = function(width, height) {
+    this.doMap = function (width, height) {
         // Default values if none provided.
         // It also limits size to [maxSide]x[maxSide], to avoid big generation time.
-        if ((width == null) || (height == null) ||
-            (width < minSide) || (height < minSide)||
+        if ((width === null) || (height === null) ||
+            (width < minSide) || (height < minSide) ||
             (width > maxSide) || (height > maxSide)) {
 
             width = 128;
@@ -269,8 +272,9 @@ function HeightMap(arg_pitch, arg_ratio) {
 
         // Look for 2^n size (better results from 2^7).
         var n = 7;
-        while (Math.pow(2, n) < side)
+        while (Math.pow(2, n) < side) {
             n++;
+        }
 
         // Create new map object.
         // At this stage, working size will be ((Math.pow(2, n) + 1) x (Math.pow(2, n) + 1))
@@ -289,16 +293,19 @@ function HeightMap(arg_pitch, arg_ratio) {
         // dbg_date[3] = new Date();
 
         // Do map!
-        this.generate(0, 0, side - 1, side - 1,(side - 1) >> 1,(side - 1) >> 1);
+        this.generate(0, 0, side - 1, side - 1, (side - 1) >> 1, (side - 1) >> 1);
 
         // For debug purpose.
         // dbg_date[4] = new Date();
 
         // Smooth map to remove weird points.
         this.smooth();
-    }
+    };
 
 }
+
+// Create new map object (as global).
+var myMap = new HeightMap();
 
 /*
  * Return a random array of cells (world map), with the requested size.
@@ -330,55 +337,58 @@ function doHeightMap(width, height)
 // From http://baagoe.com/en/RandomMusings/javascript/
 // Johannes Baagøe <baagoe@baagoe.com>, 2010
 function Mash() {
-  var n = 0xefc8249d;
+    var n = 0xefc8249d;
 
-  var mash = function(data) {
-    data = data.toString();
-    for (var i = 0; i < data.length; i++) {
-      n += data.charCodeAt(i);
-      var h = 0.02519603282416938 * n;
-      n = h >>> 0;
-      h -= n;
-      h *= n;
-      n = h >>> 0;
-      h -= n;
-      n += h * 0x100000000; // 2^32
-    }
-    return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
-  };
-  return mash;
+    var mash = function (data) {
+        data = data.toString();
+        for (var i = 0; i < data.length; i++) {
+            n += data.charCodeAt(i);
+            var h = 0.02519603282416938 * n;
+            n = h >>> 0;
+            h -= n;
+            h *= n;
+            n = h >>> 0;
+            h -= n;
+            n += h * 0x100000000; // 2^32
+        }
+        return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
+    };
+    return mash;
 }
 
 // From http://baagoe.com/en/RandomMusings/javascript/
 // Johannes Baagøe <baagoe@baagoe.com>, 2010
 function Alea() {
-  return (function(args) {
-    var s0 = 0, s1 = 0, s2 = 0, c = 1, mash = Mash(), p1 = 2091639, p2 = 2.3283064365386963e-10; // 2^-32
+    return (function (args) {
+        var s0 = 0, s1 = 0, s2 = 0, c = 1, mash = Mash(), p1 = 2091639, p2 = 2.3283064365386963e-10, i; // 2^-32
 
-    if (args.length == 0) {
-      args = [+new Date];
-    }
-    s0 = mash(' ');
-    s1 = mash(' ');
-    s2 = mash(' ');
+        if (args.length === 0) {
+            args = [+new Date()];
+        }
+        s0 = mash(' ');
+        s1 = mash(' ');
+        s2 = mash(' ');
 
-    for (var i = 0; i < args.length; i++) {
-      s0 -= mash(args[i]);
-      if (s0 < 0) s0 += 1;
-      s1 -= mash(args[i]);
-      if (s1 < 0) s1 += 1;
-      s2 -= mash(args[i]);
-      if (s2 < 0) s2 += 1;
-    }
-    mash = null;
+        for (i = 0; i < args.length; i++) {
+            s0 -= mash(args[i]);
+            if (s0 < 0) s0 += 1;
+            s1 -= mash(args[i]);
+            if (s1 < 0) s1 += 1;
+            s2 -= mash(args[i]);
+            if (s2 < 0) s2 += 1;
+        }
+        mash = null;
 
-    var random = function() {
-      var t = p1 * s0 + c * p2;
-      s0 = s1 = s2;
-      return s2 = t - (c = t | 0);
-    };
-    random.args = args;
-    return random;
+        var random = function () {
+            var t = p1 * s0 + c * p2;
+            s0 = s1 = s2;
+            return s2 = t - (c = t | 0);
+        };
+        random.args = args;
+        return random;
 
-  } (Array.prototype.slice.call(arguments)));
+    } (Array.prototype.slice.call(arguments)));
 }
+
+// Random object/class.
+var rand = new Alea('');

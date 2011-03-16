@@ -30,7 +30,7 @@ TODO :
 - All stuff related to Grid dragging should probably be located elsewhere.
   Not sure it has to be in the "managegrid.js" file.
 
-  */
+*/
 
 /*
  * Global objects (jQuery shorcuts).
@@ -42,18 +42,12 @@ TODO :
  * lblZoom is the label which display the zoom level.
  */
 
-var dInfo;
-var cGrid;
-var dGrid;
-var cMini;
-var dMini;
-
-var lblZoom;
-var txtGridWidth, txtGridHeight;
-var txtCanvasWidth, txtCanvasHeight;
+var dInfo,
+    cGrid, dGrid,
+    cMini, dMini,
+    lblZoom;
 
 var joweGrid;
-var joweMinimap;
 
 // For debug purpose only - speed tests.
 // var dbg_date = [];
@@ -68,17 +62,16 @@ var iZoom = 1;
  * Global variables to manage grid dragging.
  */
 
-var bDrag = false;
-var xDrag = 0, yDrag = 0;
+var bDrag = false, xDrag = 0, yDrag = 0;
 
 /*
  *
  */
 function gridOnMouseDown(event)
 {
-    var x = event.pageX - this.offsetLeft;
-    var y = event.pageY - this.offsetTop;
-    var obj;
+    var obj,
+        x = event.pageX - this.offsetLeft,
+        y = event.pageY - this.offsetTop;
 
     // Navigation dans les objets parents pour le calcul du décalage de position.
     if (obj = this.offsetParent) {
@@ -95,9 +88,9 @@ function gridOnMouseDown(event)
 
 function gridOnMouseMove(event)
 {
-    var x = event.pageX - this.offsetLeft;
-    var y = event.pageY - this.offsetTop;
-    var obj;
+    var obj,
+        x = event.pageX - this.offsetLeft,
+        y = event.pageY - this.offsetTop;
 
     // Navigation dans les objets parents pour le calcul du décalage de position.
     if (obj = this.offsetParent) {
@@ -110,7 +103,7 @@ function gridOnMouseMove(event)
     // For debug purpose, display mouse position.
     //dInfo.html('Mouse (x, y) = (' + event.pageX + ', ' + event.pageY + ') => (' + x + ', ' + y + ')');
     if (bDrag === true) {
-        if ((Math.abs(x - xDrag) > 10) || (Math.abs(y - yDrag) > 10) )
+        if ((Math.abs(x - xDrag) > 10) || (Math.abs(y - yDrag) > 10))
         {
             joweGrid.move((x - xDrag), (y - yDrag));
             xDrag = x;
@@ -139,14 +132,22 @@ function gridOnMouseUp(event)
     }
 }
 
+function bUpdateGrid_onClick()
+{
+    var w = $("#txtCanvasWidth").val() * 1,
+        h = $("#txtCanvasHeight").val() * 1;
+    
+    joweGrid.resize(w, h);
+}
+
 function bCreateGrid_onClick()
 {
     // For debug purpose.
     // dbg_date[0] = new Date();
     // dInfo.html("");
 
-    var w = txtGridWidth.val() * 1;
-    var h = txtGridHeight.val() * 1;
+    var w = $("#txtGridWidth").val() * 1,
+        h = $("#txtGridHeight").val() * 1;
     
     doHeightMap(w, h);
 
@@ -157,6 +158,8 @@ function bCreateGrid_onClick()
     
     // For debug purpose.
     // dbg_date[12] = new Date();
+    
+    joweGrid.initializeCells();
     
     bUpdateGrid_onClick();
 
@@ -175,29 +178,14 @@ function bCreateGrid_onClick()
     // dInfo.append("bCreateGrid_onClick (Total)=" + (dbg_date[100].getTime() - dbg_date[0].getTime()) + "<br />");
 }
 
-function bUpdateGrid_onClick()
+/*
+ * Toggle water details on/off
+ */
+function bWaterDetails_onClick()
 {
-    var w = txtCanvasWidth.val() * 1;
-    var h = txtCanvasHeight.val() * 1;
-    if ((joweGrid.canvasWidth !== w) || (joweGrid.canvasHeight !== h)) {
-        cGrid.attr({ width: w, height: h });
-        joweGrid.canvasWidth = w;
-        joweGrid.canvasHeight = h;
-    }
-
-    // For debug purpose.
-    // dbg_date[13] = new Date();
-    
+    joweGrid.waterDetails = !joweGrid.waterDetails;
     joweGrid.initializeCells();
-    
-    // For debug purpose.
-    // dbg_date[14] = new Date();
-    
-    joweGrid.draw();
-    
-    // For debug purpose.
-    // dbg_date[15] = new Date();
-
+    bUpdateGrid_onClick();
 }
 
 /*
@@ -205,69 +193,79 @@ function bUpdateGrid_onClick()
  */
 function btnZoom(i)
 {
-  iZoom += i;
-  lblZoom.html(iZoom);
-  joweGrid.setZoom(iZoom);
+    iZoom += i;
+    lblZoom.html(iZoom);
+    joweGrid.setZoom(iZoom);
 }
 
-function bShowMinimap_onClick() {
+function bUpdateMini_onClick()
+{
+    var w = $("#txtMiniWidth").val() * 1,
+        h = $("#txtMiniHeight").val() * 1;
+        
+    joweGrid.InitializeMinimap("cMini", w, h, "#000");
+    joweGrid.drawminimap();
+}
+
+function bShowMinimap_onClick()
+{
     dMini.toggle();
-    joweMinimap.resize(60, 60);
+    $("#dMiniOption").toggle();
+    
+    if (joweGrid.Minimap !== null) {
+        joweGrid.Mnimap = null;
+    } else {
+        bUpdateMini_onClick();
+    }
 }
 
 $(
-function()
+function ()
 {
-  // Initialize objects.
-  dInfo = $("#dHelp");
-  cGrid = $("#cGrid");
-  dGrid = $("#dGrid");
-  cMini = $("#cMini");
-  dMini = $("#dMini");
-  lblZoom = $("#bZoomLabel");
-  txtGridWidth = $("#txtGridWidth");
-  txtGridHeight = $("#txtGridHeight");
-  txtCanvasWidth = $("#txtCanvasWidth");
-  txtCanvasHeight = $("#txtCanvasHeight");
+    // Initialize objects.
+    dInfo = $("#dHelp");
+    cGrid = $("#cGrid");
+    dGrid = $("#dGrid");
+    cMini = $("#cMini");
+    dMini = $("#dMini");
+    lblZoom = $("#bZoomLabel");
 
-  // Get the canvas size.
-  var w = cGrid.attr("width") * 1;
-  var h = cGrid.attr("height") * 1;
-  // Set the input values.
-  txtCanvasWidth.val(w);
-  txtCanvasHeight.val(h);
+    // Get the canvas size.
+    var w = cGrid.attr("width") * 1,
+        h = cGrid.attr("height") * 1;
+    // Set the input values.
+    $("#txtCanvasWidth").val(w);
+    $("#txtCanvasHeight").val(h);
 
-  // Try to initialize grid (only if "canvas" is supported by the browser).
-  if (joweGrid = new jowe_grid("cGrid", w, h, 0)) {
+    // Try to initialize grid (only if "canvas" is supported by the browser).
+    if (joweGrid = new jowe_grid("cGrid", w, h, "#000")) {
 
-      // Set initial zoom.
-      iZoom = lblZoom.html() * 1;
-      btnZoom(0);
-  
-      cGrid.mousedown(gridOnMouseDown);
-      cGrid.mousemove(gridOnMouseMove);
-      cGrid.mouseup(gridOnMouseUp);
+        // Set initial zoom.
+        iZoom = lblZoom.html() * 1;
+        btnZoom(0);
+    
+        cGrid.mousedown(gridOnMouseDown);
+        cGrid.mousemove(gridOnMouseMove);
+        cGrid.mouseup(gridOnMouseUp);
 
-      dGrid.keypress(gridOnKeyPress);
-      
-      // Assign action to toolbar buttons.
-      $("#bCreateGrid").click(bCreateGrid_onClick);
-      $("#bUpdateGrid").click(bUpdateGrid_onClick);
-      $("#bShowCursor").click(function () {joweGrid.toggleCursor();});
-      $("#bWaterDetails").click(function () {joweGrid.waterDetails = !joweGrid.waterDetails; bUpdateGrid_onClick();});
-      $("#bZoomIn").click(function () {if (iZoom < 15) btnZoom(1);});
-      $("#bZoomOut").click(function () {if (iZoom > 1) btnZoom(-1);});
-      //$("#bRotateLeft").click(function () {joweGrid.rotate(-1);});
-      //$("#bRotateRight").click(function () {joweGrid.rotate(1);});
-
-  }
-
-  /*
-  joweMinimap = new jowe_minimap("cMini", 0, 0, "#000", joweGrid);
-  if (joweMinimap) {
-      $("#bShowMinimap").click(bShowMinimap_onClick);
-  }
-  */
-  
+        dGrid.keypress(gridOnKeyPress);
+        
+        // Assign action to toolbar buttons.
+        $("#bCreateGrid").click(bCreateGrid_onClick);
+        $("#bUpdateGrid").click(bUpdateGrid_onClick);
+        $("#bShowMinimap").click(bShowMinimap_onClick);
+        $("#bUpdateMini").click(bUpdateMini_onClick);
+        $("#bShowCursor").click(function () { joweGrid.toggleCursor(); });
+        $("#bWaterDetails").click(bWaterDetails_onClick);
+        $("#bCenter").click(function () { joweGrid.center(); joweGrid.draw(); });
+        $("#bZoomIn").click(function () { if (iZoom < 15) btnZoom(1); });
+        $("#bZoomOut").click(function () { if (iZoom > 1) btnZoom(-1); });
+        
+        // Capture "enter" and do click on each toolbar button.
+        $(".button").bind('keypress', function (event) { if (event.keyCode === 13) $(this).click(); });
+        
+        //$("#bRotateLeft").click(function () {joweGrid.rotate(-1);});
+        //$("#bRotateRight").click(function () {joweGrid.rotate(1);});
+    }
 }
 );
