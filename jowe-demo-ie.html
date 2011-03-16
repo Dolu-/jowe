@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
+    
+    <title>jOWE ~ Demo for IE (with ExplorerCanvas)</title>
+
+    <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
+    <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+    <!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
+    <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-ui.js"></script>
+    <script type="text/javascript" src="jowe-demo.js"></script>
+</head>
 <!--
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
@@ -35,133 +50,108 @@ Any other questions about this icon set please contact mjames@gmail.com
 This is the HTML demo file of the jOWE project.
 
 NOTICE:
-- I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able
-  to run this code properly. IE is really slow on displaying map, and even after
-  loading, moving takes too much time to be usable. See you with IE 9 ;)
+  I feel sorry for IE users (below version 9), but even with "ExplorerCanvas",
+  you won't be able to run this code properly. IE is really slow on displaying map,
+  and even after loading, moving takes too much time to be usable.
+  Please, update your internet explorer to version 9, or use an html5 compliant
+  browser (Chrome, Opera, Firefox, ...).
 
 About jQuery :
-I'm using jQuery to manage the user interface. The whole process can be done with
-another framework. It means that "jowe-core.js" and "jowe-ui.js" don't need it.
+  I'm using jQuery to manage the user interface. The whole process can be done with
+  another framework. It means that "jowe-core.js" and "jowe-ui.js" don't need it.
 
+Resources about IE9 :
+  http://blogs.msdn.com/b/ie/archive/2010/06/16/ie-s-compatibility-features-for-site-developers.aspx
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-    <title>jOWE ~ Demo for IE (with ExplorerCanvas)</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-    <!--[if IE]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
-    <script type="text/javascript" src="jowe-core.js"></script>
-    <script type="text/javascript" src="jowe-ui.js"></script>
-    <script type="text/javascript" src="jowe-demo.js"></script>
-    <style type="text/css">
-        body{font: 12px Tahoma;}
-        canvas{display: block;}
-        
-        .info{width: 598px;height: 120px;float: left;border: 1px indigo solid;}
-        #dToolbar{background-color:#F0F0F0;border:1px gray dotted;height:22px;width:510px;margin:1px;}
-        
-        .button{
-        border:1px #F0F0F0 solid;width:20px;height:20px;float:left;text-align:center;
-        background-color:lightgray;background-position:center center;background-repeat:no-repeat;
-        }
-        .labelbutton{
-        border:1px #F0F0F0 solid;height:16px;float:left;text-align:left;font-size:11px;
-        margin:1px;padding-top:2px;
-        }
-        .inputbutton{
-        border:1px lightgray solid;width:35px;height:20px;float:left;text-align:right;font-size:11px;
-        margin:1px;
-        }
-        .separator{
-        border:1px #F0F0F0 solid;width:5px;height:20px;float:left;
-        }
-        
-        #bCreateGrid{background-image:url(images/brick_go.png);}
-        #bUpdateGrid{background-image:url(images/arrow_refresh.png);}
-        #bShowMinimap{background-image:url(images/map.png);}
-        #bShowCursor{background-image:url(images/shading.png);}
-        #bWaterDetails{background-image:url(images/layers.png);}
-        #bZoomIn{background-image:url(images/zoom_in.png);}
-        #bZoomOut{background-image:url(images/zoom_out.png);}
-        #bRotateLeft{background-image:url(images/arrow_turn_left.png);}
-        #bRotateRight{background-image:url(images/arrow_turn_right.png);}
-    </style>
-</head>
 <body>
 
-<!--
-The toolbar with all the buttons and input text.
-//-->
+<!--// The toolbar with all the buttons and input text. //-->
 <div id="dToolbar">
 
-  <label id="lblGridWidth" class="labelbutton" for="txtGridHeight">&nbsp;Grid:</label>
-  <input id="txtGridWidth" class="inputbutton" type="text" value="30" />
+  <label id="lblGridWidth" class="labelbutton" for="txtGridHeight">Grid:</label>
+  <input id="txtGridWidth" class="inputbutton" type="text" value="160" tabindex="12" />
   <label id="lblGridheight" class="labelbutton" for="txtGridWidth">x</label>
-  <input id="txtGridHeight" class="inputbutton" type="text" value="30" />
-  <div id="bCreateGrid" class="button"></div>
-  <label id="lblCanvasWidth" class="labelbutton" for="txtCanvasWidth">&nbsp;Canvas:</label>
-  <input id="txtCanvasWidth" class="inputbutton" type="text" value="800" maxlength="4" />
+  <input id="txtGridHeight" class="inputbutton" type="text" value="100" />
+  <div id="bCreateGrid" class="button" tabindex="15"></div>
+  <div id="bSeparator01" class="separator"></div>
+  <label id="lblCanvasWidth" class="labelbutton" for="txtCanvasWidth">Canvas:</label>
+  <input id="txtCanvasWidth" class="inputbutton" type="text" value="800" maxlength="4" tabindex="17" />
   <label id="lblCanvasHeight" class="labelbutton" for="txtCanvasHeight">x</label>
-  <input id="txtCanvasHeight" class="inputbutton" type="text" value="520" maxlength="4" />
-  <div id="bUpdateGrid" class="button"></div>
+  <input id="txtCanvasHeight" class="inputbutton" type="text" value="520" maxlength="4" tabindex="19" />
+  <div id="bUpdateGrid" class="button" tabindex="20"></div>
+  
   <div id="bSeparator02" class="separator"></div>
-<!--  
-  <div id="bShowMinimap" class="button"></div>
-//-->
-  <div id="bShowCursor" class="button"></div>
-  <div id="bWaterDetails" class="button"></div>
-  <div id="bSeparator03" class="separator"></div>
-  <div id="bZoomOut" class="button"></div>
-  <div id="bZoomLabel" class="button">4</div>
-  <div id="bZoomIn" class="button"></div>
+
+  <div id="bShowMinimap" class="button" tabindex="30"></div>
+  <div id="dMiniOption" style="display: none;">
+    <div id="bSeparator03" class="separator"></div>
+    <label id="lblMiniWidth" class="labelbutton" for="txtMiniWidth">Minimap:</label>
+    <input id="txtMiniWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="32" />
+    <label id="lblMiniHeight" class="labelbutton" for="txtMiniHeight">x</label>
+    <input id="txtMiniHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="34" />
+    <div id="bUpdateMini" class="button" tabindex="35"></div>
+  </div>
+  
   <div id="bSeparator04" class="separator"></div>
+  
+  <div id="bShowCursor" class="button" tabindex="40"></div>
+  <div id="bWaterDetails" class="button" tabindex="41"></div>
+  
+  <div id="bSeparator05" class="separator"></div>
+  
+  <div id="bCenter" class="button" tabindex="50"></div>
+  <div id="bZoomOut" class="button" tabindex="51"></div>
+  <div id="bZoomLabel" class="button">1</div>
+  <div id="bZoomIn" class="button" tabindex="52"></div>
+  
+  <div id="bSeparator10" class="separator"></div>
 <!--  
-  <div id="bRotateLeft" class="button"></div>
+  <div id="bRotateLeft" class="button" tabindex="61"></div>
   <div id="bRotateLabel" class="button">N</div>
-  <div id="bRotateRight" class="button"></div>
-//-->  
+  <div id="bRotateRight" class="button" tabindex="62"></div>
+//-->
+  
 </div>
 
-<!--  
-<div id="dMini" tabindex="100">
-  <canvas id="cMini" width="20" height="20">
+<!--// Canvas for the Minimap. //-->
+<div id="dMini" tabindex="100" style="display: none;">
+  <canvas id="cMini" width="0" height="0">
   </canvas>
 </div>
-//-->
 
-<div id="dGrid" tabindex="100">
-  <canvas id="cGrid" width="500" height="300" tabindex="101">
-      <p>I feel sorry for IE users, but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
-          IE is really slow on displaying map, and even after loading, moving takes too much time to be usable. See you with IE 9 ;)<br/>
-          Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.
+<!--// Canvas for the Grid. //-->
+<div id="dGrid" tabindex="200">
+  <canvas id="cGrid" width="600" height="300">
+      <p>I feel sorry for IE users (below version 9), but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
+      IE is really slow on displaying map, and even after loading, moving takes too much time to be usable.<br/>
+      Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.<br />
+      If you really want to have a look (with "<a href="http://code.google.com/p/explorercanvas/">ExplorerCanvas</a>"),
+      you can go to this page : <a href="jowe-demo-ie.html">jowe-demo-ie.html</a><br />
+      Be advise that it will take time, and that dragging the grid will be an awfull experience.<br />
+      </p>
+      <p>I suggest you to use a modern html5 compliant browser like Chrome, Opera, Firefox, ...<br />
+      You could also take a look at <a href="http://www.google.com/chromeframe/">Google Chrome Frame</a>.
+      It is a free plug-in for Internet Explorer.<br />
+      Some advanced web apps use Google Chrome Frame to provide you with additional features and better performance.<br />
       </p>
   </canvas>
 </div>
 
-  <div id="dHelp" class="info">
-    <img align="absmiddle" src="images/brick_go.png">
-    create a random world with the size entered in the "grid" textboxes (width x height).<br />
-    <img align="absmiddle" src="images/arrow_refresh.png">
-    update the canvas size with new values (width x height).<br />
+<!--// Online help. //-->
+<div id="dHelp" class="info">
+  <img src="images/brick_go.png" alt="Create" /> create a random world with the size entered in the "grid" textboxes (width x height)<br />
+  <img src="images/arrow_refresh.png" alt="Update" /> update the canvas size with new values (width x height)<br />
+  <img src="images/map.png" alt="Minimap" /> show/hide minimap<br />
+  <img src="images/shading.png" alt="Cursor" /> show/hide cursor in grid (that follow the mouse)<br />
+  <img src="images/layers.png" alt="Water details" /> show/hide water levels detail<br />
+  <img src="images/arrow_inout.png" alt="Center" /> refresh display to center of the map<br />
+  <img src="images/zoom_in.png" alt="Zoom In" />
+  <img src="images/zoom_out.png" alt="Zoom out" /> zoom in/zoom out<br />
 <!--  
-    <img align="absmiddle" src="images/map.png">
-    show/hide minimap.<br />
+  <img align="absmiddle" src="images/arrow_turn_left.png" alt="Turn left" />
+  <img align="absmiddle" src="images/arrow_turn_right.png" alt="Turn right" /> turn left/turn right.<br />
 //-->
-    <img align="absmiddle" src="images/shading.png">
-    show/hide cursor in grid (that follow the mouse).<br />
-    <img align="absmiddle" src="images/layers.png">
-    show/hide water levels detail.<br />
-    <img align="absmiddle" src="images/zoom_in.png">
-    <img align="absmiddle" src="images/zoom_out.png">
-    zoom in/zoom out.<br />
-<!--  
-    <img align="absmiddle" src="images/arrow_turn_left.png">
-    <img align="absmiddle" src="images/arrow_turn_right.png">
-    turn left/turn right.<br />
-//-->    
-  </div>
+</div>
 
 </body>
 </html>
