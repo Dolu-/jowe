@@ -31,10 +31,6 @@ Thanks to Radu Privantu for the HME project and to Stefan Hellkvist for the
 SDL plasma code.
 
 ********************************************************************************
-The Mash() and Alea() objects : Johannes Baagøe <baagoe@baagoe.com>, 2010
-From http://baagoe.com/en/RandomMusings/javascript/
-
-********************************************************************************
 
 Details about generation time in milliseconds - for 'doHeightMap()' (beware it's average time) :
 Execution time could be extremely different depending on your configuration and many other
@@ -80,12 +76,14 @@ NOTICE :
   Every other piece of code in here is only for the HeightMap object.
 */
 
+
 /*
-
-Random Height Map Generator Object.
-
-*/
-
+ * [Privileged method] initialize()
+ *
+ * Random Height Map Generator Object.
+ * arg_pitch = pitch to be used
+ * arg_ratio = ratio to be used
+ */
 function HeightMap(arg_pitch, arg_ratio) {
 
     // Size of the current map [0 .. side], [0 .. side].
@@ -107,13 +105,23 @@ function HeightMap(arg_pitch, arg_ratio) {
         // For now 3.1 is around the minimum value to use, below that you
         // could obtain strange map (unmanaged cell display).
         // If you put an higher value, your map will look flattened.
-        ratio = 3.1;
+        ratio = 3.1,
 
+        // Random object/class.
+        rand;
+        
     if ((arg_pitch !== undefined) && (arg_pitch !== null)) {
         pitch = arg_pitch;
     }
     if ((arg_ratio !== undefined) && (arg_ratio !== null)) {
         ratio = arg_ratio;
+    }
+
+    // Use Alea() if exists.
+    if (typeof Alea == "undefined") {
+        rand = Math.random;
+    } else {
+        rand = new Alea('');
     }
 
     // Array with the world map.
@@ -140,7 +148,7 @@ function HeightMap(arg_pitch, arg_ratio) {
      * result is rounded (~~ => Math.floor).
      */
     function randomMinMax(min, max) {
-        return ~~((Math.random() * ((max - min) + 1)) + min);
+        return ~~((rand() * ((max - min) + 1)) + min);
     }
 
     /*
@@ -176,7 +184,6 @@ function HeightMap(arg_pitch, arg_ratio) {
         if (0 < delta) avg += (rand() * ((delta << 1) + 1)) - delta;
         return (pitch < avg) ? pitch : (0 > avg) ? 0 : ~~avg;
     }
-
     
     /*
      * [Privileged method] generate
@@ -253,7 +260,6 @@ function HeightMap(arg_pitch, arg_ratio) {
      * Build a map (size is 0-based).
      * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
      * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
-     * 
      */
     this.doMap = function (width, height) {
         // Default values if none provided.
@@ -301,7 +307,6 @@ function HeightMap(arg_pitch, arg_ratio) {
         // Smooth map to remove weird points.
         this.smooth();
     };
-
 }
 
 // Create new map object (as global).
@@ -310,8 +315,7 @@ var myMap = new HeightMap();
 /*
  * Return a random array of cells (world map), with the requested size.
  */
-function doHeightMap(width, height)
-{
+function doHeightMap(width, height) {
     // Borders of the working height map to exclude from final result.
     var Crop = 1;
 
@@ -331,64 +335,3 @@ function doHeightMap(width, height)
     // For debug purpose.
     // dbg_date[6] = new Date();
 }
-
-/**********************************************************************************/
-
-// From http://baagoe.com/en/RandomMusings/javascript/
-// Johannes Baagøe <baagoe@baagoe.com>, 2010
-function Mash() {
-    var n = 0xefc8249d;
-
-    var mash = function (data) {
-        data = data.toString();
-        for (var i = 0; i < data.length; i++) {
-            n += data.charCodeAt(i);
-            var h = 0.02519603282416938 * n;
-            n = h >>> 0;
-            h -= n;
-            h *= n;
-            n = h >>> 0;
-            h -= n;
-            n += h * 0x100000000; // 2^32
-        }
-        return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
-    };
-    return mash;
-}
-
-// From http://baagoe.com/en/RandomMusings/javascript/
-// Johannes Baagøe <baagoe@baagoe.com>, 2010
-function Alea() {
-    return (function (args) {
-        var s0 = 0, s1 = 0, s2 = 0, c = 1, mash = Mash(), p1 = 2091639, p2 = 2.3283064365386963e-10, i; // 2^-32
-
-        if (args.length === 0) {
-            args = [+new Date()];
-        }
-        s0 = mash(' ');
-        s1 = mash(' ');
-        s2 = mash(' ');
-
-        for (i = 0; i < args.length; i++) {
-            s0 -= mash(args[i]);
-            if (s0 < 0) s0 += 1;
-            s1 -= mash(args[i]);
-            if (s1 < 0) s1 += 1;
-            s2 -= mash(args[i]);
-            if (s2 < 0) s2 += 1;
-        }
-        mash = null;
-
-        var random = function () {
-            var t = p1 * s0 + c * p2;
-            s0 = s1 = s2;
-            return s2 = t - (c = t | 0);
-        };
-        random.args = args;
-        return random;
-
-    } (Array.prototype.slice.call(arguments)));
-}
-
-// Random object/class.
-var rand = new Alea('');

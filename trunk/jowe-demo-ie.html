@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8" />
+    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
+    <meta charset="UTF-8" />
     
     <title>jOWE ~ Demo for IE (with ExplorerCanvas)</title>
 
     <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
     <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="jowe-alea.js"></script>
     <!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-ui.js"></script>
@@ -69,28 +71,27 @@ Resources about IE9 :
 <div id="dToolbar">
 
   <label id="lblGridWidth" class="labelbutton" for="txtGridHeight">Grid:</label>
-  <input id="txtGridWidth" class="inputbutton" type="text" value="160" tabindex="12" />
+  <input id="txtGridWidth" class="inputbutton" type="text" value="80" tabindex="12" />
   <label id="lblGridheight" class="labelbutton" for="txtGridWidth">x</label>
-  <input id="txtGridHeight" class="inputbutton" type="text" value="100" />
+  <input id="txtGridHeight" class="inputbutton" type="text" value="80" tabindex="14" />
   <div id="bCreateGrid" class="button" tabindex="15"></div>
+  
   <div id="bSeparator01" class="separator"></div>
+  
   <label id="lblCanvasWidth" class="labelbutton" for="txtCanvasWidth">Canvas:</label>
-  <input id="txtCanvasWidth" class="inputbutton" type="text" value="800" maxlength="4" tabindex="17" />
+  <input id="txtCanvasWidth" class="inputbutton" type="text" value="540" maxlength="4" tabindex="17" />
   <label id="lblCanvasHeight" class="labelbutton" for="txtCanvasHeight">x</label>
-  <input id="txtCanvasHeight" class="inputbutton" type="text" value="520" maxlength="4" tabindex="19" />
+  <input id="txtCanvasHeight" class="inputbutton" type="text" value="300" maxlength="4" tabindex="19" />
   <div id="bUpdateGrid" class="button" tabindex="20"></div>
   
   <div id="bSeparator02" class="separator"></div>
 
   <div id="bShowMinimap" class="button" tabindex="30"></div>
-  <div id="dMiniOption" style="display: none;">
-    <div id="bSeparator03" class="separator"></div>
-    <label id="lblMiniWidth" class="labelbutton" for="txtMiniWidth">Minimap:</label>
-    <input id="txtMiniWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="32" />
-    <label id="lblMiniHeight" class="labelbutton" for="txtMiniHeight">x</label>
-    <input id="txtMiniHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="34" />
-    <div id="bUpdateMini" class="button" tabindex="35"></div>
-  </div>
+  <label id="lblMiniWidth" class="labelbutton" for="txtMiniWidth">Minimap:</label>
+  <input id="txtMiniWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="32" />
+  <label id="lblMiniHeight" class="labelbutton" for="txtMiniHeight">x</label>
+  <input id="txtMiniHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="34" />
+  <div id="bUpdateMini" class="button" tabindex="35"></div>
   
   <div id="bSeparator04" class="separator"></div>
   
@@ -101,11 +102,11 @@ Resources about IE9 :
   
   <div id="bCenter" class="button" tabindex="50"></div>
   <div id="bZoomOut" class="button" tabindex="51"></div>
-  <div id="bZoomLabel" class="button">1</div>
+  <div id="bZoomLabel" class="button"><p>1</p></div>
   <div id="bZoomIn" class="button" tabindex="52"></div>
   
-  <div id="bSeparator10" class="separator"></div>
 <!--  
+  <div id="bSeparator10" class="separator"></div>
   <div id="bRotateLeft" class="button" tabindex="61"></div>
   <div id="bRotateLabel" class="button">N</div>
   <div id="bRotateRight" class="button" tabindex="62"></div>
@@ -121,7 +122,7 @@ Resources about IE9 :
 
 <!--// Canvas for the Grid. //-->
 <div id="dGrid" tabindex="200">
-  <canvas id="cGrid" width="600" height="300">
+  <canvas id="cGrid" width="540" height="300">
       <p>I feel sorry for IE users (below version 9), but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
       IE is really slow on displaying map, and even after loading, moving takes too much time to be usable.<br/>
       Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.<br />

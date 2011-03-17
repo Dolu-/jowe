@@ -202,6 +202,32 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         this.draw();
     };
 
+    
+    /*
+     * [Privileged method] Minimap_onClick()
+     *
+     * Redraw grid on mouse click in minimap.
+     */
+    this.Minimap_onClick = function (x, y) {
+        // Calculate x,y coordinate of mouse according to minimap scale.
+        var cX = ~~(ratioMini * (x - xOffsetMini)),
+            cY = ~~(ratioMini * (y - yOffsetMini));
+        // Avoid over limits.
+        if (cX < 0) {
+            cX = 0;
+        } else if (cX >= yLen) {
+            cX = yLen - 1;
+        }
+        if (cY < 0) {
+            cY = 0;
+        } else if (cY >= xLen) {
+            cY = xLen - 1;
+        }
+        this.xOffset = this.Cells[cX][cY].x - (width >> 1);
+        this.yOffset = this.Cells[cX][cY].y - (height >> 1);
+        this.draw();
+    };
+    
     /*
      * [Privileged method] initializeCells()
      *

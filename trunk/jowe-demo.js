@@ -132,6 +132,27 @@ function gridOnMouseUp(event)
     }
 }
 
+/*
+ *
+ */
+function miniOnMouseDown(event)
+{
+    var obj,
+        x = event.pageX - this.offsetLeft,
+        y = event.pageY - this.offsetTop;
+
+    // Navigation dans les objets parents pour le calcul du décalage de position.
+    if (obj = this.offsetParent) {
+        do {
+            x += obj.offsetLeft;
+            y += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+    }
+
+    //alert('x=' + x + ',y' + y);
+    joweGrid.Minimap_onClick(x, y);
+}
+
 function bUpdateGrid_onClick()
 {
     var w = $("#txtCanvasWidth").val() * 1,
@@ -183,6 +204,7 @@ function bCreateGrid_onClick()
  */
 function bWaterDetails_onClick()
 {
+    $("#bWaterDetails").toggleClass('active')
     joweGrid.waterDetails = !joweGrid.waterDetails;
     joweGrid.initializeCells();
     bUpdateGrid_onClick();
@@ -194,7 +216,7 @@ function bWaterDetails_onClick()
 function btnZoom(i)
 {
     iZoom += i;
-    lblZoom.html(iZoom);
+    lblZoom.html('<p>'+iZoom+'</p>');
     joweGrid.setZoom(iZoom);
 }
 
@@ -210,7 +232,7 @@ function bUpdateMini_onClick()
 function bShowMinimap_onClick()
 {
     dMini.toggle();
-    $("#dMiniOption").toggle();
+    $("#bShowMinimap").toggleClass('active')
     
     if (joweGrid.Minimap !== null) {
         joweGrid.Mnimap = null;
@@ -241,7 +263,7 @@ function ()
     if (joweGrid = new jowe_grid("cGrid", w, h, "#000")) {
 
         // Set initial zoom.
-        iZoom = lblZoom.html() * 1;
+        iZoom = lblZoom.text() * 1;
         btnZoom(0);
     
         cGrid.mousedown(gridOnMouseDown);
@@ -250,12 +272,14 @@ function ()
 
         dGrid.keypress(gridOnKeyPress);
         
+        cMini.mousedown(miniOnMouseDown);
+        
         // Assign action to toolbar buttons.
         $("#bCreateGrid").click(bCreateGrid_onClick);
         $("#bUpdateGrid").click(bUpdateGrid_onClick);
         $("#bShowMinimap").click(bShowMinimap_onClick);
         $("#bUpdateMini").click(bUpdateMini_onClick);
-        $("#bShowCursor").click(function () { joweGrid.toggleCursor(); });
+        $("#bShowCursor").click(function () { $("#bShowCursor").toggleClass('active'); joweGrid.toggleCursor(); });
         $("#bWaterDetails").click(bWaterDetails_onClick);
         $("#bCenter").click(function () { joweGrid.center(); joweGrid.draw(); });
         $("#bZoomIn").click(function () { if (iZoom < 15) btnZoom(1); });
