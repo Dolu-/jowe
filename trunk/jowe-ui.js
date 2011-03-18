@@ -98,7 +98,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
     this.Cells = null;
     // Shortcuts to "Length" properties.
     var xLen = 0, yLen = 0;
-    
+
     // (Half) width of a cell in pixels (beware of the 2D perspective).
     this.xSize = 24;
 
@@ -128,12 +128,16 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
     var Cell = function (h) {
         this.x = 0;
         this.y = 0;
-        this.h = h;            // Height/Color (based on current height).
-        this.I = false;       // Is cell initialized?
-        this.Q = true;         // Is quad?
-        this.c1 = '#000000';   // Color for quad, or for left triangle (if vertical) or for top triangle (if horizontal)
-        this.c2 = '#000000';   // Color for right or bottom triangle
-        this.V = true;         // Is vertical? (for triangle only)
+        // Height/Color (based on current height).
+        this.h = h;
+        // Cell status :
+        //    0 = Cell is Uninitialized/Status Unknown
+        //    1 = Cell is a Quad
+        //    2 = Cell is a vertical triangle
+        //    3 = Cell is an horizontal triangle
+        this.S = 0;
+        this.c1 = '';   // Color for quad, or for left triangle (if vertical) or for top triangle (if horizontal)
+        this.c2 = '';   // Color for right or bottom triangle
     };
 
     /*
@@ -149,8 +153,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
                 aX = this.Cells[x];
                 for (y = 0; y < ixLength; y += 1) {
                     aX[y].h = item[x][y];
-                    aX[y].I = false;
-                    aX[y].Q = aX[y].V = true;
+                    aX[y].S = 0;
                 }
             }
 
@@ -180,12 +183,12 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         if (this.Cells === null) {
             return false;
         }
-        
+
         // Set global offset to have grid centered on the canvas.
         this.xOffset = (this.Cells[xLen - 1][0].x - width) >> 1; // eq. to math.floor((...) / 2);
         this.yOffset = (this.Cells[xLen - 1][yLen - 1].y - height) >> 1; // eq. to math.floor((...) / 2);
     };
-    
+
     /*
      * [Privileged method] resize()
      *
@@ -202,7 +205,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         this.draw();
     };
 
-    
+
     /*
      * [Privileged method] Minimap_onClick()
      *
@@ -210,24 +213,24 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
      */
     this.Minimap_onClick = function (x, y) {
         // Calculate x,y coordinate of mouse according to minimap scale.
-        var cX = ~~(ratioMini * (x - xOffsetMini)),
-            cY = ~~(ratioMini * (y - yOffsetMini));
+        var cX = ~~((x - xOffsetMini) / ratioMini),
+            cY = ~~((y - yOffsetMini) / ratioMini);
         // Avoid over limits.
         if (cX < 0) {
             cX = 0;
-        } else if (cX >= yLen) {
-            cX = yLen - 1;
+        } else if (cX >= xLen) {
+            cX = xLen - 1;
         }
         if (cY < 0) {
             cY = 0;
-        } else if (cY >= xLen) {
-            cY = xLen - 1;
+        } else if (cY >= yLen) {
+            cY = yLen - 1;
         }
         this.xOffset = this.Cells[cX][cY].x - (width >> 1);
         this.yOffset = this.Cells[cX][cY].y - (height >> 1);
         this.draw();
     };
-    
+
     /*
      * [Privileged method] initializeCells()
      *
@@ -315,18 +318,22 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
      */
     function setCell(obj, cTop, cBottom, cRight, cLeft) {
 
-        // Indicates that the current cell is now initialized!
-        obj.I = true;
 
         if ((cTop === cRight) && (cTop === cLeft) && (cTop === cBottom)) {
 
+            // Cell is a quad!
+            obj.S = 1;
+            
             // All same height.
             obj.c1 = getColor(cTop, 1, this.waterDetails);
 
         } else if ((cTop !== cBottom) &&
-                      (((cTop === cRight) && (cLeft === cBottom)) || 
+                      (((cTop === cRight) && (cLeft === cBottom)) ||
                       ((cTop === cLeft) && (cRight === cBottom)))) {
 
+            // Cell is a quad!
+            obj.S = 1;
+            
             //  2x2 same height (opposite side).
             if (cTop > cBottom) {
                 obj.c1 = getColor(cTop, 0, this.waterDetails);
@@ -339,7 +346,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                    =
             // 3 same height :  # - =
             //                    =
-            obj.Q = false;
+            obj.S = 2;
             obj.c2 = getColor(cTop, 1, this.waterDetails);
 
             if (cTop > cLeft) {
@@ -353,7 +360,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                    =
             // 3 same height :  = - #
             //                    =
-            obj.Q = false;
+            obj.S = 2;
             obj.c1 = getColor(cTop, 1, this.waterDetails);
 
             if (cTop > cRight) {
@@ -367,7 +374,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                    =
             // 3 same height :  = - =
             //                    #
-            obj.Q = obj.V = false;
+            obj.S = 3;
             obj.c1 = getColor(cTop, 1, this.waterDetails);
 
             if (cTop > cBottom) {
@@ -381,7 +388,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                    #
             // 3 same height :  = - =
             //                    =
-            obj.Q = obj.V = false;
+            obj.S = 3;
             obj.c2 = getColor(cBottom, 1, this.waterDetails);
 
             if (cTop > cBottom) {
@@ -395,7 +402,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                                                =
             // 2 same height (cross side) and 2 other # :   # - #
             //                                                =
-            obj.Q = false;
+            obj.S = 2;
 
             if (cTop > cLeft) {
                 obj.c1 = getColor(cTop, 0, this.waterDetails);        // go up
@@ -414,7 +421,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                                                #
             // 2 same height (cross side) and 2 other # :   = - =
             //                                                #
-            obj.Q = obj.V = false;
+            obj.S = 3;
 
             if (cRight > cBottom) {
                 obj.c2 = getColor(cRight, 0, this.waterDetails);    // Go up
@@ -432,7 +439,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             //                                                =
             // 2 same height (cross side) and 2 other # :   # - =
             // (4 variations)                                 #
-            obj.Q = obj.V = false;
+            obj.S = 3;
 
             if (cRight > cBottom) {
                 obj.c2 = getColor(cRight, 0, this.waterDetails);
@@ -470,7 +477,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             this.Minimap.fillStyle = backcolor;
             this.Minimap.fillRect(0, 0, width, height);
         }
-        
+
         return (this.Minimap !== null);
     };
 
@@ -480,7 +487,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
      * Draw a minimap from current grid.
      */
     this.drawminirectangle = function () {
-        
+
         var X1 = ~~(0.5 * ((this.yOffset / this.ySize) + (this.xOffset / this.xSize) - yLen + 1)),
             Y1 = ~~(0.5 * ((this.yOffset / this.ySize) - (this.xOffset / this.xSize) + yLen - 1)),
             h = 0.5 * height / this.ySize,
@@ -490,7 +497,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         this.Minimap.save();
         this.Minimap.translate(xOffsetMini, yOffsetMini);
         this.Minimap.scale(ratioMini, ratioMini);
-        
+
         // Yellow thin rectangle.
         this.Minimap.strokeStyle = 'yellow';
         // TODO : adjust lineWidth to ratioMini, could become really thin..
@@ -506,7 +513,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         // Restore context.
         this.Minimap.restore();
     };
-    
+
     /*
      * [Privileged method] Minimap()
      *
@@ -544,7 +551,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
                 }
             }
             tmpContext.putImageData(imgmap, 0, 0);
-            
+
             // Calculation to keep ratio aspect in minimap.
             ratioMini = Math.min(heightMinimap / yLen, widthMinimap / xLen, 1);
 
@@ -552,7 +559,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             this.Minimap.width = this.Minimap.width;
             this.Minimap.fillStyle = backcolor;
             this.Minimap.fillRect(0, 0, widthMinimap, heightMinimap);
-            
+
             // Center minimap on canvas.
             xOffsetMini = ((xLen * ratioMini) < widthMinimap)  ? (widthMinimap  - (xLen * ratioMini)) >> 1 : 0;
             yOffsetMini = ((yLen * ratioMini) < heightMinimap) ? (heightMinimap - (yLen * ratioMini)) >> 1 : 0;
@@ -562,7 +569,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             this.drawminirectangle();
         }
     };
-    
+
     /*
      * [Privileged method] draw()
      *
@@ -596,16 +603,13 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             // Below, the offset is arbitrary set to "-4" (the same for Y with "-2"),
             // but it is dependant of the maximum elevation of the map and the hSize value.
             // It would be better to calculate it at first initialization.
-            startX = ~~(0.5 * ((this.yOffset / this.ySize) + (this.xOffset / this.xSize) - yLen + 1)),
-            startY = ~~(0.5 * ((this.yOffset / this.ySize) - (this.xOffset / this.xSize) + yLen - 1)),
+            startX = ~~(0.5 * ((this.yOffset / this.ySize) + (this.xOffset / this.xSize) - yLen + 1)) - 4,
+            startY = ~~(0.5 * ((this.yOffset / this.ySize) - (this.xOffset / this.xSize) + yLen - 1)) - 2,
 
             // Calculate the number of cells that can be displayed inside the grid (used in the drawGrid function).
             // We add some more loop to both to take account of height gap.
             loopX = ~~(width / this.xSize) + 3,
             cellX, cellY;
-
-        startX -= 4;
-        startY -= 2;
 
         // Set translation to the offset point.
         this.Grid.translate(-this.xOffset, -this.yOffset);
@@ -635,19 +639,18 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
                 startY--;
             }
             sign *= -1;
-
-            x++;
+            x += 1;
         }
 
         // Restore the position.
         this.Grid.translate(this.xOffset, this.yOffset);
-        
+
         // Draw minimap if visible.
         if (this.Minimap !== null) {
             this.drawminimap();
         }
     };
-    
+
     /*
      * [Privileged method] drawCell()
      *
@@ -655,11 +658,11 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
      */
     this.drawCell = function (cX, cY, isCursor) {
         if ((cX >= 0) && (cX < (xLen - 1)) && (cY >= 0) && (cY < (yLen - 1))) {
-            if (!this.Cells[cX][cY].I) {
+            if (this.Cells[cX][cY].S < 1) {
                 setCell(this.Cells[cX][cY], this.Cells[cX][cY].h, this.Cells[cX + 1][cY + 1].h, this.Cells[cX + 1][cY].h, this.Cells[cX][cY + 1].h);
             }
 
-            if ((this.Cells[cX][cY].Q) || (isCursor)) {
+            if ((this.Cells[cX][cY].S === 1) || (isCursor)) {
                 // set color.
                 if (isCursor) {
                     this.Grid.fillStyle = backcolor;
@@ -685,7 +688,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
                 this.Grid.moveTo(this.Cells[cX][cY].x, this.Cells[cX][cY].y);
                 this.Grid.lineTo(this.Cells[cX][cY + 1].x, this.Cells[cX][cY + 1].y);
 
-                if (this.Cells[cX][cY].V) {
+                if (this.Cells[cX][cY].S === 2) {
                     // Draw left triangle.
                     this.Grid.lineTo(this.Cells[cX + 1][cY + 1].x, this.Cells[cX + 1][cY + 1].y);
 
@@ -700,7 +703,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
                 this.Grid.beginPath();
 
                 this.Grid.moveTo(this.Cells[cX + 1][cY].x, this.Cells[cX + 1][cY].y);
-                if (this.Cells[cX][cY].V) {
+                if (this.Cells[cX][cY].S === 2) {
                     // Draw right triangle.
                     this.Grid.lineTo(this.Cells[cX][cY].x, this.Cells[cX][cY].y);
                 } else {
@@ -748,7 +751,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
         if (this.Cells === null) {
             return false;
         }
-    
+
         var a = this.Cells,
             l = a.length - 1;
 
@@ -899,7 +902,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
 
             // Draw cursor.
             this.drawCell(this.xCursor, this.yCursor, true);
-            
+
             // Restore the position.
             this.Grid.translate(this.xOffset, this.yOffset);
         }
@@ -914,9 +917,9 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
     this.hideCursor = function () {
         // Set translation to the offset point.
         this.Grid.translate(-this.xOffset, -this.yOffset);
-        
+
         this.drawCell(this.xCursor, this.yCursor);
-        
+
         // Restore the position.
         this.Grid.translate(this.xOffset, this.yOffset);
     };
@@ -927,7 +930,7 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
      * Toggle cursor state (enabled/disabled).
      */
     this.toggleCursor = function () {
-    
+
         if (this.Cells === null) {
             return false;
         }
