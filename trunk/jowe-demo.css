@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010 Ludovic L.
+Copyright (c) 2010-2011 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -24,17 +24,21 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ********************************************************************************
 
-This is the CSS of the HTML demo file of the jOWE project.
+This is the CSS for the HTML demo file of the jOWE project.
 
 */
 
 body{font:11px Tahoma;margin:0px;padding:0px;}
 
-#dToolbar{position:fixed;background-color:#eee;border-bottom:1px gray dotted;padding-bottom:2px;height:auto;width:100%;}
-#dGrid{padding-top:28px;}
-#dMini{padding-top:28px;float:left;}
+#dToolbar{position:fixed;background-color:#eee;padding-bottom:0px;height:auto;width:100%;}
+#dGrid{padding-top:0px;}
+#dMap{padding-top:0;float:left;}
 
-.info{width:640px;height:130px;float:left;border:1px black solid;}
+#dDisplayInformation{padding-top:58px;background-color:#f0f0e0;}
+.leftinfo{width:160px;float:left;}
+
+.info{margin:0px;padding:2px; width:640px;height:180px;float:left;border:1px black solid;}
+.info div{height:18px;padding-left:19px;background-position:top left;background-repeat:no-repeat;}
 
 .button{
 margin-top:2px;margin-right:1px;
@@ -46,10 +50,10 @@ border-right:1px #aaa solid;border-bottom:1px #aaa solid;
 background-color:#ddd;
 }
 
-.active{
+.active, .selected{
 border-top:1px #aaa solid;border-left:1px #aaa solid;
 border-right:1px #fff solid;border-bottom:1px #fff solid;
-background-color:#d7d7d7;
+background-color:#ccc;
 }
 
 .labelbutton{
@@ -64,19 +68,52 @@ border-top:1px #999 solid;border-left:1px #999 solid;
 border-right:1px #ddd solid;border-bottom:1px #ddd solid;
 width:34px;height:16px;float:left;text-align:right;font-size:11px;
 }
-.separator{
-border:1px #F0F0F0 solid;width:6px;height:20px;float:left;
+
+.checkbutton{
+margin:6px 0px 1px 3px;
+width:20px;height:16px;float:left;
 }
 
-#bCreateGrid{background-image:url(images/brick_go.png);}
-#bUpdateGrid{background-image:url(images/arrow_refresh.png);}
-#bShowMinimap{background-image:url(images/map.png);}
-#bUpdateMini{background-image:url(images/arrow_refresh.png);}
-#bShowCursor{background-image:url(images/shading.png);}
-#bWaterDetails{background-image:url(images/layers.png);}
-#bCenter{background-image:url(images/arrow_inout.png);}
-#bZoomIn{background-image:url(images/zoom_in.png);}
+.filler{
+margin-left:4px;
+margin-right:4px;
+width:0px;height:27px;float:left;
+}
+
+.separator{
+border-left:1px #bbb dotted;
+border-right:1px #fff solid;
+}
+
+.newline{
+width:100%;
+border-top:1px #bbb dotted;
+border-bottom:1px #fff solid;
+clear: both;
+}
+
+#bCreateWorld, #dCreateWorld{background-image:url(images/brick_go.png);}
+
+#bModeNormal{background-image:url(images/world.png);}
+#bModeFertility{background-image:url(images/rainbow.png);}
+#bModeRainfall{background-image:url(images/weather_rain.png);}
+#bModeTemperature{background-image:url(images/chart_curve.png);}
+#bModePopulation{background-image:url(images/group.png);}
+
+#bShowGrid, #dShowGrid{background-image:url(images/page_world.png);}
+#bUpdateGrid, #dUpdateGrid{background-image:url(images/arrow_refresh.png);}
+
+#bShowMap, #dShowMap{background-image:url(images/map.png);}
+#bUpdateMap, #dUpdateMap{background-image:url(images/arrow_refresh.png);}
+
+#bInformation, #dInformation{background-image:url(images/information.png);}
+#bShowCursor, #dShowCursor{background-image:url(images/shading.png);}
+#bWaterDetails, #dWaterDetails{background-image:url(images/layers.png);}
+#bCenter, #dCenter{background-image:url(images/arrow_inout.png);}
+
+#bZoomIn, #dZoomIn{background-image:url(images/zoom_in.png);}
 #bZoomLabel p{margin:0px;padding-top:3px;}
-#bZoomOut{background-image:url(images/zoom_out.png);}
+#bZoomOut, #dZoomOut{background-image:url(images/zoom_out.png);}
+
 #bRotateLeft{background-image:url(images/arrow_turn_left.png);}
 #bRotateRight{background-image:url(images/arrow_turn_right.png);}
