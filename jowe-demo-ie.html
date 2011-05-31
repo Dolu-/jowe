@@ -8,12 +8,26 @@
     <title>jOWE ~ Demo for IE (with ExplorerCanvas)</title>
 
     <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
-    <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="js/json2.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
     <!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
     <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-world.js"></script>
     <script type="text/javascript" src="jowe-ui.js"></script>
     <script type="text/javascript" src="jowe-demo.js"></script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-20897630-2']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
 </head>
 <!--
 ********************************************************************************
@@ -21,7 +35,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010 Ludovic L.
+Copyright (c) 2010-2011 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -70,58 +84,127 @@ Resources about IE9 :
 <!--// The toolbar with all the buttons and input text. //-->
 <div id="dToolbar">
 
-  <label id="lblGridWidth" class="labelbutton" for="txtGridHeight">Grid:</label>
-  <input id="txtGridWidth" class="inputbutton" type="text" value="80" tabindex="12" />
-  <label id="lblGridheight" class="labelbutton" for="txtGridWidth">x</label>
-  <input id="txtGridHeight" class="inputbutton" type="text" value="80" tabindex="14" />
-  <div id="bCreateGrid" class="button" tabindex="15"></div>
-  
-  <div id="bSeparator01" class="separator"></div>
-  
-  <label id="lblCanvasWidth" class="labelbutton" for="txtCanvasWidth">Canvas:</label>
-  <input id="txtCanvasWidth" class="inputbutton" type="text" value="540" maxlength="4" tabindex="17" />
-  <label id="lblCanvasHeight" class="labelbutton" for="txtCanvasHeight">x</label>
-  <input id="txtCanvasHeight" class="inputbutton" type="text" value="300" maxlength="4" tabindex="19" />
-  <div id="bUpdateGrid" class="button" tabindex="20"></div>
-  
-  <div id="bSeparator02" class="separator"></div>
+  <label id="lblWorldWidth" class="labelbutton" for="txtWorldWidth">World size:</label>
+  <input id="txtWorldWidth" class="inputbutton" type="text" value="80" tabindex="20" />
+  <label id="lblWorldHeight" class="labelbutton" for="txtWorldHeight">x</label>
+  <input id="txtWorldHeight" class="inputbutton" type="text" value="80" tabindex="30" />
 
-  <div id="bShowMinimap" class="button" tabindex="30"></div>
-  <label id="lblMiniWidth" class="labelbutton" for="txtMiniWidth">Minimap:</label>
-  <input id="txtMiniWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="32" />
-  <label id="lblMiniHeight" class="labelbutton" for="txtMiniHeight">x</label>
-  <input id="txtMiniHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="34" />
-  <div id="bUpdateMini" class="button" tabindex="35"></div>
+  <div id="bSeparator10" class="filler separator"></div>
+
+  <label id="lblWorldPitch" class="labelbutton" for="txtWorldPitch">Height:</label>
+  <input id="txtWorldPitch" class="inputbutton" type="text" value="8" tabindex="40" />
+
+  <div id="bSeparator15" class="filler"></div>
+
+  <label id="lblWorldRatio" class="labelbutton" for="txtWorldRatio">Noise:</label>
+  <input id="txtWorldRatio" class="inputbutton" type="text" value="3.1" tabindex="45" />
+<!-- Temporarly disabled, no code behind...
+  <div id="bSeparator15" class="filler separator"></div>
   
-  <div id="bSeparator04" class="separator"></div>
+  <input id="chkFertility" class="checkbutton" type="checkbox" tabindex="46" value="true" />
+  <label id="lblFertility" class="labelbutton" for="chkFertility">Fertility</label>
+
+  <input id="chkRainfall" class="checkbutton" type="checkbox" tabindex="47" value="true" />
+  <label id="lblRainfall" class="labelbutton" for="chkRainfall">Rainfall</label>
+
+  <input id="chkTemperature" class="checkbutton" type="checkbox" tabindex="48" value="true" />
+  <label id="lblTemperature" class="labelbutton" for="chkTemperature">Temperature</label>
+
+  <input id="chkPopulation" class="checkbutton" type="checkbox" tabindex="49" value="true" />
+  <label id="lblPopulation" class="labelbutton" for="chkPopulation">Population</label>
+-->
+  <div id="bSeparator20" class="filler separator"></div>
   
-  <div id="bShowCursor" class="button" tabindex="40"></div>
-  <div id="bWaterDetails" class="button" tabindex="41"></div>
+  <div id="bCreateWorld" class="button" tabindex="50" title="Create world"></div>
   
-  <div id="bSeparator05" class="separator"></div>
+  <div id="bSeparator30" class="newline"></div>
+  <div id="bSeparator31" class="filler"></div>
   
-  <div id="bCenter" class="button" tabindex="50"></div>
-  <div id="bZoomOut" class="button" tabindex="51"></div>
-  <div id="bZoomLabel" class="button"><p>1</p></div>
-  <div id="bZoomIn" class="button" tabindex="52"></div>
+  <div id="bModeNormal" class="button selected" tabindex="52"></div>
+  <div id="bModeFertility" class="button" tabindex="53"></div>
+  <div id="bModeRainfall" class="button" tabindex="54"></div>
+  <div id="bModeTemperature" class="button" tabindex="55"></div>
+  <div id="bModePopulation" class="button" tabindex="56"></div>
+ 
+  <div id="bSeparator40" class="filler separator"></div>
   
+  <div id="bShowGrid" class="button active" tabindex="58"></div>
+  <label id="lblGridWidth" class="labelbutton" for="txtGridWidth">Grid:</label>
+  <input id="txtGridWidth" class="inputbutton" type="text" value="540" maxlength="4" tabindex="60" />
+  <label id="lblGridHeight" class="labelbutton" for="txtGridHeight">x</label>
+  <input id="txtGridHeight" class="inputbutton" type="text" value="300" maxlength="4" tabindex="70" />
+  <div id="bUpdateGrid" class="button" tabindex="80"></div>
+  
+  <div id="bSeparator45" class="filler separator"></div>
+
+  <div id="bShowMap" class="button" tabindex="90"></div>
+  <label id="lblMapWidth" class="labelbutton" for="txtMapWidth">Map:</label>
+  <input id="txtMapWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="100" />
+  <label id="lblMapHeight" class="labelbutton" for="txtMapHeight">x</label>
+  <input id="txtMapHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="110" />
+  <div id="bUpdateMap" class="button" tabindex="120"></div>
+  
+  <div id="bSeparator50" class="filler separator"></div>
+  
+  <div id="bInformation" class="button" tabindex="130" title="Show/Hide information"></div>
+  <div id="bShowCursor" class="button" tabindex="135" title="Show/Hide cursor"></div>
+  <div id="bWaterDetails" class="button" tabindex="140" title="Show/Hide water details"></div>
+  
+  <div id="bSeparator60" class="filler"></div>
+  
+  <div id="bCenter" class="button" tabindex="150"></div>
+
+  <div id="bSeparator65" class="filler"></div>
+
+  <div id="bZoomOut" class="button" tabindex="160" title="Zoom in"></div>
+  <div id="bZoomLabel" class="button" title="Current zoom level"><p>2</p></div>
+  <div id="bZoomIn" class="button" tabindex="170" title="Zoom out"></div>
+  
+  <div id="bSeparator99" class="newline"></div>
 <!--  
-  <div id="bSeparator10" class="separator"></div>
-  <div id="bRotateLeft" class="button" tabindex="61"></div>
+  <div id="bSeparator70" class="separator"></div>
+  <div id="bRotateLeft" class="button" tabindex="180"></div>
   <div id="bRotateLabel" class="button">N</div>
-  <div id="bRotateRight" class="button" tabindex="62"></div>
+  <div id="bRotateRight" class="button" tabindex="190"></div>
 //-->
   
 </div>
 
-<!--// Canvas for the Minimap. //-->
-<div id="dMini" tabindex="100" style="display: none;">
-  <canvas id="cMini" width="0" height="0">
+<!--// Display Information about the current map.//-->
+<div id="dDisplayInformation" width="100%">
+  <div id="dDetailInformation" style="display: none;">
+      <div id="dOverallInformation" class="leftinfo">
+      Average height : <br />
+      Average fertility : <br />
+      Average rainfall : <br />
+      Average temperature : <br />
+      Population : <br />
+      </div>
+      <div id="dCursorXYZInformation" class="leftinfo">
+      X : <span id="lblCursorX">-</span><br />
+      Y : <span id="lblCursorY">-</span><br />
+      Cell type : <span id="lblCellType">-</span>
+      </div>
+      <div id="dCursorMapInformation" class="leftinfo">
+      Height : <span id="lblCellHeight">-</span><br />
+      Fertility : <span id="lblCellFertility">-</span><br />
+      Rainfall : <span id="lblCellRainfall">-</span><br />
+      Temperature : <span id="lblCellTemperature">-</span><br />
+      Population : <span id="lblCellPopulation">-</span>
+      </div>
+      <div id="dFillerInformation" class="newline">
+      </div>
+  </div>
+</div>
+
+<!--// Canvas for the Map. //-->
+<div id="dMap" tabindex="400" style="display: none;">
+  <canvas id="cMap" width="0" height="0">
   </canvas>
 </div>
 
 <!--// Canvas for the Grid. //-->
-<div id="dGrid" tabindex="200">
+<div id="dGrid" tabindex="600">
   <canvas id="cGrid" width="540" height="300">
       <p>I feel sorry for IE users (below version 9), but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
       IE is really slow on displaying map, and even after loading, moving takes too much time to be usable.<br/>
@@ -140,19 +223,24 @@ Resources about IE9 :
 
 <!--// Online help. //-->
 <div id="dHelp" class="info">
-  <img src="images/brick_go.png" alt="Create" /> create a random world with the size entered in the "grid" textboxes (width x height)<br />
-  <img src="images/arrow_refresh.png" alt="Update" /> update the canvas size with new values (width x height)<br />
-  <img src="images/map.png" alt="Minimap" /> show/hide minimap<br />
-  <img src="images/shading.png" alt="Cursor" /> show/hide cursor in grid (that follow the mouse)<br />
-  <img src="images/layers.png" alt="Water details" /> show/hide water levels detail<br />
-  <img src="images/arrow_inout.png" alt="Center" /> refresh display to center of the map<br />
-  <img src="images/zoom_in.png" alt="Zoom In" />
-  <img src="images/zoom_out.png" alt="Zoom out" /> zoom in/zoom out<br />
+  <div id="dCreateWorld"> create a random world with the size entered in the "grid" textboxes (width x height)</div>
+  <div id="dShowGrid"> show/hide world grid</div>
+  <div id="dShowMap"> show/hide world map</div>
+  <div id="dUpdateGrid"> update the canvas size with new values (width x height)</div>
+  <div id="dInformation"> show/hide information about current map</div>
+  <div id="dShowCursor"> show/hide cursor in grid (that follow the mouse)</div>
+  <div id="dWaterDetails"> show/hide water levels detail</div>
+  <div id="dCenter"> refresh display to center of the map</div>
+  <div id="dZoomIn">zoom in</div>
+  <div id="dZoomOut">zoom out</div>
 <!--  
   <img align="absmiddle" src="images/arrow_turn_left.png" alt="Turn left" />
   <img align="absmiddle" src="images/arrow_turn_right.png" alt="Turn right" /> turn left/turn right.<br />
 //-->
-</div>
 
+	<p><em><a href="http://code.google.com/p/jowe/">Want to know more ? Have a look on the project page</a></em></p>
+
+    <div id="dSaveJSON"></div>
+</div>
 </body>
 </html>
