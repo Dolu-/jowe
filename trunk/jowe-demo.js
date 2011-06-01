@@ -119,12 +119,12 @@ function grid_onMouseMove(event)
             lblCursorX.html(cursor.x < 0 ? '-' : cursor.x);
             lblCursorY.html(cursor.y < 0 ? '-' : cursor.y);
             if ((cursor.x >= 0) && (cursor.y >= 0)) {
-                lblCellType.html(c[myWorld.height.item[cursor.x][cursor.y]][3]);
-                lblCellHeight.html(myWorld.height.item[cursor.x][cursor.y]);
-                lblCellFertility.html(myWorld.fertility.item[cursor.x][cursor.y]);
-                lblCellRainfall.html(myWorld.rainfall.item[cursor.x][cursor.y]);
-                lblCellTemperature.html(myWorld.temperature.item[cursor.x][cursor.y]);
-                lblCellPopulation.html(myWorld.population.item[cursor.x][cursor.y]);
+                lblCellType.html(c[myCity.height.item[cursor.x][cursor.y]][3]);
+                lblCellHeight.html(myCity.height.item[cursor.x][cursor.y]);
+                lblCellFertility.html(myCity.fertility.item[cursor.x][cursor.y]);
+                lblCellRainfall.html(myCity.rainfall.item[cursor.x][cursor.y]);
+                lblCellTemperature.html(myCity.temperature.item[cursor.x][cursor.y]);
+                lblCellPopulation.html(myCity.population.item[cursor.x][cursor.y]);
              }
         }
     }
@@ -186,16 +186,16 @@ function bCreateWorld_onClick()
         p = $("#txtWorldPitch").val() * 1,
         r = $("#txtWorldRatio").val() * 1;
 
-    myWorld = new WorldMap(w, h, p, r);
+    myCity = new CityMap(w, h, p, r);
 
     // For debug purpose.
     if (isdebug) dbg_date[11] = new Date();
     
-    joweGrid.initialize(myWorld.height.item
-                       ,myWorld.fertility.item
-                       ,myWorld.rainfall.item
-                       ,myWorld.temperature.item
-                       ,myWorld.population.item);
+    joweGrid.initialize(myCity.height.item
+                       ,myCity.fertility.item
+                       ,myCity.rainfall.item
+                       ,myCity.temperature.item
+                       ,myCity.population.item);
     
     // For debug purpose.
     if (isdebug) dbg_date[12] = new Date();
@@ -311,17 +311,17 @@ function bShowInformation_onClick()
 
 function iBrick_onClick()
 {
-  //alert(JSON.stringify(myWorld.height.item));
-  //$("#dSaveJSON").html(JSON.stringify(myWorld.height.item));
+  //alert(JSON.stringify(myCity.height.item));
+  //$("#dSaveJSON").html(JSON.stringify(myCity.height.item));
   // $.ajax({
     // type : 'POST',
     // url  : 'jowe-savejson.php',
-    // data : {json : JSON.stringify(myWorld)},
+    // data : {json : JSON.stringify(myCity)},
     // success : function(data) {
         // alert(data);
     // }
   // });
-  $("#dSaveJSON").html(JSON.stringify(myWorld));
+  $("#dSaveJSON").html(JSON.stringify(myCity));
 }
 
 $(

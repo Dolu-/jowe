@@ -53,18 +53,18 @@ Nonsense if it's not usable. Time for 2048x2048 map is left only for information
 
 Here is a bunch of time (in ms) that I obtain with several calls in Google Chrome 8.0 (for 2000x2000) :
 ~previous release :
-initialize          =  172    147     95    103
-generate            = 1692   1711   1722   1703
-smooth              =  811    786    793    773
-crop                =  135    186    185    185
-doHeightMap (Total) = 2810   2830   2795   2764
+initialize    =  172    147     95    103
+make          = 1692   1711   1722   1703
+smooth        =  811    786    793    773
+crop          =  135    186    185    185
+doMap (Total) = 2810   2830   2795   2764
 ~current release :
-initialize          =  250    280    212    219
-generate            =  999   1507   1014   1003
-smooth              =  700    706    702    697
-crop                =   42     48     43     44
-doHeightMap (Total) = 1991   2541   1971   1963
-=> Good improvements in crop and generate.
+initialize    =  250    280    212    219
+make          =  999   1507   1014   1003
+smooth        =  700    706    702    697
+crop          =   42     48     43     44
+doMap (Total) = 1991   2541   1971   1963
+=> Good improvements in crop and make.
 => Small one in smooth
 => Regression in initialize (?!)
 ********************************************************************************
@@ -167,13 +167,13 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
     }
     
     /*
-     * [Privileged method] generate
+     * [Privileged method] make
      *
      * Generate a random map.
      * Parameters indicates "top/left" and "right/bottom" limits.
      * Caution : this function onyl works with 2^n squares, as it goes recursively with divide by 2.
      */
-    this.generate = function (x1, y1, x2, y2, xm, ym) {
+    this.make = function (x1, y1, x2, y2, xm, ym) {
     
         // Notice : Removing floor below could produce more realistics maps (it adds more noise).
                  // Should it be set by default ? Next "floor" is done in addDelta().
@@ -201,10 +201,10 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
 
         if (((x2 - x1) > 2) || ((y2 - y1) > 2)) {
             delta = (xm - x1) / 2;
-            this.generate(xm, ym, x2, y2, xm + delta, ym + delta);
-            this.generate(x1, ym, xm, y2, xm - delta, ym + delta);
-            this.generate(x1, y1, xm, ym, xm - delta, ym - delta);
-            this.generate(xm, y1, x2, ym, xm + delta, ym - delta);
+            this.make(xm, ym, x2, y2, xm + delta, ym + delta);
+            this.make(x1, ym, xm, y2, xm - delta, ym + delta);
+            this.make(x1, y1, xm, ym, xm - delta, ym - delta);
+            this.make(xm, y1, x2, ym, xm + delta, ym - delta);
         }
     };
 
@@ -254,7 +254,18 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
             for (y = 0; y < S[0].length ; y += 1)
                 D[from_x + x][from_y + y] = S[x][y];
     }
-
+    
+    /*
+     * [Privileged method] makeMap
+     *
+     * This is only a shortcut to call function make() with default parameters.
+     * All necessary variables should have been initialized.
+     */
+    this.makeMap = function () {
+        // Do map!
+        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
+    }
+    
 /* COMMENTS:
     
     Everything before this point is considered to be clean and optimized (nothing to be done in a short time).
@@ -291,7 +302,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         p_width += (2 * cropsize);
         p_height += (2 * cropsize);
 
-        // Core engine (generate generate) works only with squares.
+        // Core engine (function make) works only with squares.
         // (BTW, we also have better results with 2^N x 2^N maps)
         // Let's keep the bigger side.
         side = Math.max(p_width, p_height);
@@ -334,7 +345,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         if (isdebug) dbg_date[3] = new Date();
 
         // Do map!
-        this.generate(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
+        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
         
         // For debug purpose.
         if (isdebug) dbg_date[4] = new Date();
@@ -371,7 +382,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         pitch = 8,
         
         // Indicates how much height difference between 2 points we can have.
-        // Only used in function "generate"
+        // Only used in function "make"
         // By the way, combined with "pitch" (previous property),
         // it allows to obtain very different types of map.
         // For now 3.1 is around the minimum value to use, below that you
