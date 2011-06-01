@@ -1,5 +1,6 @@
 #summary Content of the project
 #labels Phase-Design
+#sidebar TableOfContents
 
 = Introduction =
 
