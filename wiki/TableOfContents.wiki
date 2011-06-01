@@ -1,9 +1,7 @@
 #summary Table of contents
 
   * [http://code.google.com/p/jowe/ Project page]
-
   * [http://jowe.ouebfrance.com/jowe-demo.html Online Demo]
-
   * [JoweContent Content]
     * [FileJoweAlea "jowe-alea.js"]
     * [FileJoweCore "jowe-core.js"]
