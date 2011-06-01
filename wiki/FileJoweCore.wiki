@@ -1,5 +1,6 @@
 #summary About "jowe-core.js"
 #labels Phase-Implementation
+#sidebar TableOfContents
 
 = Jowe-Core =
 
