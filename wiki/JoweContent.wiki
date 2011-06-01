@@ -12,7 +12,7 @@ This section will help you to find explanation for each of them.
 As the project is not finalized yet, you should consider this documentation somehow unstable.
 However, the files described below are stable enough to have some explanations.
 
-  * jowe-alea.js
+  * [FileJoweAlea jowe-alea.js]
   * jowe-core.js
   * jowe-ui.js
   * ...
