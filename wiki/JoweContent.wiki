@@ -13,6 +13,6 @@ As the project is not finalized yet, you should consider this documentation some
 However, the files described below are stable enough to have some explanations.
 
   * [FileJoweAlea jowe-alea.js]
-  * jowe-core.js
+  * [FileJoweCore jowe-core.js]
   * jowe-ui.js
   * ...
