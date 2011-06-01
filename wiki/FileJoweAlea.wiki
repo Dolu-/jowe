@@ -1,5 +1,6 @@
 #summary About "jowe-alea.js"
 #labels Phase-Implementation
+#sidebar TableOfContents
 
 = Jowe-Alea =
 
