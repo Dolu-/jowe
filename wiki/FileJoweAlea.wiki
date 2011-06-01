@@ -1,4 +1,4 @@
-#summary About file jowe-alea.js
+#summary About "jowe-alea.js"
 #labels Phase-Implementation
 
 = Jowe-Alea =
