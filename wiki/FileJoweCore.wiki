@@ -1,0 +1,24 @@
+#summary About "jowe-core.js"
+#labels Phase-Implementation
+
+= Jowe-Core =
+
+This is the main file of the project. It contains the "engine" to construct your map.
+
+
+== Details ==
+
+More to come very soon...
+
+== Usage ==
+
+This section will contain exemples for using the core engine...
+
+== Notice ==
+
+*Content :*
+  * HeightMap()
+    * initialize()
+    * fillCorners()
+    * fillBorders()
+    * ...
