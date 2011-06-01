@@ -24,23 +24,28 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ********************************************************************************
-This is the Javascript demo file of the jOWE project.
+This is a Javascript demo file for the jOWE project.
+This file needs "jowe-core.js" to work.
 
-*/
+NOTICE :
+A "City" is composed of 5 HeightMap objects :
+  - height
+  - fertility
+  - rainfall
+  - temperature
+  - population
 
-/* COMMENTS:
+The object represents a large area that contains the city.
 
-   The function below should be moved on dedicated file...
-   It doesn't belong to the "core".
 */
 
 /*
- * [Public "object"] WorldMap()
+ * [Public "object"] CityMap()
  *
- * Random World Map Generator Object.
+ * Random City Map Generator Object.
  *
  */
-function WorldMap(width, height, pitch, ratio) {
+function CityMap(width, height, pitch, ratio) {
 
     // if ((width !== undefined) && (width !== null) && (!isNaN(width))) {
         // return false
@@ -49,7 +54,7 @@ function WorldMap(width, height, pitch, ratio) {
         // return false;
     // }
     
-    // World array consists of 5 arrays : Height, Fertility, Rainfall, Temperature, Population.
+    // City consists of 5 arrays : Height, Fertility, Rainfall, Temperature, Population.
 	this.height = new HeightMap(pitch, ratio);
     this.height.doMap(width, height);
 
@@ -85,5 +90,5 @@ function WorldMap(width, height, pitch, ratio) {
     this.population.copy(city, 15, 15);
 }
 
-// Create world object (as global).
-var myWorld;
+// Create city object (as global).
+var myCity;

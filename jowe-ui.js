@@ -64,25 +64,38 @@ c[1] = ['#0000ff', '#0000ee', '#0000dd', 'Ocean']; // dark blue (ocean)
 c[0] = ['#0000ff', '#0000ee', '#0000dd', 'Deep ocean']; // dark blue (ocean)
 
 // Colors for fertility. 
-c[100] = ['#EEF1FA', '#E8E9F0', '#E2E1E6', '#DCD9DC', '#D6D1D2'
-         ,'#D0C9C8', '#CAC1BE', '#C4B9B4', '#BEB1AA', '#B8A9A0', '#B2A196'
-         ,'#AC998C', '#A69182', '#A08978', '#9A816E', '#947964', '#8E715A'
-         ,'#886950', '#826146', '#7C593C', '#765132', '#704928', '#6A411E'
-         ,'#643914', '#5E310A', '#582900' ];
+c[100] = ['#EEF1FA', '#E8E9F0', '#E2E1E6', '#DCD9DC',
+          '#D6D1D2', '#D0C9C8', '#CAC1BE', '#C4B9B4',
+          '#BEB1AA', '#B8A9A0', '#B2A196', '#AC998C',
+          '#A69182', '#A08978', '#9A816E', '#947964',
+          '#8E715A', '#886950', '#826146', '#7C593C',
+          '#765132', '#704928', '#6A411E', '#643914',
+          '#5E310A', '#582900' ];
 
 // Colors for rainfall.
-c[101] = ['#B5DED0', '#91BACF', '#6E81BD', '#50468C', '#371F57'];
+c[101] = ['#C7F0D2', '#BEE7D1', '#B5DED0', '#ACD5CF',
+          '#A3CCCF', '#9AC3CF', '#91BACF', '#88ABCA',
+          '#7F9DC6', '#768FC1', '#6E81BD', '#6672B0',
+          '#5F63A4', '#575498', '#50468C', '#493C7E',
+          '#433271', '#3D2864', '#371F57', '#31164A',
+          '#2B0D3D']
 
 // Colors for temperature.
-c[102] = ['#495CFF', '#84D41D', '#E0DC63', '#FF9300', '#FF0000'];
+c[102] = ['#F0F0FF', '#C6CBFF', '#9CA6FF', '#7281FF',
+          '#495CFF', '#577AC6', '#66988E', '#75B655',
+          '#84D41D', '#9BD62E', '#B2D840', '#C9DA51',
+          '#E0DC63', '#E7C94A', '#EFB731', '#F7A518',
+          '#FF9300', '#FF6E00', '#FF4900', '#FF2400',
+          '#FF0000' ]
          
 // Colors for population.
-c[103] = ['#FFFFFF',
-          '#FAFAFA', '#F0F0F0', '#E6E6E6', '#DCDCDC', '#D2D2D2',
-          '#C8C8C8', '#BEBEBE', '#B4B4B4', '#AAAAAA', '#A0A0A0',
-          '#969696', '#8C8C8C', '#828282', '#787878', '#6E6E6E',
-          '#646464', '#5A5A5A', '#505050', '#464646', '#3C3C3C',
-          '#323232', '#282828', '#1E1E1E', '#141414', '#0A0A0A' ];
+c[103] = ['#FFFFFF', '#FAFAFA', '#F0F0F0', '#E6E6E6',
+          '#DCDCDC', '#D2D2D2', '#C8C8C8', '#BEBEBE',
+          '#B4B4B4', '#AAAAAA', '#A0A0A0', '#969696',
+          '#8C8C8C', '#828282', '#787878', '#6E6E6E',
+          '#646464', '#5A5A5A', '#505050', '#464646',
+          '#3C3C3C', '#323232', '#282828', '#1E1E1E',
+          '#141414', '#0A0A0A' ];
 
 // Indicates from which item starts water level in color array.
 var cWater = 2;
@@ -367,13 +380,13 @@ function jowe_grid(canvasId, canvasWidth, canvasHeight, canvasBackColor) {
             if (h < 3) {
                 r = c[2][1];
             } else {
-                r = c[101][Math.floor(o.r / 4)]
+                r = c[101][o.r]
             }
         } else if (m === 't') {
             if (h < 3) {
                 r = c[2][1];
             } else {
-                r = c[102][Math.floor(o.t / 4)]
+                r = c[102][o.t]
             }
         } else if (m === 'p') {
             if (h < 3) {
