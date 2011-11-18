@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
+    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
+    <meta charset="UTF-8" />
+    
+    <title>jOWE ~ Examples ~ jowe-core.js</title>
+    
+    <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-alea.js"></script>
+</head>
+<!--
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010-2011 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+
+How to use the HeightMap object.
+
+-->
+<body>
+  <h1>Initialization:</h1>
+
+    <p>Calling all methods individually :</p>
+
+<pre>
+  <font color=green>// Create an object with default values :
+  // pitch = 8, ratio = 3.1, width = 127, height = 127</font>
+  var oMap = new HeightMap();
+</pre>
+  
+  <h1>Method 1:</h1>
+  <p>Calling all methods individually :</p>
+
+<pre>
+  <font color=green>// Set the new size.</font>
+  oMap.setSide(10, 12);
+  
+  <font color=green>// Process the random height map.</font>
+  oMap.makeMap();
+</pre>
+
+  <p>At this stage, the array (oMap.item) contains :</p>
+  
+<pre>
+  [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4] 
+  ,[6,6,5,5,5,4,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4] 
+  ,[5,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[6,5,5,5,5,4,4,3,4,3,4,4,5,4,4,4,4] 
+  ,[4,4,4,4,3,3,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[4,4,4,3,3,3,3,2,3,3,4,4,4,4,4,4,4] 
+  ,[3,3,3,3,2,2,2,2,3,3,3,4,4,4,4,4,4] 
+  ,[3,3,3,2,2,2,2,2,3,2,3,3,5,4,4,4,5] 
+  ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4] 
+  ,[2,2,2,2,2,2,2,1,2,2,3,3,4,4,4,4,4] 
+  ,[2,2,2,2,1,1,1,1,1,2,2,3,3,3,4,4,4] 
+  ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5] 
+  ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4] 
+  ,[1,1,1,0,1,1,1,0,1,1,2,2,3,3,4,4,5] 
+  ,[0,0,0,0,0,0,0,0,1,1,2,2,3,3,4,4,5] 
+  ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]]
+</pre>
+
+<pre>
+  <font color=green>// Optional, but smoothing the map is often required to avoid weird points and
+  // produce better looking map. For now, smooth only worked on non-cropped map.
+  // Once the map is cropped, smooth will failed (will be fixed in a next release).</font>
+  oMap.smooth();  
+</pre>
+
+  <p>At this stage, the array (oMap.item) contains the values below. You should notice some small variations.</p>
+  
+<pre>
+  [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4] 
+  ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4] 
+  ,[6,6,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4] 
+  ,[5,5,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4] 
+  ,[6,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[4,4,4,4,4,3,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[4,4,4,3,3,3,3,3,3,3,4,4,4,4,4,4,4] 
+  ,[3,3,3,3,2,2,2,3,3,3,3,4,4,4,4,4,4] 
+  ,[3,3,3,2,2,2,2,2,2,3,3,4,4,4,4,4,5] 
+  ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4] 
+  ,[2,2,2,2,2,2,2,2,2,2,3,3,3,4,4,4,4] 
+  ,[2,2,2,2,2,2,1,1,1,2,2,3,3,3,4,4,4] 
+  ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5] 
+  ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4] 
+  ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,5] 
+  ,[0,0,0,0,0,0,0,1,1,1,2,2,3,3,4,4,5] 
+  ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]]
+</pre>
+
+<pre>
+  <font color=green>// Finally, crop the working map to get the map with the requested size (10,12) as set previously.</font>
+  oMap.crop();
+</pre>
+
+  <p>At the end, the array (oMap.item) contains :</p>
+  
+<pre>
+  [[6,6,5,5,4,4,3,3,3,4,4,4] 
+  ,[6,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,4,4,3,3,3,3,4,4,4] 
+  ,[4,4,4,4,3,3,3,3,3,4,4,4] 
+  ,[4,4,3,3,3,3,3,3,3,4,4,4] 
+  ,[3,3,3,2,2,2,3,3,3,3,4,4] 
+  ,[3,3,2,2,2,2,2,2,3,3,4,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,3]]
+</pre>
+
+  <h1>Method 2:</h1>
+  <p>Calling the "all-in-one" function :</p>
+
+<pre>  
+  <font color=green>// Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").</font>
+  oMap.doMap(10,12);
+</pre>
+
+  <p>You got in only one call the final result, the array (oMap.item) contains :</p>
+  
+<pre>
+  [[6,6,5,5,4,4,3,3,3,4,4,4] 
+  ,[6,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,4,4,3,3,3,3,4,4,4] 
+  ,[4,4,4,4,3,3,3,3,3,4,4,4] 
+  ,[4,4,3,3,3,3,3,3,3,4,4,4] 
+  ,[3,3,3,2,2,2,3,3,3,3,4,4] 
+  ,[3,3,2,2,2,2,2,2,3,3,4,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,3]]
+</pre>
+
+<script type="text/javascript">
+
+  var oMap;
+
+  // Create object with default values :
+  // pitch = 8, ratio = 3.1, width = 127, height = 127
+  oMap = new HeightMap();
+  
+  // Uncomment line below only if you want to have same result as example.
+  //oMap.setAleaSeed('jowe');
+  
+  // Set new size.
+  oMap.setSide(10, 12);
+  
+  // Process the random height map.
+  oMap.makeMap();
+  
+  // document.write("<hr />// After oMap.makeMap() : <br />");
+  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
+
+  // oMap.item:    array(17)
+  // oMap.item[0]: array(17)
+  // oMap.item = [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4]  // [ 0]
+  //             ,[6,6,5,5,5,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 1]
+  //             ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 2]
+  //             ,[5,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 3]
+  //             ,[6,5,5,5,5,4,4,3,4,3,4,4,5,4,4,4,4]  // [ 4]
+  //             ,[4,4,4,4,3,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 5]
+  //             ,[4,4,4,3,3,3,3,2,3,3,4,4,4,4,4,4,4]  // [ 6]
+  //             ,[3,3,3,3,2,2,2,2,3,3,3,4,4,4,4,4,4]  // [ 7]
+  //             ,[3,3,3,2,2,2,2,2,3,2,3,3,5,4,4,4,5]  // [ 8]
+  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4]  // [ 9]
+  //             ,[2,2,2,2,2,2,2,1,2,2,3,3,4,4,4,4,4]  // [10]
+  //             ,[2,2,2,2,1,1,1,1,1,2,2,3,3,3,4,4,4]  // [11]
+  //             ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5]  // [12]
+  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4]  // [13]
+  //             ,[1,1,1,0,1,1,1,0,1,1,2,2,3,3,4,4,5]  // [14]
+  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,3,3,4,4,5]  // [15]
+  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]] // [16]
+  // Values are between 0 and 8 (between 0 and pitch).
+  // At this point, "item" still has the working size (16x16).
+
+  // Optionnal, smoothing the map is often required to avoid weird points
+  // and produce better looking map.
+  // For now, smooth only worked on non-cropped map.
+  // Once the map is cropped, smooth will failed (will be fixed in a next release).
+  oMap.smooth();
+
+  // document.write("// After oMap.smooth() : <br />");
+  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
+  
+  // oMap.item:    array(17)
+  // oMap.item[0]: array(17)
+  // oMap.item = [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4]  // [ 0]
+  //             ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 1]
+  //             ,[6,6,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 2]
+  //             ,[5,5,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 3]
+  //             ,[6,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 4]
+  //             ,[4,4,4,4,4,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 5]
+  //             ,[4,4,4,3,3,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 6]
+  //             ,[3,3,3,3,2,2,2,3,3,3,3,4,4,4,4,4,4]  // [ 7]
+  //             ,[3,3,3,2,2,2,2,2,2,3,3,4,4,4,4,4,5]  // [ 8]
+  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4]  // [ 9]
+  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,3,4,4,4,4]  // [10]
+  //             ,[2,2,2,2,2,2,1,1,1,2,2,3,3,3,4,4,4]  // [11]
+  //             ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5]  // [12]
+  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4]  // [13]
+  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,5]  // [14]
+  //             ,[0,0,0,0,0,0,0,1,1,1,2,2,3,3,4,4,5]  // [15]
+  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]] // [16]
+
+  // Finally, crop the working map to get the map with the requested size (10,12) as set previously.
+  oMap.crop();
+
+  // document.write("// After oMap.crop() : <br />");
+  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
+  
+  // oMap.item:    array(10)
+  // oMap.item[0]: array(12)
+  // oMap.item = [[6,6,5,5,4,4,3,3,3,4,4,4]  // [0]
+  //             ,[6,5,5,5,4,4,3,3,3,4,4,4]  // [1]
+  //             ,[5,5,5,5,4,4,3,3,3,4,4,4]  // [2]
+  //             ,[5,5,5,4,4,3,3,3,3,4,4,4]  // [3]
+  //             ,[4,4,4,4,3,3,3,3,3,4,4,4]  // [4]
+  //             ,[4,4,3,3,3,3,3,3,3,4,4,4]  // [5]
+  //             ,[3,3,3,2,2,2,3,3,3,3,4,4]  // [6]
+  //             ,[3,3,2,2,2,2,2,2,3,3,4,4]  // [7]
+  //             ,[2,2,2,2,2,2,2,2,2,3,3,4]  // [8]
+  //             ,[2,2,2,2,2,2,2,2,2,3,3,3]] // [9]
+  
+
+  // Uncomment line below only if you want to have same result as example.
+  oMap.setAleaSeed('jowe');
+  
+  // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
+  oMap.doMap(10,12);
+  
+  //document.write("// After oMap.doMap() : <br />");
+  //document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
+
+</script>
+</body>
+</html>
