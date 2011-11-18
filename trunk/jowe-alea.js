@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010-2011 Ludovic L.
+Copyright (C) 2010 by Johannes Baagøe <baagoe@baagoe.org>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -26,7 +26,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ********************************************************************************
 
 The Mash() and Alea() objects : Johannes Baagøe <baagoe@baagoe.com>, 2010
-From http://baagoe.com/en/RandomMusings/javascript/
+http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 
 ********************************************************************************
 */
@@ -48,14 +48,16 @@ function Mash() {
         }
         return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
     };
+    
+    mash.version = 'Mash 0.9';
     return mash;
 }
 
 function Alea() {
     return (function (args) {
-        var s0 = 0, s1 = 0, s2 = 0, c = 1, mash = Mash(), p1 = 2091639, p2 = 2.3283064365386963e-10, i; // 2^-32
+        var s0 = 0, s1 = 0, s2 = 0, c = 1, mash = Mash(), i; // 2^-32
 
-        if (args.length === 0) {
+        if (args.length == 0) {
             args = [+new Date()];
         }
         s0 = mash(' ');
@@ -73,10 +75,18 @@ function Alea() {
         mash = null;
 
         var random = function () {
-            var t = p1 * s0 + c * p2;
+            var t = 2091639 * s0 + c * 2.3283064365386963e-10; // 2^-32
             s0 = s1 = s2;
             return s2 = t - (c = t | 0);
         };
+        random.uint32 = function() {
+            return random() * 0x100000000; // 2^32
+        };
+        random.fract53 = function() {
+            return random() + 
+                (random() * 0x200000 | 0) * 1.1102230246251565e-16; // 2^-53
+        };
+        random.version = 'Alea 0.9';
         random.args = args;
         return random;
 

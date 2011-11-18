@@ -82,10 +82,10 @@ TODO :
  * [Public "object"] HeightMap()
  *
  * Random Height Map Generator Object.
- * arg_pitch  [integer] : pitch to be used
- * arg_ratio  [float]   : ratio to be used
- * arg_width  [integer] : width of the map to be generated
- * arg_height [integer] : height of the map to be generated
+ * arg_pitch  [integer] : pitch to be used (default : 8)
+ * arg_ratio  [float]   : ratio to be used (default : 3.1)
+ * arg_width  [integer] : width of the map to be generated (default : 127)
+ * arg_height [integer] : height of the map to be generated (default : 127)
  */
 function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
     
@@ -236,10 +236,12 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      *
      * Crop current map according to specific size.
      */
-    this.crop = function (width, height, cropsize) {
-        var a = this.item.slice(cropsize, width + cropsize),
+    this.crop = function (p_width, p_height) {
+        p_width  = typeof p_width  != "undefined" ? p_width  : width;
+        p_height = typeof p_height != "undefined" ? p_height : height;
+        var a = this.item.slice(cropsize, p_width + cropsize),
             x = a.length;
-        while (x--) a[x] = a[x].slice(cropsize, height + cropsize);
+        while (x--) a[x] = a[x].slice(cropsize, p_height + cropsize);
         this.item = a;
     };
 
@@ -260,10 +262,33 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      *
      * This is only a shortcut to call function make() with default parameters.
      * All necessary variables should have been initialized.
+     * The "item" array will be set to "-1" if not already done.
      */
     this.makeMap = function () {
+        // Initialize the "item" array with default height to -1
+        // and corners set to random values.
+        if (this.item.length < 1) {
+          this.initialize(-1);
+          this.fillCorners(true);
+        }
         // Do map!
         this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
+    }
+    
+    /*
+     * [Privileged method] makeMap
+     * 
+     * Allows to set a seed used to regenerate identical maps over multiple calls.
+     */
+    this.setAleaSeed = function (seed) {
+        // Use Alea() if exists.
+        if (typeof Alea != "undefined") {
+            if ((typeof seed == "undefined") || (seed == null)) {
+                rand = new Alea();
+            } else {
+                rand = new Alea(seed);
+            }
+        }
     }
     
 /* COMMENTS:
@@ -327,14 +352,14 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
      * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
      */
-    this.doMap = function (width, height, bInitialize) {
+    this.doMap = function (p_width, p_height, bInitialize) {
     
-        if ((bInitialize === undefined) || (bInitialize === null) || (bInitialize === true)) {
+        if ((typeof bInitialize == "undefined") || (bInitialize === null) || (bInitialize === true)) {
             // Initialize side width.
-            this.setSide(width, height);
+            this.setSide(p_width, p_height);
             
             // For debug purpose.
-            if (isdebug) dbg_date[2] = new Date();
+            // if (isdebug) dbg_date[2] = new Date();
             
             // Initialize height.
             this.initialize(-1);
@@ -342,25 +367,25 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
             this.fillCorners(true);
         }
         // For debug purpose.
-        if (isdebug) dbg_date[3] = new Date();
+        // if (isdebug) dbg_date[3] = new Date();
 
         // Do map!
         this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
         
         // For debug purpose.
-        if (isdebug) dbg_date[4] = new Date();
+        // if (isdebug) dbg_date[4] = new Date();
  
         // Smooth height map to remove weird points.
         this.smooth();
         
         // For debug purpose.
-        if (isdebug) dbg_date[5] = new Date();
+        // if (isdebug) dbg_date[5] = new Date();
 
         // Crop the working map to get the requested map.
-        this.crop(width, height, cropsize);
+        this.crop();
 
         // For debug purpose.
-        if (isdebug) dbg_date[6] = new Date();
+        // if (isdebug) dbg_date[6] = new Date();
 
     };
 
@@ -371,7 +396,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
     
         // Set minimum and maximum size for a side.
         minSide = 4,
-		maxSide = 1000,
+        maxSide = 1000,
         
         // "real" dimension of the current object (not resized to 2^n square) and not cropped.
         width = 127,
@@ -393,10 +418,11 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // Random object/class.
         rand,
 
-        // Borders of the working height map to exclude from final result.
-		cropsize = 1;
+        // Borders of the working height map to exclude from final result,
+        // because there are not processed in the smooth function.
+        cropsize = 1;
         
-		// Shortcut to function.
+        // Shortcut to function.
         floor = Math.floor;
         
     if ((arg_pitch !== undefined) && (arg_pitch !== null) && (!isNaN(arg_pitch))) {
