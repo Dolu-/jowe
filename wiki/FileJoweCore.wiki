@@ -5,7 +5,8 @@
 = Jowe-Core =
 
 This is the main file of the project. It contains the "engine" to construct your map.
-
+It only produces an array of integer with random values. That's the single purpose of that object.
+That way, its result could be used in any other GUI.
 
 == Details ==
 
@@ -13,13 +14,77 @@ More to come very soon...
 
 == Usage ==
 
-This section will contain exemples for using the core engine...
+Usage 1:
+
+Calling methods individually.
+
+{{{
+// Create a new HeightMap object with default values
+// pitch = 8, ratio = 3.1, width = 127, height = 127
+var oMap = new HeightMap();
+
+// Set the requested size for the final array (zero-based).
+// Below you'll get an array of [0..9][0..11].
+oMap.setSide(10, 12);
+
+// Process the random height map.
+oMap.makeMap();
+
+// Optional, but smoothing the map is often required to avoid weird points and
+// produce better looking map. For now, smooth only works on non-cropped maps.
+// Once the map is cropped, smooth will failed (will be fixed in a next release).
+oMap.smooth();
+
+// Finally, crop the working map to get the one with the requested size (10,12) as set previously.
+oMap.crop();
+}}}
+
+Usage 2:
+
+Calling the "all-in-one" method.
+
+{{{
+// Create a new HeightMap object with default values.
+var oMap = new HeightMap();
+// Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
+oMap.doMap(10,12);
+}}}
+
+Both usages will give you an item array which will looks like the one below :
+
+{{{
+oMap.item =
+  [[6,6,5,5,4,4,3,3,3,4,4,4] 
+  ,[6,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,4,4,3,3,3,3,4,4,4] 
+  ,[4,4,4,4,3,3,3,3,3,4,4,4] 
+  ,[4,4,3,3,3,3,3,3,3,4,4,4] 
+  ,[3,3,3,2,2,2,3,3,3,3,4,4] 
+  ,[3,3,2,2,2,2,2,2,3,3,4,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,3]]
+}}}
 
 == Notice ==
 
 *Content :*
   * HeightMap()
-    * initialize()
-    * fillCorners()
-    * fillBorders()
-    * ...
+    * Private methods
+      * randomMinMax(min, max) {...}
+      * function addDelta(avg, delta) {...}
+    * Privileged methods
+      * initialize: function (h) {...}
+      * fillCorners: function (overwrite) {...}
+      * fillBorders: function (value, borderwidth) {...}
+      * make: function (x1, y1, x2, y2, xm, ym) {...}
+      * smooth: function () {...}
+      * crop: function (p_width, p_height) {...}
+      * copy: function (source, from_x, from_y) {...}
+      * makeMap: function () {...}
+      * setAleaSeed: function (seed) {...}
+      * setSide: function (p_width, p_height) {...}
+      * doMap: function (p_width, p_height, bInitialize) {...}
+    * Public variable
+      * item: Array[]
+
