@@ -9,6 +9,8 @@
     
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
+
+    <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
 </head>
 <!--
 ********************************************************************************
@@ -41,6 +43,11 @@ How to use the HeightMap object.
 
 -->
 <body>
+<em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
+<hr />
+
+  <p>This page explains how to use the HeightMap object in the "jowe-core.js" file. You can give it a try at the bottom of the page.</p>
+  
   <h1>Initialization:</h1>
 
     <p>Calling all methods individually :</p>
@@ -156,8 +163,24 @@ How to use the HeightMap object.
   ,[2,2,2,2,2,2,2,2,2,3,3,3]]
 </pre>
 
+  <h1>Try it :</h1>
+  
+  <div id="tresult">
+    
+  </div>
+
+  <p>
+    Enter 'width' x 'height' and generate your heightmap.<br />
+    <input id="twidth" type="text" value="10" size="6" maxlength="3" style="text-align:right;">
+      x
+    <input id="theight" type="text" value="12" size="6" maxlength="3" style="text-align:right;">
+    <input id="tsubmit" type="submit" value="Generate">
+  </p>
+
 <script type="text/javascript">
 
+function run_test(w, h)
+{
   var oMap;
 
   // Create object with default values :
@@ -165,97 +188,31 @@ How to use the HeightMap object.
   oMap = new HeightMap();
   
   // Uncomment line below only if you want to have same result as example.
-  //oMap.setAleaSeed('jowe');
+  // oMap.setAleaSeed('jowe');
   
-  // Set new size.
-  oMap.setSide(10, 12);
-  
-  // Process the random height map.
-  oMap.makeMap();
-  
-  // document.write("<hr />// After oMap.makeMap() : <br />");
-  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
-
-  // oMap.item:    array(17)
-  // oMap.item[0]: array(17)
-  // oMap.item = [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4]  // [ 0]
-  //             ,[6,6,5,5,5,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 1]
-  //             ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 2]
-  //             ,[5,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 3]
-  //             ,[6,5,5,5,5,4,4,3,4,3,4,4,5,4,4,4,4]  // [ 4]
-  //             ,[4,4,4,4,3,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 5]
-  //             ,[4,4,4,3,3,3,3,2,3,3,4,4,4,4,4,4,4]  // [ 6]
-  //             ,[3,3,3,3,2,2,2,2,3,3,3,4,4,4,4,4,4]  // [ 7]
-  //             ,[3,3,3,2,2,2,2,2,3,2,3,3,5,4,4,4,5]  // [ 8]
-  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4]  // [ 9]
-  //             ,[2,2,2,2,2,2,2,1,2,2,3,3,4,4,4,4,4]  // [10]
-  //             ,[2,2,2,2,1,1,1,1,1,2,2,3,3,3,4,4,4]  // [11]
-  //             ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5]  // [12]
-  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4]  // [13]
-  //             ,[1,1,1,0,1,1,1,0,1,1,2,2,3,3,4,4,5]  // [14]
-  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,3,3,4,4,5]  // [15]
-  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]] // [16]
-  // Values are between 0 and 8 (between 0 and pitch).
-  // At this point, "item" still has the working size (16x16).
-
-  // Optionnal, smoothing the map is often required to avoid weird points
-  // and produce better looking map.
-  // For now, smooth only worked on non-cropped map.
-  // Once the map is cropped, smooth will failed (will be fixed in a next release).
-  oMap.smooth();
-
-  // document.write("// After oMap.smooth() : <br />");
-  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
-  
-  // oMap.item:    array(17)
-  // oMap.item[0]: array(17)
-  // oMap.item = [[8,6,6,5,6,4,4,3,3,3,4,4,5,4,4,4,4]  // [ 0]
-  //             ,[6,6,6,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 1]
-  //             ,[6,6,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 2]
-  //             ,[5,5,5,5,5,4,4,3,3,3,4,4,4,4,4,4,4]  // [ 3]
-  //             ,[6,5,5,5,4,4,3,3,3,3,4,4,4,4,4,4,4]  // [ 4]
-  //             ,[4,4,4,4,4,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 5]
-  //             ,[4,4,4,3,3,3,3,3,3,3,4,4,4,4,4,4,4]  // [ 6]
-  //             ,[3,3,3,3,2,2,2,3,3,3,3,4,4,4,4,4,4]  // [ 7]
-  //             ,[3,3,3,2,2,2,2,2,2,3,3,4,4,4,4,4,5]  // [ 8]
-  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,4,4,4,4,4]  // [ 9]
-  //             ,[2,2,2,2,2,2,2,2,2,2,3,3,3,4,4,4,4]  // [10]
-  //             ,[2,2,2,2,2,2,1,1,1,2,2,3,3,3,4,4,4]  // [11]
-  //             ,[3,2,2,2,2,1,1,1,1,1,2,2,3,3,4,4,5]  // [12]
-  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,4]  // [13]
-  //             ,[1,1,1,1,1,1,1,1,1,1,2,2,3,3,4,4,5]  // [14]
-  //             ,[0,0,0,0,0,0,0,1,1,1,2,2,3,3,4,4,5]  // [15]
-  //             ,[0,0,0,0,0,0,0,0,1,1,2,2,4,3,4,4,6]] // [16]
-
-  // Finally, crop the working map to get the map with the requested size (10,12) as set previously.
-  oMap.crop();
-
-  // document.write("// After oMap.crop() : <br />");
-  // document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
-  
-  // oMap.item:    array(10)
-  // oMap.item[0]: array(12)
-  // oMap.item = [[6,6,5,5,4,4,3,3,3,4,4,4]  // [0]
-  //             ,[6,5,5,5,4,4,3,3,3,4,4,4]  // [1]
-  //             ,[5,5,5,5,4,4,3,3,3,4,4,4]  // [2]
-  //             ,[5,5,5,4,4,3,3,3,3,4,4,4]  // [3]
-  //             ,[4,4,4,4,3,3,3,3,3,4,4,4]  // [4]
-  //             ,[4,4,3,3,3,3,3,3,3,4,4,4]  // [5]
-  //             ,[3,3,3,2,2,2,3,3,3,3,4,4]  // [6]
-  //             ,[3,3,2,2,2,2,2,2,3,3,4,4]  // [7]
-  //             ,[2,2,2,2,2,2,2,2,2,3,3,4]  // [8]
-  //             ,[2,2,2,2,2,2,2,2,2,3,3,3]] // [9]
-  
-
-  // Uncomment line below only if you want to have same result as example.
-  oMap.setAleaSeed('jowe');
+  var start = new Date().getTime();
   
   // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
-  oMap.doMap(10,12);
+  oMap.doMap(w, h);
   
-  //document.write("// After oMap.doMap() : <br />");
-  //document.write("oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";<hr />");
+  var end = new Date().getTime();
+  
+  $("#tresult").html("<pre>" +
+                     "oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";" +
+                     "</pre>" +
+                     "<p><em>Heightmap processed in " + (end - start) + "ms</em></p>");
+}
 
+$(function () {
+
+  $("#tsubmit").click(function() {
+    run_test( 1 * $("#twidth").val(), 1 * $("#theight").val() );
+  });
+
+});
+  
 </script>
+<hr />
+<em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
 </body>
 </html>

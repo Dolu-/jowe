@@ -32,7 +32,7 @@ SDL plasma code.
 
 ********************************************************************************
 
-Details about generation time in milliseconds - for 'doHeightMap()' (beware it's average time) :
+Details about generation time in milliseconds - for 'doMap()' (beware it's average time) :
 Execution time could be extremely different depending on your configuration and many other
 several factors, you would have to be really careful by interpreting the results below.
 _______________________________________________________________________________ _ _ _ _ _ _ _ _
@@ -42,6 +42,10 @@ _______________________________________________________________________________ 
 | Intel T2400@1.83Ghz/2Gb | Google Chrome 8.0 |    50   |   150   |    550    |     2100      |
 |                         | Firefox 4.0b9     |    60   |   220   |    800    |     3300(*1)  |
 |                         | Firefox 3.6 (*2)  |   180   |   650   |   2400    |       -       |
+|                         |                   |         |         |           |               |
+| Intel i5@2.67Ghz/4Gb    | Google Chrome 15  |    25   |    60   |    200    |      700      |
+|                         | Firefox 7         |    50   |   140   |    450    |       -       |
+|                         | I.E. 9            |    20   |    60   |    230    |      970      |
 |                         |                   |         |         |           |               |
 
 (*1) After several calls, generation of large maps takes a lot of time (memory issue?).
@@ -70,11 +74,7 @@ doMap (Total) = 1991   2541   1971   1963
 ********************************************************************************
 
 NOTICE :
-- Every piece of code in here is only for the HeightMap object.
-  No other object!
-
-TODO :
-- Remove "debug" related stuff.
+- Every piece of code in here is only for the HeightMap object. No other object!
 
 */
 
@@ -162,7 +162,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      * The function ensure that the result is positive and less than the pitch (max height).
      */
     function addDelta(avg, delta) {
-        if (0 < delta) avg += ((rand() * ((delta * 2) + 1)) - delta);
+        if (0 < delta) avg += ((((delta * 2) + 1) * rand()) - delta);
         return (pitch < avg) ? pitch : (0 > avg) ? 0 : floor(avg);
     }
     
@@ -178,27 +178,25 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // Notice : Removing floor below could produce more realistics maps (it adds more noise).
                  // Should it be set by default ? Next "floor" is done in addDelta().
                  // (caution : it takes more time on FF when removed).
-        var delta = floor((x2 - xm) / ratio), xmym,
-            x1y1  = this.item[x1][y1],
-            x2y2  = this.item[x2][y2],
-            x1y2  = this.item[x1][y2],
-            x2y1  = this.item[x2][y1];
+        var delta = floor((x2 - xm) / ratio), xmym = 0, H = this.item,
+            x1y1  = H[x1][y1],
+            x2y2  = H[x2][y2],
+            x1y2  = H[x1][y2],
+            x2y1  = H[x2][y1];
 
         // Set a random height for the middle of the current square.
         // addDelta is called with the average height of the 4 points.
-        if (0 > this.item[xm][ym]) {
-            this.item[xm][ym] = xmym = addDelta((x1y1 + x1y2 + x2y2 + x2y1) / 4, delta);
-        } else {
-            xmym = this.item[xm][ym];
-        }
+        if (0 > H[xm][ym]) H[xm][ym] = addDelta((x1y1 + x1y2 + x2y2 + x2y1) / 4, delta);
+        xmym = H[xm][ym];
   
         // Set a random height for the middle of the hypotenuse of each triangle.
         // addDelta is called with the average height of the 3 points.
-        if (0 > this.item[xm][y1]) this.item[xm][y1] = addDelta((x1y1 + x2y1 + xmym) / 3, delta);
-        if (0 > this.item[xm][y2]) this.item[xm][y2] = addDelta((x1y2 + x2y2 + xmym) / 3, delta);
-        if (0 > this.item[x2][ym]) this.item[x2][ym] = addDelta((x2y1 + x2y2 + xmym) / 3, delta);
-        if (0 > this.item[x1][ym]) this.item[x1][ym] = addDelta((x1y1 + x1y2 + xmym) / 3, delta);
+        if (0 > H[xm][y1]) H[xm][y1] = addDelta((x1y1 + x2y1 + xmym) / 3, delta);
+        if (0 > H[xm][y2]) H[xm][y2] = addDelta((x1y2 + x2y2 + xmym) / 3, delta);
+        if (0 > H[x2][ym]) H[x2][ym] = addDelta((x2y1 + x2y2 + xmym) / 3, delta);
+        if (0 > H[x1][ym]) H[x1][ym] = addDelta((x1y1 + x1y2 + xmym) / 3, delta);
 
+        // Go on if there's space left to fill between points.
         if (((x2 - x1) > 2) || ((y2 - y1) > 2)) {
             delta = (xm - x1) / 2;
             this.make(xm, ym, x2, y2, xm + delta, ym + delta);
@@ -214,20 +212,22 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      * Set cells height to be closer to other adjacent cells.
      */
     this.smooth  = function () {
-        var H = this.item, x, y, sum, s = side - 1, xm1 = [], xp1 = [];
-        for (x = 1; x < s ; x += 1) {
-            xm1 = H[x - 1];
-            sum = H[x][1];
+        var H = this.item, x = 0, y = 0, sum = 0, s = side - 1, xm1 = [], xp1 = [], x0 = [];
+        // Goes through every lines and columns except first and last one,
+        // because "sum" below takes every items around the current one.
+        for (xm1 = H[x], x = 1, x0 = H[x]; x < s ; x += 1) {
             xp1 = H[x + 1];
-            for (y = 1; y < s ; y += 1) {
+            for (y = 1, sum = x0[1]; y < s ; y += 1) {
 
-                sum += (xm1[y - 1] + xm1[y] + xm1[y + 1] + H[x][y] + H[x][y + 1] + xp1[y - 1] + xp1[y] + xp1[y + 1]);
+                sum += (xm1[y - 1] + xm1[y] + xm1[y + 1] + x0[y] + x0[y + 1] + xp1[y - 1] + xp1[y] + xp1[y + 1]);
                 
-                sum = floor(4 < (sum % 9) ? (sum / 9) + 1 : sum / 9);
+                sum = floor((4 < (sum % 9) ? 1 : 0) + (sum / 9));
                 
                 if (pitch < sum) sum = pitch;
-                H[x][y] = sum;
+                x0[y] = sum;
             }
+            xm1 = x0;
+            x0 = xp1;
         }
     };
 
@@ -237,11 +237,14 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      * Crop current map according to specific size.
      */
     this.crop = function (p_width, p_height) {
+        // Initialise width and height if not specified.
         p_width  = typeof p_width  != "undefined" ? p_width  : width;
         p_height = typeof p_height != "undefined" ? p_height : height;
+        
         var a = this.item.slice(cropsize, p_width + cropsize),
+            hc = p_height + cropsize,
             x = a.length;
-        while (x--) a[x] = a[x].slice(cropsize, p_height + cropsize);
+        while (x--) a[x] = a[x].slice(cropsize, hc);
         this.item = a;
     };
 
@@ -286,10 +289,54 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
             if ((typeof seed == "undefined") || (seed == null)) {
                 rand = new Alea();
             } else {
+                // Use "seed" if any.
                 rand = new Alea(seed);
             }
         }
     }
+    
+    /*
+     * [Privileged method] doMap
+     *
+     * Build a map (size is 0-based).
+     * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
+     * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
+     */
+    this.doMap = function (p_width, p_height, bInitialize) {
+    
+        if ((typeof bInitialize == "undefined") || (bInitialize === null) || (bInitialize === true)) {
+            // Initialize side width.
+            this.setSide(p_width, p_height);
+            
+            // To test speed, uncomment line below :
+            // if (isdebug) dbg_date[2] = new Date();
+            
+            // Initialize height.
+            this.initialize(-1);
+            // Initialize corners.
+            this.fillCorners(true);
+        }
+        // To test speed, uncomment line below :
+        // if (isdebug) dbg_date[3] = new Date();
+
+        // Do map!
+        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
+        
+        // To test speed, uncomment line below :
+        // if (isdebug) dbg_date[4] = new Date();
+ 
+        // Smooth height map to remove weird points.
+        this.smooth();
+        
+        // To test speed, uncomment line below :
+        // if (isdebug) dbg_date[5] = new Date();
+
+        // Crop the working map to get the requested map.
+        this.crop();
+
+        // To test speed, uncomment line below :
+        // if (isdebug) dbg_date[6] = new Date();
+    };
     
 /* COMMENTS:
     
@@ -344,50 +391,6 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // Return calculated value.
         return side;
     }
-    
-    /*
-     * [Privileged method] doMap
-     *
-     * Build a map (size is 0-based).
-     * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
-     * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
-     */
-    this.doMap = function (p_width, p_height, bInitialize) {
-    
-        if ((typeof bInitialize == "undefined") || (bInitialize === null) || (bInitialize === true)) {
-            // Initialize side width.
-            this.setSide(p_width, p_height);
-            
-            // For debug purpose.
-            // if (isdebug) dbg_date[2] = new Date();
-            
-            // Initialize height.
-            this.initialize(-1);
-            // Initialize corners.
-            this.fillCorners(true);
-        }
-        // For debug purpose.
-        // if (isdebug) dbg_date[3] = new Date();
-
-        // Do map!
-        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
-        
-        // For debug purpose.
-        // if (isdebug) dbg_date[4] = new Date();
- 
-        // Smooth height map to remove weird points.
-        this.smooth();
-        
-        // For debug purpose.
-        // if (isdebug) dbg_date[5] = new Date();
-
-        // Crop the working map to get the requested map.
-        this.crop();
-
-        // For debug purpose.
-        // if (isdebug) dbg_date[6] = new Date();
-
-    };
 
     // Size of the current map [0 .. side], [0 .. side].
     // Always have to be (N^2)+1 x (N^2)+1 ("diamond square" algorithm. Better looking results with squares).
