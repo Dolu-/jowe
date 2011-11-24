@@ -162,7 +162,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
      * The function ensure that the result is positive and less than the pitch (max height).
      */
     function addDelta(avg, delta) {
-        if (0 < delta) avg += ((((delta * 2) + 1) * rand()) - delta);
+        if (delta) avg += ((((delta * 2) + 1) * rand()) - delta);
         return (pitch < avg) ? pitch : (0 > avg) ? 0 : floor(avg);
     }
     
@@ -178,7 +178,8 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // Notice : Removing floor below could produce more realistics maps (it adds more noise).
                  // Should it be set by default ? Next "floor" is done in addDelta().
                  // (caution : it takes more time on FF when removed).
-        var delta = floor((x2 - xm) / ratio), xmym = 0, H = this.item,
+        var delta = floor((x2 - xm) / ratio),
+            xmym = 0, H = this.item,
             x1y1  = H[x1][y1],
             x2y2  = H[x2][y2],
             x1y2  = H[x1][y2],
@@ -449,7 +450,6 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
     } else {
         rand = new Alea();
     }
-
     // Array with the world map.
     this.item = [];
 }
