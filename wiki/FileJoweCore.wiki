@@ -8,15 +8,9 @@ This is the main file of the project. It contains the "engine" to construct your
 It only produces an array of integer with random values. That's the single purpose of that object.
 That way, its result could be used in any other GUI.
 
-== Details ==
-
-More to come very soon...
-
 == Usage ==
 
-Usage 1:
-
-Calling methods individually.
+=== Method 1: Calling methods individually ===
 
 {{{
 // Create a new HeightMap object with default values
@@ -39,9 +33,7 @@ oMap.smooth();
 oMap.crop();
 }}}
 
-Usage 2:
-
-Calling the "all-in-one" method.
+=== Method 2: Calling the "all-in-one" method ===
 
 {{{
 // Create a new HeightMap object with default values.
@@ -68,23 +60,8 @@ oMap.item =
 
 == Notice ==
 
-*Content :*
-  * HeightMap()
-    * Private methods
-      * randomMinMax(min, max) {...}
-      * function addDelta(avg, delta) {...}
-    * Privileged methods
-      * initialize: function (h) {...}
-      * fillCorners: function (overwrite) {...}
-      * fillBorders: function (value, borderwidth) {...}
-      * make: function (x1, y1, x2, y2, xm, ym) {...}
-      * smooth: function () {...}
-      * crop: function (p_width, p_height) {...}
-      * copy: function (source, from_x, from_y) {...}
-      * makeMap: function () {...}
-      * setAleaSeed: function (seed) {...}
-      * setSide: function (p_width, p_height) {...}
-      * doMap: function (p_width, p_height, bInitialize) {...}
-    * Public variable
-      * item: Array[]
+For an online help on how to use the jowe-core.js file, follow that [http://jowe.ouebfrance.com/examples-jowe-core.html link]
 
+== Documentation ==
+
+[http://jowe.ouebfrance.com/jsdoc/HeightMap.html Online] documentation for the HeightMap object provided by the jowe-core.js file.
