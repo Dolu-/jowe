@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
+    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
+    <meta charset="UTF-8" />
+    
+    <title>jOWE ~ Examples ~ jowe-core.js (part 2 - with colors)</title>
+    
+    <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-alea.js"></script>
+
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-20897630-2']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</head>
+<!--
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010-2012 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+
+How to use the HeightMap object (part 2).
+
+-->
+<body>
+<em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
+<hr />
+<p>
+	We've seen in the <a href="examples-jowe-core.html">previous part</a> how to use the HeightMap object to generate
+	an array with random values, like the one below :<br />
+</p>
+
+<pre>
+  [[6,6,5,5,4,4,3,3,3,4,4,4] 
+  ,[6,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,5,4,4,3,3,3,4,4,4] 
+  ,[5,5,5,4,4,3,3,3,3,4,4,4] 
+  ,[4,4,4,4,3,3,3,3,3,4,4,4] 
+  ,[4,4,3,3,3,3,3,3,3,4,4,4] 
+  ,[3,3,3,2,2,2,3,3,3,3,4,4] 
+  ,[3,3,2,2,2,2,2,2,3,3,4,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,4] 
+  ,[2,2,2,2,2,2,2,2,2,3,3,3]]
+</pre>
+
+<h1>Green map</h1>
+
+<p>
+	From there, it's no big deal to produce some colored map, taking values in the array as argument for the RGB function.<br />
+	The "pitch" gives the maximum value we can encounter in the array. Then we can calculate the color this way :
+</p>
+
+<pre>
+  red_value = 0;
+  green_value = Math.floor((item[x][y] / pitch) * 255);
+  blue_value = 0;
+</pre>
+
+<p>
+	It will give us some green map like this one :
+</p>
+
+<pre>
+    <span style="background:rgb(0,191,0)">&nbsp;6</span><span style="background:rgb(0,191,0)">&nbsp;6</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,191,0)">&nbsp;6</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,159,0)">&nbsp;5</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,127,0)">&nbsp;4</span>
+    <span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,63,0)">&nbsp;2</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span><span style="background:rgb(0,95,0)">&nbsp;3</span>
+</pre>
+
+<h1>Pure HTML "realistic" map</h1>
+
+<p>
+	Of course, there's plenty other way to transform the HeightMap to a colored map.<br />
+	We can have an array of "color", each color having a specific meaning :
+</p>
+
+<pre>
+  <i><font color=blue>var</font></i> height_color = ['#0000ee'    <font color=green>// dark blue (ocean)</font>
+                     ,'#0000ee'    <font color=green>// dark blue (ocean)</font>
+                     ,'#0033dd'    <font color=green>// blue (sea/coast)</font>
+                     ,'#20F220'    <font color=green>// light green (plain)</font>
+                     ,'#10D210'    <font color=green>// green (plain)</font>
+                     ,'#00B200'    <font color=green>// dark green (plain)</font>
+                     ,'#505050'    <font color=green>// gray (mountain)</font>
+                     ,'#505050'    <font color=green>// gray (mountain)</font>
+                     ,'#DADADA'];  <font color=green>// white (snow)</font>
+</pre>
+
+<p>
+	It gives a more "realistic" map (as we can expect from HTML code of course) :
+</p>
+
+<pre>
+    <span style="background:#505050">&nbsp;6</span><span style="background:#505050">&nbsp;6</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#505050">&nbsp;6</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#00B200">&nbsp;5</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#10D210">&nbsp;4</span>
+    <span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#0033dd">&nbsp;2</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span><span style="background:#20F220">&nbsp;3</span>
+</pre>
+
+<p>
+	The jOWE project does not provide (for now) method to produce HTML map from an HeightMap object.
+	So, if you have wrote any UI engine does it and you want to share, please feel free to contact me and join the project.<br />
+	The project is focused on the HTML5 canvas object to have a better rendering.
+</p>
+
+<h1>
+	Give it a try
+</h1>
+
+  <div id="tresult">
+    
+  </div>
+
+  <p>
+    Enter 'Pitch' and 'Ratio' :<br />
+    <input id="tpitch" type="text" value="8" size="6" maxlength="2" style="text-align:right;">
+      &
+    <input id="tratio" type="text" value="3.1" size="6" maxlength="4" style="text-align:right;"><br />
+    Enter 'width' x 'height' :<br />
+    <input id="twidth" type="text" value="20" size="6" maxlength="3" style="text-align:right;">
+      x
+    <input id="theight" type="text" value="36" size="6" maxlength="3" style="text-align:right;">
+    <input id="tsubmit" type="submit" value="Generate">
+  </p>
+  
+<script type="text/javascript">
+
+function run_test(p, r, w, h)
+{
+  var oMap;
+
+  // Create object with default values :
+  // pitch = 8, ratio = 3.1, width = 127, height = 127
+  oMap = new HeightMap(p, r);
+  
+  // Uncomment line below only if you want to have same result as example.
+  //oMap.setAleaSeed('jowe');
+  
+  var start = new Date().getTime();
+  
+  // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
+  oMap.doMap(w, h);
+  
+  var end = new Date().getTime();
+  var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'];
+  var s = "<pre>";
+  for(var i = 0; i < oMap.item.length; i++) {
+	for(var j = 0; j < oMap.item[i].length; j++) {
+		s += "<span style=\"background:" + height_color[Math.floor((oMap.item[i][j] / p) * height_color.length)] + "\">&nbsp;&nbsp;</span>";
+	}
+	s += "<br/>"
+  }
+  s += "</pre>";
+  $("#tresult").html(s + "<p><em>Heightmap processed in " + (end - start) + "ms</em></p>");
+}
+
+$(function () {
+
+  $("#tsubmit").click(function() {
+    run_test( 1 * $("#tpitch").val(), 1.0 * $("#tratio").val(), 1 * $("#twidth").val(), 1 * $("#theight").val() );
+  });
+
+});
+  
+</script>
+
+<hr />
+<em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
+</body>
+</html>

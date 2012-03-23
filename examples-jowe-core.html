@@ -5,12 +5,24 @@
     <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <meta charset="UTF-8" />
     
-    <title>jOWE ~ Examples ~ jowe-core.js</title>
+    <title>jOWE ~ Examples ~ jowe-core.js (part 1)</title>
     
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
 
-    <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-20897630-2']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
 </head>
 <!--
 ********************************************************************************
@@ -18,7 +30,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010-2011 Ludovic L.
+Copyright (c) 2010-2012 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -39,7 +51,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ********************************************************************************
 
-How to use the HeightMap object.
+How to use the HeightMap object (part 1).
 
 -->
 <body>
@@ -58,7 +70,7 @@ How to use the HeightMap object.
   var oMap = new HeightMap();
 </pre>
   
-  <h1>Method 1:</h1>
+  <h1>Method 1</h1>
   <p>Calling all methods individually :</p>
 
 <pre>
@@ -139,7 +151,7 @@ How to use the HeightMap object.
   ,[2,2,2,2,2,2,2,2,2,3,3,3]]
 </pre>
 
-  <h1>Method 2:</h1>
+  <h1>Method 2</h1>
   <p>Calling the "all-in-one" function :</p>
 
 <pre><font color=green>  // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").</font>
@@ -213,21 +225,8 @@ How to use the HeightMap object.
   ,[45,45,45,44,44,42,39,36,33,31,28,25,22,18,15,14,14,15,16,18,19,20,21,22,22,22,23,23,24,25,26,26,25,24]]
 </pre>
   
-  <h1>Try it :</h1>
+  <h1>Try it</h1>
 
-  <pre>
-  [[6,6,5,5,4,4,3,3,3,4,4,4] 
-  ,[6,5,5,5,4,4,3,3,3,4,4,4] 
-  ,[5,5,5,5,4,4,3,3,3,4,4,4] 
-  ,[5,5,5,4,4,3,3,3,3,4,4,4] 
-  ,[4,4,4,4,3,3,3,3,3,4,4,4] 
-  ,[4,4,3,3,3,3,3,3,3,4,4,4] 
-  ,[3,3,3,2,2,2,3,3,3,3,4,4] 
-  ,[3,3,2,2,2,2,2,2,3,3,4,4] 
-  ,[2,2,2,2,2,2,2,2,2,3,3,4] 
-  ,[2,2,2,2,2,2,2,2,2,3,3,3]]
-</pre>
-  
   <div id="tresult">
     
   </div>
@@ -263,7 +262,7 @@ function run_test(p, r, w, h)
   oMap.doMap(w, h);
   
   var end = new Date().getTime();
-  
+
   $("#tresult").html("<pre>" +
                      "oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";" +
                      "</pre>" +
@@ -279,6 +278,7 @@ $(function () {
 });
   
 </script>
+
 <hr />
 <em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
 </body>

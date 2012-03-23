@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010-2011 Ludovic L.
+Copyright (c) 2010-2012 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -78,107 +78,208 @@ NOTICE :
 
 */
 
-/*
- * [Public "object"] HeightMap()
- *
- * Random Height Map Generator Object.
- * arg_pitch  [integer] : pitch to be used (default : 8)
- * arg_ratio  [float]   : ratio to be used (default : 3.1)
- * arg_width  [integer] : width of the map to be generated (default : 127)
- * arg_height [integer] : height of the map to be generated (default : 127)
+/**
+ * @fileOverview This file contains the HeightMap object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
+ * @author Ludovic Lefebvre
+ * @version 1.0
  */
-function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
+
+/**
+ * Creates a new random height map generator object.
+ * @class Represents an HeightMap.
+ * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-core.html">HeightMap</a> object?
+ * @param {number} [opt_pitch=8]    Maximum elevation to be used. Items in the map will have a value between 0 and opt_pitch.
+ * @param {number} [opt_ratio=3.1]  Ratio to be used.
+ * @param {number} [opt_width=127]  Width of the map to be generated.
+ * @param {number} [opt_height=127] Height of the map to be generated.
+ */ 
+function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
+    "use strict";
     
-    /*
-     * [Privileged method] initialize()
-     *
-     * Initialize the item array.
-     * h [integer] : default value for each item.
+    /**
+     * Set minimum size for the side value of the working square.
+     * @type number
+     * @private
+     * @constant
+     */
+    var MIN_SIDE = 4;
+    
+    /**
+     * Set maximum size for the side value of the working square.
+     * @type number
+     * @private
+     * @constant
+     */
+    var MAX_SIDE = 1010;
+
+    /**
+     * Borders of the working height map to exclude from final result,
+     * because there are not processed in the smooth function.
+     * @type number
+     * @private
+     * @constant
+     */
+    var CROP_SIZE = 1;
+        
+    /**
+     * Maximum elevation for current map [0 to p_pitch].
+     * <br />
+     * You will have to adjust the color managment in "jowe-ui" to fit your elevation.
+     * @type number
+     * @private
+     */
+    var p_pitch = 8;
+        
+    /**
+     * Indicates how much height difference between 2 points we can have.
+     * Only used in "make" method.
+     * <br />
+     * By the way, combined with "p_pitch" (previous property),
+     * it allows to obtain very different types of map.
+     * <br/>
+     * For now 3.1 is around the minimum value to use, below that you
+     * could obtain strange map (unmanaged cell display).
+     * If you put an higher value, your map will look flattened.
+     * @type number
+     * @private
+     */
+    var p_ratio = 3.1;
+
+    /**
+     * Size of the current map [0 to p_side], [0 to p_side].
+     * <br />
+     * Always have to be (N^2)+1 x (N^2)+1 ("diamond square" algorithm. Better looking results with squares).
+     * We only need to store it once (p_side = width = height).
+     * @type number
+     * @private
+     */
+    var p_side = 129,
+        
+        // "real" dimension of the current object (not resized to 2^n square) and not cropped.
+        width = 127,
+        height = 127,
+        
+        // Random object/class.
+        rand;
+
+    /**
+     * Shorcut to Math function.
+     * <br />
+     * Used to "speed up" calls to Math.floor() function.
+     * @function
+     * @private
+     */
+    var floor = Math.floor;
+    
+    /**
+     * Result array with the world map.
+     * @type Array
+     * @public
+     */
+    this.item = [];
+    
+    /**
+     * Initialize the item array before calling the generator method.
+     * The whole item array is filled with the default value given as parameter.
+     * @param {number} h default value given to each item.
+     * @public
      */
     this.initialize = function (h) {
-        var x = side, a = this.item, b = [];
-        a.length = b.length = side;
+        var x = p_side, a = this.item, b = [];
+        a.length = b.length = p_side;
         while (x) b[--x] = h;
-        x = side;
+        x = p_side;
         while (x) a[--x] = b.slice();
     };
         
-    /*
-     * [Private method] randomMinMax
-     *
-     * Return a random value between min and max (included), result is rounded.
-     * min [integer]
-     * max [integer]
+    /**
+     * Generate a random value between min and max (both included), result is floored.
+     * @param {number} min
+     * @param {number} max
+     * @return {number} Random value.
+     * @private
      */
-    function randomMinMax(min, max) {
+    function p_randomMinMax(min, max) {
         return floor((rand() * ((max - min) + 1)) + min);
     }
 
-    /*
-     * [Privileged method] fillCorners
-     *
-     * Set random value for each corner - initialize the map (called once at initialization)
-     * overwrite [boolean]  : indicates if existing values should be overwritten
+    /**
+     * Set random value for each corner, needed before calling the generator.
+     * <br />
+     * Require the item array to be initialized.
+     * @param {boolean} overwrite Indicates if existing values should be overwritten.
+     * @protected
      */
     this.fillCorners = function (overwrite) {
         var H = this.item;
         if (overwrite || (0 > H[0][0])) {
-            H[0][0] = randomMinMax(0, pitch);
+            H[0][0] = p_randomMinMax(0, p_pitch);
         }
-        if (overwrite || (0 > H[side - 1][0])) {
-            H[side - 1][0] = randomMinMax(0, pitch);
+        if (overwrite || (0 > H[p_side - 1][0])) {
+            H[p_side - 1][0] = p_randomMinMax(0, p_pitch);
         }
-        if (overwrite || (0 > H[side - 1][side - 1])) {
-            H[side - 1][side - 1] = randomMinMax(0, pitch);
+        if (overwrite || (0 > H[p_side - 1][p_side - 1])) {
+            H[p_side - 1][p_side - 1] = p_randomMinMax(0, p_pitch);
         }
-        if (overwrite || (0 > H[0][side - 1])) {
-            H[0][side - 1] = randomMinMax(0, pitch);
+        if (overwrite || (0 > H[0][p_side - 1])) {
+            H[0][p_side - 1] = p_randomMinMax(0, p_pitch);
         }
     };
 
-    /*
-     * [Privileged method] fillBorders
-     *
-     * Set random value for each border.
-     * value [integer]       : default height to apply
-     * borderwidth [integer] : width of the border
+    /**
+     * Set a specified value for each border of the map.
+     * <br />
+     * The item array should be initialized.
+     * @param {number} value Default height to be applied.
+     * @param {number} borderwidth Width of the border to apply the value.
+     * @protected
      */
     this.fillBorders = function (value, borderwidth) {
-        var H = this.item, s = side - 1, x, y;
-
-        for (x = 0; x < side; x += 1) {
+        var H = this.item, s = p_side - 1, x, y;
+        for (x = 0; x < p_side; x += 1) {
             for (y = 0; y < borderwidth; y += 1) {
-                H[0 + y][x] = H[s - y][x] = H[x][0 + y] = H[x][s - y] = value;
+                H[y][x] = H[s - y][x] = H[x][y] = H[x][s - y] = value;
             }
         }
     };
     
-    /*
-     * [Private method] addDelta
-     *
+    /**
      * Return a value added with a random delta.
+     * <br/>
      * If the delta is more than 0, it adds to "avg" a random value between "-delta" and "+delta".
+     * <br />
      * In fact it sets the height between two points. The closer there are, the lower the delta will be.
      * The function ensure that the result is positive and less than the pitch (max height).
+     * <br />
+     * @param {number} avg
+     * @param {number} delta
+     * @return {number}
+     * @private
      */
-    function addDelta(avg, delta) {
+    function p_addDelta(avg, delta) {
         if (delta) avg += ((((delta * 2) + 1) * rand()) - delta);
-        return (pitch < avg) ? pitch : (0 > avg) ? 0 : floor(avg);
+        return (p_pitch < avg) ? p_pitch : (0 > avg) ? 0 : floor(avg);
     }
     
-    /*
-     * [Privileged method] make
-     *
+    /**
      * Generate a random map.
-     * Parameters indicates "top/left" and "right/bottom" limits.
-     * Caution : this function onyl works with 2^n squares, as it goes recursively with divide by 2.
+     * <br />
+     * Parameters indicates "top/left", "right/bottom" limits, and "middle" coordinates.
+     * <br />
+     * Caution : this function only works with 2^n squares, as it goes recursively with divide by 2.
+     * @param {number} x1 x coordinate of the top 
+     * @param {number} y1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} xm
+     * @param {number} ym
+     * @protected
      */
     this.make = function (x1, y1, x2, y2, xm, ym) {
-    
         // Notice : Removing floor below could produce more realistics maps (it adds more noise).
-                 // Should it be set by default ? Next "floor" is done in addDelta().
+                 // Should it be set by default ? Next "floor" is done in p_addDelta().
                  // (caution : it takes more time on FF when removed).
-        var delta = floor((x2 - xm) / ratio),
+        var delta = floor((x2 - xm) / p_ratio),
             xmym = 0, H = this.item,
             x1y1  = H[x1][y1],
             x2y2  = H[x2][y2],
@@ -186,16 +287,16 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
             x2y1  = H[x2][y1];
 
         // Set a random height for the middle of the current square.
-        // addDelta is called with the average height of the 4 points.
-        if (0 > H[xm][ym]) H[xm][ym] = addDelta((x1y1 + x1y2 + x2y2 + x2y1) / 4, delta);
+        // p_addDelta is called with the average height of the 4 points.
+        if (0 > H[xm][ym]) H[xm][ym] = p_addDelta((x1y1 + x1y2 + x2y2 + x2y1) / 4, delta);
         xmym = H[xm][ym];
   
         // Set a random height for the middle of the hypotenuse of each triangle.
-        // addDelta is called with the average height of the 3 points.
-        if (0 > H[xm][y1]) H[xm][y1] = addDelta((x1y1 + x2y1 + xmym) / 3, delta);
-        if (0 > H[xm][y2]) H[xm][y2] = addDelta((x1y2 + x2y2 + xmym) / 3, delta);
-        if (0 > H[x2][ym]) H[x2][ym] = addDelta((x2y1 + x2y2 + xmym) / 3, delta);
-        if (0 > H[x1][ym]) H[x1][ym] = addDelta((x1y1 + x1y2 + xmym) / 3, delta);
+        // p_addDelta is called with the average height of the 3 points.
+        if (0 > H[xm][y1]) H[xm][y1] = p_addDelta((x1y1 + x2y1 + xmym) / 3, delta);
+        if (0 > H[xm][y2]) H[xm][y2] = p_addDelta((x1y2 + x2y2 + xmym) / 3, delta);
+        if (0 > H[x2][ym]) H[x2][ym] = p_addDelta((x2y1 + x2y2 + xmym) / 3, delta);
+        if (0 > H[x1][ym]) H[x1][ym] = p_addDelta((x1y1 + x1y2 + xmym) / 3, delta);
 
         // Go on if there's space left to fill between points.
         if (((x2 - x1) > 2) || ((y2 - y1) > 2)) {
@@ -207,24 +308,20 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         }
     };
 
-    /*
-     * [Privileged method] smooth
-     *
+    /**
      * Set cells height to be closer to other adjacent cells.
+     * @protected
      */
-    this.smooth  = function () {
-        var H = this.item, x = 0, y = 0, sum = 0, s = side - 1, xm1 = [], xp1 = [], x0 = [];
+    this.smooth = function () {
+        var H = this.item, x = 0, y = 0, sum = 0, s = p_side - 1, xm1 = [], xp1 = [], x0 = [];
         // Goes through every lines and columns except first and last one,
         // because "sum" below takes every items around the current one.
-        for (xm1 = H[x], x = 1, x0 = H[x]; x < s ; x += 1) {
+        for (xm1 = H[x], x = 1, x0 = H[x]; x < s; x += 1) {
             xp1 = H[x + 1];
-            for (y = 1, sum = x0[1]; y < s ; y += 1) {
-
+            for (y = 1, sum = x0[1]; y < s; y += 1) {
                 sum += (xm1[y - 1] + xm1[y] + xm1[y + 1] + x0[y] + x0[y + 1] + xp1[y - 1] + xp1[y] + xp1[y + 1]);
-                
                 sum = floor((4 < (sum % 9) ? 1 : 0) + (sum / 9));
-                
-                if (pitch < sum) sum = pitch;
+                if (p_pitch < sum) sum = p_pitch;
                 x0[y] = sum;
             }
             xm1 = x0;
@@ -232,41 +329,47 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         }
     };
 
-    /*
-     * [Privileged method] crop
-     *
-     * Crop current map according to specific size.
+    /**
+     * Crop the current map according to specific size.
+     * <br />
+     * The internal "item" array will then be reduced.
+     * @param {number} opt_width Width of the cropped map.
+     * @param {number} opt_height Haight of the cropped map.
+     * @protected
      */
-    this.crop = function (p_width, p_height) {
+    this.crop = function (opt_width, opt_height) {
         // Initialise width and height if not specified.
-        p_width  = typeof p_width  != "undefined" ? p_width  : width;
-        p_height = typeof p_height != "undefined" ? p_height : height;
+        opt_width  = typeof opt_width  != 'undefined' ? opt_width  : width;
+        opt_height = typeof opt_height != 'undefined' ? opt_height : height;
         
-        var a = this.item.slice(cropsize, p_width + cropsize),
-            hc = p_height + cropsize,
+        var a = this.item.slice(CROP_SIZE, opt_width + CROP_SIZE),
+            hc = opt_height + CROP_SIZE,
             x = a.length;
-        while (x--) a[x] = a[x].slice(cropsize, hc);
+        while (x--) a[x] = a[x].slice(CROP_SIZE, hc);
         this.item = a;
     };
 
-    /*
-     * [Privileged method] copy
-     *
-     * Copy data from another map to the current object at x, y coordinates
+    /**
+     * Copy data from another map to the current object at x, y coordinates.
+     * @param {array} source Source array that whose values will replace a part of the internal map array.
+     * @param {number} from_x X coordinate of the item array to start the copy
+     * @param {number} from_y Y coordinate of the item array to start the copy
+     * @protected
      */
     this.copy = function (source, from_x, from_y) {
         var D = this.item, S = source.item, x, y;
-        for (x = 0; x < S.length ; x += 1) 
+        for (x = 0; x < S.length; x += 1) 
             for (y = 0; y < S[0].length ; y += 1)
                 D[from_x + x][from_y + y] = S[x][y];
-    }
+    };
     
-    /*
-     * [Privileged method] makeMap
-     *
-     * This is only a shortcut to call function make() with default parameters.
+    /**
+     * This is a shortcut to call function make() with default parameters.
+     * <br />
      * All necessary variables should have been initialized.
+     * <br />
      * The "item" array will be set to "-1" if not already done.
+     * @protected
      */
     this.makeMap = function () {
         // Initialize the "item" array with default height to -1
@@ -276,36 +379,43 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
           this.fillCorners(true);
         }
         // Do map!
-        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
-    }
+        this.make(0, 0, p_side - 1, p_side - 1, floor((p_side - 1) / 2), floor((p_side - 1) / 2));
+    };
     
-    /*
-     * [Privileged method] makeMap
-     * 
-     * Allows to set a seed used to regenerate identical maps over multiple calls.
+    /**
+     * Allow you to set a seed used to regenerate identical maps over multiple calls.
+     * @param {*} opt_seed Seed used to generate the current map.
+     * @protected
      */
-    this.setAleaSeed = function (seed) {
+    this.setAleaSeed = function (opt_seed) {
         // Use Alea() if exists.
-        if (typeof Alea != "undefined") {
-            if ((typeof seed == "undefined") || (seed == null)) {
-                rand = new Alea();
+        if (typeof Alea != 'undefined') {
+            if ((typeof opt_seed == 'undefined') || (opt_seed == null)) {
+                rand = Alea();
             } else {
-                // Use "seed" if any.
-                rand = new Alea(seed);
+                // Use "opt_seed" if any.
+                rand = Alea(opt_seed);
             }
         }
-    }
+    };
     
-    /*
-     * [Privileged method] doMap
-     *
+    /**
      * Build a map (size is 0-based).
+     * <br />
      * doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
      * but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
+     * @example
+     * var oMap = new HeightMap(99, 0.54);
+     * oMap.doMap(14, 34);
+     * @param {number} p_width
+     * @param {number} p_height
+     * @param {boolean} bInitialize Tell to the function to goes through an initialization of the map array.
+     *                              Then will call "SetSide", "initialize" and "fillcorners" with default values.
+     * @protected
      */
     this.doMap = function (p_width, p_height, bInitialize) {
     
-        if ((typeof bInitialize == "undefined") || (bInitialize === null) || (bInitialize === true)) {
+        if ((typeof bInitialize == 'undefined') || (bInitialize === null) || (bInitialize === true)) {
             // Initialize side width.
             this.setSide(p_width, p_height);
             
@@ -321,7 +431,7 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // if (isdebug) dbg_date[3] = new Date();
 
         // Do map!
-        this.make(0, 0, side - 1, side - 1, floor((side - 1) / 2), floor((side - 1) / 2));
+        this.make(0, 0, p_side - 1, p_side - 1, floor((p_side - 1) / 2), floor((p_side - 1) / 2));
         
         // To test speed, uncomment line below :
         // if (isdebug) dbg_date[4] = new Date();
@@ -339,117 +449,61 @@ function HeightMap(arg_pitch, arg_ratio, arg_width, arg_height) {
         // if (isdebug) dbg_date[6] = new Date();
     };
     
-/* COMMENTS:
-    
-    Everything before this point is considered to be clean and optimized (nothing to be done in a short time).
-    
-    --------------------------------------------------------------------------------
-    
-    Everything below this point need to be cleaned up and probably rearrange...
-*/
-    
-    /*
-     * [Privileged method] setSide
-     *
-     * Calculate the value of the side of the "square".
-     * width  [integer],
-     * height [integer] : dimension of the requested map.
+    /**
+     * Calculate the side of the "square" used to generate the random heightmap.
+     * @param {number} opt_width
+     * @param {number} opt_height
+     * @return {number} calculated side to be used
+     * @protected
      */
-    this.setSide = function (p_width, p_height) {
+    this.setSide = function (opt_width, opt_height) {
         // Default values if none provided.
-        // It also limits size to [maxSide]x[maxSide], to avoid big generation time.
-        if ((p_width === undefined) || (p_height === undefined) ||
-            (p_width === null) || (p_height === null) ||
-            (isNaN(p_width)) || (isNaN(p_height)) ||
-            (p_width < minSide) || (p_height < minSide) ||
-            (p_width > maxSide) || (p_height > maxSide)) {
-            
-            p_width = p_height = height = width = 127;
+        // It also limits size to [MAX_SIDE]x[MAX_SIDE], to avoid big generation time.
+        if ((opt_width !== undefined) && (opt_width !== null) && (!isNaN(opt_width)) && (opt_width > MIN_SIDE) && (opt_width < MAX_SIDE)) {
+            width = floor(opt_width);
         } else {
-            width = p_width;
-            height = p_height;
+            width = 127;
         }
-
+        if ((opt_height !== undefined) && (opt_height !== null) && (!isNaN(opt_height)) && (opt_height > MIN_SIDE) && (opt_height < MAX_SIDE)) {
+            height = floor(opt_height);
+        } else {
+            height = 127;
+        }
         // We'll exclude all the border lines to avoid weird point,
         // so we enlarge the map size with (width+2) and (height+2).
-        p_width += (2 * cropsize);
-        p_height += (2 * cropsize);
+        opt_width += (2 * CROP_SIZE);
+        opt_height += (2 * CROP_SIZE);
 
         // Core engine (function make) works only with squares.
         // (BTW, we also have better results with 2^N x 2^N maps)
         // Let's keep the bigger side.
-        side = Math.max(p_width, p_height);
+        p_side = Math.max(opt_width, opt_height);
 
-        // Look for 2^n size (better results from 2^7).
+        // Look for closest 2^n size (better results from 2^7).
         var n = 4;
-        while (Math.pow(2, n) < side) {
+        while (Math.pow(2, n) < p_side) {
             n++;
         }
-
         // At this stage, working size will be ((Math.pow(2, n) + 1) x (Math.pow(2, n) + 1))
-        side = Math.pow(2, n) + 1;
+        p_side = Math.pow(2, n) + 1;
         
         // Return calculated value.
-        return side;
-    }
-
-    // Size of the current map [0 .. side], [0 .. side].
-    // Always have to be (N^2)+1 x (N^2)+1 ("diamond square" algorithm. Better looking results with squares).
-    // We only need to store it once (side = width = height).
-    var side = 129,
+        return p_side;
+    };
     
-        // Set minimum and maximum size for a side.
-        minSide = 4,
-        maxSide = 1000,
-        
-        // "real" dimension of the current object (not resized to 2^n square) and not cropped.
-        width = 127,
-        height = 127,
-        
-        // Maximum elevation for current map [0 .. _Pitch].
-        // You will have to adjust the color managment in "jowe-ui" to fit your elevation.
-        pitch = 8,
-        
-        // Indicates how much height difference between 2 points we can have.
-        // Only used in function "make"
-        // By the way, combined with "pitch" (previous property),
-        // it allows to obtain very different types of map.
-        // For now 3.1 is around the minimum value to use, below that you
-        // could obtain strange map (unmanaged cell display).
-        // If you put an higher value, your map will look flattened.
-        ratio = 3.1,
-
-        // Random object/class.
-        rand,
-
-        // Borders of the working height map to exclude from final result,
-        // because there are not processed in the smooth function.
-        cropsize = 1;
-        
-        // Shortcut to function.
-        floor = Math.floor;
-        
-    if ((arg_pitch !== undefined) && (arg_pitch !== null) && (!isNaN(arg_pitch))) {
-        pitch = floor(arg_pitch); // Just in case, pitch is floored, need to be an integer.
+    if ((opt_pitch !== undefined) && (opt_pitch !== null) && (!isNaN(opt_pitch))) {
+        p_pitch = floor(opt_pitch); // Just in case, pitch is floored, need to be an integer.
     }
-    if ((arg_ratio !== undefined) && (arg_ratio !== null) && (!isNaN(arg_ratio))) {
-        ratio = arg_ratio;
+    if ((opt_ratio !== undefined) && (opt_ratio !== null) && (!isNaN(opt_ratio))) {
+        p_ratio = opt_ratio;
     }
-    if ((arg_width !== undefined) && (arg_width !== null) && (!isNaN(arg_width))) {
-        width = floor(arg_width);
-    }
-    if ((arg_height !== undefined) && (arg_height !== null) && (!isNaN(arg_height))) {
-        height = floor(arg_height);
-    }
-    // Calculate side for the internal square
-    this.setSide(height, width);
+    // Set width and height and calculate side for the internal square
+    this.setSide(opt_width, opt_height);
 
     // Use Alea() if exists.
-    if (typeof Alea == "undefined") {
+    if (typeof Alea == 'undefined') {
         rand = Math.random;
     } else {
-        rand = new Alea();
+        rand = Alea();
     }
-    // Array with the world map.
-    this.item = [];
 }
