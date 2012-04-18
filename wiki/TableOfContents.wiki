@@ -5,3 +5,5 @@
   * [JoweContent Content]
     * [FileJoweAlea "jowe-alea.js"]
     * [FileJoweCore "jowe-core.js"]
+
+  * [http://jowe.ouebfrance.com/jsdoc/index.html Online Help]
