@@ -64,4 +64,4 @@ For an online help on how to use the jowe-core.js file, follow that [http://jowe
 
 == Documentation ==
 
-[http://jowe.ouebfrance.com/jsdoc/HeightMap.html Online] documentation for the HeightMap object provided by the jowe-core.js file.
+[http://jowe.ouebfrance.com/jsdoc/symbols/HeightMap.html Online] documentation for the HeightMap object provided by the jowe-core.js file.
