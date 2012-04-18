@@ -1,0 +1,1086 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="generator" content="JsDoc Toolkit" />
+
+<title>JsDoc Reference - HeightMap</title>
+<style type="text/css">
+body {font:13px Tahoma, Arial, Helvetica, sans-serif;width:900px}
+.header {clear:both;background-color:#ccc;padding:8px}
+h1 {font-size:150%;font-weight:bold;padding:0;margin:1em 0 0 .3em}
+hr {border:none 0;border-top:1px solid #7F8FB1;height:1px;padding:5px 0 5px 0}
+pre.code {display:block;padding:8px;border:1px dashed #ccc;background-color:lightYellow}
+#index {margin-top:24px;float:left;width:160px;position:absolute;left:8px;background-color:#F3F3F3;padding:8px}
+#content {margin-left:190px;width:700px}
+.classList {list-style-type:none;padding:0;margin:0 0 0 8px;font-family:arial, sans-serif;font-size:1em;overflow:auto}
+.classList li {padding:0;margin:0 0 8px 0}
+.summaryTable {width:100%}
+h1.classTitle {font-size:170%;line-height:130%}
+h2 {font-size:110%}
+caption, div.sectionTitle {background-color:#7F8FB1;color:#fff;font-size:2em;text-align:left;padding:5px 0px 5px 10px;border:1px #7F8FB1 solid;margin-top:2em}
+div.sectionTitle {margin-bottom:8px 0 8px 0}
+.summaryTable thead {display:none;}
+.summaryTable td {vertical-align:top;padding:4px;border-bottom:1px #7F8FB1 solid;border-right:1px #7F8FB1 solid}
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes {border-left:1px #7F8FB1 solid;width:140px;text-align:right;font-size:11px}
+td.attributes, .fixedFont {color:#002EBE;font-family:"Courier New",Courier,monospace;font-size:1.1em;padding-bottom:0.7em}
+.summaryTable td.nameDescription {text-align:left;font-size:13px;line-height:15px}
+.summaryTable td.nameDescription, .description {padding:0.2em;margin-left:2em}
+.summaryTable {margin-bottom:8px;}
+ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
+.detailList {margin-left:20px;line-height:15px}
+.detailList dt {margin-left:20px;}
+.detailList .heading {font-weight:bold;padding-bottom:6px;margin-left:0}
+.light, td.attributes, .light a:link, .light a:visited {color:#777;font-style:italic}
+.fineprint {text-align:center;font-size:10px}
+</style>
+</head>
+<body>
+<div id="header">
+<em>This page is a part of the <a href="http://code.google.com/p/jowe/">jOWE</a> project - a javascript Opensource Word Engine</em>
+<hr />
+</div>
+<div id="index">
+	<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+
+<li></li>
+
+<li><a href="../symbols/HeightMap.html">HeightMap</a></li>
+
+<li><a href="../symbols/jowe_ui_2d_hexa.html">jowe_ui_2d_hexa</a></li>
+
+</ul>
+<hr />
+</div>
+<div id="content">
+	<h1 class="classTitle">
+		
+		Class HeightMap
+	</h1>
+	<p class="description">
+		
+		
+		Represents an HeightMap.
+	</p>
+<!-- ============================== constructor summary ==================== -->			
+	
+	<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class HeightMap.">
+		<caption>Class Summary</caption>
+		<thead>
+			<tr>
+				<th scope="col">Constructor Attributes</th>
+				<th scope="col">Constructor Name and Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="attributes">&nbsp;</td>
+				<td class="nameDescription" >
+					<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#constructor">HeightMap</a></b>(opt_pitch, opt_ratio, opt_width, opt_height)
+					</div>
+					<div class="description">Creates a new random height map generator object.</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+<!-- ============================== properties summary ===================== -->
+	
+		
+		
+		<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class HeightMap.">
+			<caption>Field Summary</caption>
+			<thead>
+				<tr>
+					<th scope="col">Field Attributes</th>
+					<th scope="col">Field Name and Description</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &lt;constant&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-CROP_SIZE">CROP_SIZE</a></b>
+						</div>
+						<div class="description">Borders of the working height map to exclude from final result,
+because there are not processed in the smooth function.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#item">item</a></b>
+						</div>
+						<div class="description">Result array with the world map.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &lt;constant&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-MAX_SIDE">MAX_SIDE</a></b>
+						</div>
+						<div class="description">Set maximum size for the side value of the working square.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &lt;constant&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-MIN_SIDE">MIN_SIDE</a></b>
+						</div>
+						<div class="description">Set minimum size for the side value of the working square.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-p_pitch">p_pitch</a></b>
+						</div>
+						<div class="description">Maximum elevation for current map [0 to p_pitch].</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-p_ratio">p_ratio</a></b>
+						</div>
+						<div class="description">Indicates how much height difference between 2 points we can have.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont">
+						<b><a href="../symbols/HeightMap.html#-p_side">p_side</a></b>
+						</div>
+						<div class="description">Size of the current map [0 to p_side], [0 to p_side].</div>
+					</td>
+				</tr>
+			
+			</tbody>
+		</table>
+		
+		
+	
+<!-- ============================== methods summary ======================== -->
+	
+		
+		
+		<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class HeightMap.">
+			<caption>Method Summary</caption>
+			<thead>
+				<tr>
+					<th scope="col">Method Attributes</th>
+					<th scope="col">Method Name and Description</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#copy">copy</a></b>(source, from_x, from_y)
+						</div>
+						<div class="description">Copy data from another map to the current object at x, y coordinates.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#crop">crop</a></b>(opt_width, opt_height)
+						</div>
+						<div class="description">Crop the current map according to specific size.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#doMap">doMap</a></b>(p_width, p_height, bInitialize)
+						</div>
+						<div class="description">Build a map (size is 0-based).</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#fillBorders">fillBorders</a></b>(value, borderwidth)
+						</div>
+						<div class="description">Set a specified value for each border of the map.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#fillCorners">fillCorners</a></b>(overwrite)
+						</div>
+						<div class="description">Set random value for each corner, needed before calling the generator.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#-floor">floor</a></b>()
+						</div>
+						<div class="description">Shorcut to Math function.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#initialize">initialize</a></b>(h)
+						</div>
+						<div class="description">Initialize the item array before calling the generator method.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#make">make</a></b>(x1, y1, x2, y2, xm, ym)
+						</div>
+						<div class="description">Generate a random map.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#makeMap">makeMap</a></b>()
+						</div>
+						<div class="description">This is a shortcut to call function make() with default parameters.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#-p_addDelta">p_addDelta</a></b>(avg, delta)
+						</div>
+						<div class="description">Return a value added with a random delta.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#-p_randomMinMax">p_randomMinMax</a></b>(min, max)
+						</div>
+						<div class="description">Generate a random value between min and max (both included), result is floored.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#setAleaSeed">setAleaSeed</a></b>(opt_seed)
+						</div>
+						<div class="description">Allow you to set a seed used to regenerate identical maps over multiple calls.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#setSide">setSide</a></b>(opt_width, opt_height)
+						</div>
+						<div class="description">Calculate the side of the "square" used to generate the random heightmap.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/HeightMap.html#smooth">smooth</a></b>()
+						</div>
+						<div class="description">Set cells height to be closer to other adjacent cells.</div>
+					</td>
+				</tr>
+			
+			</tbody>
+		</table>
+		
+		
+	
+<!-- ============================== events summary ======================== -->
+	
+<!-- ============================== constructor details ==================== -->		
+	
+	<div class="details"><a name="constructor"> </a>
+		<div class="sectionTitle">
+			Class Detail
+		</div>
+		<div class="fixedFont">
+				<b>HeightMap</b>(opt_pitch, opt_ratio, opt_width, opt_height)
+		</div>
+		<div class="description">
+			Creates a new random height map generator object.
+			
+		</div>
+		
+			
+				<dl class="detailList">
+				<dt class="heading">Parameters:</dt>
+				
+					<dt>
+						<span class="light fixedFont">{number}</span>  <b>opt_pitch</b>
+						<i>Optional, Default: 8</i>
+					</dt>
+						<dd>Maximum elevation to be used. Items in the map will have a value between 0 and opt_pitch.</dd>
+				
+					<dt>
+						<span class="light fixedFont">{number}</span>  <b>opt_ratio</b>
+						<i>Optional, Default: 3.1</i>
+					</dt>
+						<dd>Ratio to be used.</dd>
+				
+					<dt>
+						<span class="light fixedFont">{number}</span>  <b>opt_width</b>
+						<i>Optional, Default: 127</i>
+					</dt>
+						<dd>Width of the map to be generated.</dd>
+				
+					<dt>
+						<span class="light fixedFont">{number}</span>  <b>opt_height</b>
+						<i>Optional, Default: 127</i>
+					</dt>
+						<dd>Height of the map to be generated.</dd>
+				
+				</dl>
+			
+			
+			
+			
+			
+			
+			
+				<dl class="detailList">
+				<dt class="heading">See:</dt>
+				
+					<dd>How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-core.html">HeightMap</a> object?</dd>
+				
+				</dl>
+			
+	</div>
+	
+<!-- ============================== field details ========================== -->		
+	
+		<div class="sectionTitle">
+			Field Detail
+		</div>
+		
+			<a name="-CROP_SIZE"> </a>
+			<div class="fixedFont">&lt;private&gt; &lt;constant&gt; 
+			<span class="light">{number}</span>
+			<b>CROP_SIZE</b>
+			</div>
+			<div class="description">
+				Borders of the working height map to exclude from final result,
+because there are not processed in the smooth function.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="item"> </a>
+			<div class="fixedFont">
+			<span class="light">{Array}</span>
+			<b>item</b>
+			</div>
+			<div class="description">
+				Result array with the world map.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-MAX_SIDE"> </a>
+			<div class="fixedFont">&lt;private&gt; &lt;constant&gt; 
+			<span class="light">{number}</span>
+			<b>MAX_SIDE</b>
+			</div>
+			<div class="description">
+				Set maximum size for the side value of the working square.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-MIN_SIDE"> </a>
+			<div class="fixedFont">&lt;private&gt; &lt;constant&gt; 
+			<span class="light">{number}</span>
+			<b>MIN_SIDE</b>
+			</div>
+			<div class="description">
+				Set minimum size for the side value of the working square.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-p_pitch"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			<span class="light">{number}</span>
+			<b>p_pitch</b>
+			</div>
+			<div class="description">
+				Maximum elevation for current map [0 to p_pitch].
+<br />
+You will have to adjust the color managment in "jowe-ui" to fit your elevation.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-p_ratio"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			<span class="light">{number}</span>
+			<b>p_ratio</b>
+			</div>
+			<div class="description">
+				Indicates how much height difference between 2 points we can have.
+Only used in "make" method.
+<br />
+By the way, combined with "p_pitch" (previous property),
+it allows to obtain very different types of map.
+<br/>
+For now 3.1 is around the minimum value to use, below that you
+could obtain strange map (unmanaged cell display).
+If you put an higher value, your map will look flattened.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-p_side"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			<span class="light">{number}</span>
+			<b>p_side</b>
+			</div>
+			<div class="description">
+				Size of the current map [0 to p_side], [0 to p_side].
+<br />
+Always have to be (N^2)+1 x (N^2)+1 ("diamond square" algorithm. Better looking results with squares).
+We only need to store it once (p_side = width = height).
+				
+				
+			</div>
+			
+				
+				
+				
+				
+			
+		
+	
+<!-- ============================== method details ========================= -->		
+	
+		<div class="sectionTitle">
+			Method Detail
+		</div>
+		
+			<a name="copy"> </a>
+			<div class="fixedFont">
+			
+			<b>copy</b>(source, from_x, from_y)
+			</div>
+			<div class="description">
+				Copy data from another map to the current object at x, y coordinates.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{array}</span> <b>source</b>
+							
+						</dt>
+						<dd>Source array that whose values will replace a part of the internal map array.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>from_x</b>
+							
+						</dt>
+						<dd>X coordinate of the item array to start the copy</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>from_y</b>
+							
+						</dt>
+						<dd>Y coordinate of the item array to start the copy</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="crop"> </a>
+			<div class="fixedFont">
+			
+			<b>crop</b>(opt_width, opt_height)
+			</div>
+			<div class="description">
+				Crop the current map according to specific size.
+<br />
+The internal "item" array will then be reduced.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>opt_width</b>
+							<i>Optional</i>
+						</dt>
+						<dd>Width of the cropped map.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>opt_height</b>
+							<i>Optional</i>
+						</dt>
+						<dd>Height of the cropped map.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="doMap"> </a>
+			<div class="fixedFont">
+			
+			<b>doMap</b>(p_width, p_height, bInitialize)
+			</div>
+			<div class="description">
+				Build a map (size is 0-based).
+<br />
+doMap(5, 10) will return a map with dimension [0 .. 4][0 .. 9]
+but as we need 2 points to make a cell we'll have 4x9 cells (= 36 true cells displayed).
+				
+				
+			</div>
+			
+			
+			<pre class="code">var oMap = new HeightMap(99, 0.54);
+oMap.doMap(14, 34);</pre>
+			
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>p_width</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>p_height</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{boolean}</span> <b>bInitialize</b>
+							<i>Optional, Default: true</i>
+						</dt>
+						<dd>Tell to the function to goes through an initialization of the map array.
+                             Then will call "SetSide", "initialize" and "fillcorners" with default values.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="fillBorders"> </a>
+			<div class="fixedFont">
+			
+			<b>fillBorders</b>(value, borderwidth)
+			</div>
+			<div class="description">
+				Set a specified value for each border of the map.
+<br />
+The item array should be initialized.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>value</b>
+							
+						</dt>
+						<dd>Default height to be applied.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>borderwidth</b>
+							
+						</dt>
+						<dd>Width of the border to apply the value.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="fillCorners"> </a>
+			<div class="fixedFont">
+			
+			<b>fillCorners</b>(overwrite)
+			</div>
+			<div class="description">
+				Set random value for each corner, needed before calling the generator.
+<br />
+Require the item array to be initialized.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{boolean}</span> <b>overwrite</b>
+							
+						</dt>
+						<dd>Indicates if existing values should be overwritten.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-floor"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			
+			<b>floor</b>()
+			</div>
+			<div class="description">
+				Shorcut to Math function.
+<br />
+Used to "speed up" calls to Math.floor() function.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="initialize"> </a>
+			<div class="fixedFont">
+			
+			<b>initialize</b>(h)
+			</div>
+			<div class="description">
+				Initialize the item array before calling the generator method.
+The whole item array is filled with the default value given as parameter.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>h</b>
+							
+						</dt>
+						<dd>default value given to each item.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="make"> </a>
+			<div class="fixedFont">
+			
+			<b>make</b>(x1, y1, x2, y2, xm, ym)
+			</div>
+			<div class="description">
+				Generate a random map.
+<br />
+Parameters indicates "top/left", "right/bottom" limits, and "middle" coordinates.
+<br />
+Caution : this function only works with 2^n squares, as it goes recursively with divide by 2.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>x1</b>
+							
+						</dt>
+						<dd>x coordinate of the top</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>y1</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>x2</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>y2</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>xm</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>ym</b>
+							
+						</dt>
+						<dd></dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="makeMap"> </a>
+			<div class="fixedFont">
+			
+			<b>makeMap</b>()
+			</div>
+			<div class="description">
+				This is a shortcut to call function make() with default parameters.
+<br />
+All necessary variables should have been initialized.
+<br />
+The "item" array will be set to "-1" if not already done.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="-p_addDelta"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			<span class="light">{number}</span>
+			<b>p_addDelta</b>(avg, delta)
+			</div>
+			<div class="description">
+				Return a value added with a random delta.
+<br/>
+If the delta is more than 0, it adds to "avg" a random value between "-delta" and "+delta".
+<br />
+In fact it sets the height between two points. The closer there are, the lower the delta will be.
+The function ensure that the result is positive and less than the pitch (max height).
+<br />
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>avg</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>delta</b>
+							
+						</dt>
+						<dd></dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+					<dl class="detailList">
+					<dt class="heading">Returns:</dt>
+					
+						<dd><span class="light fixedFont">{number}</span> </dd>
+					
+					</dl>
+				
+				
+				
+			<hr />
+		
+			<a name="-p_randomMinMax"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			<span class="light">{number}</span>
+			<b>p_randomMinMax</b>(min, max)
+			</div>
+			<div class="description">
+				Generate a random value between min and max (both included), result is floored.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>min</b>
+							
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>max</b>
+							
+						</dt>
+						<dd></dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+					<dl class="detailList">
+					<dt class="heading">Returns:</dt>
+					
+						<dd><span class="light fixedFont">{number}</span> Random value.</dd>
+					
+					</dl>
+				
+				
+				
+			<hr />
+		
+			<a name="setAleaSeed"> </a>
+			<div class="fixedFont">
+			
+			<b>setAleaSeed</b>(opt_seed)
+			</div>
+			<div class="description">
+				Allow you to set a seed used to regenerate identical maps over multiple calls.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{*}</span> <b>opt_seed</b>
+							<i>Optional</i>
+						</dt>
+						<dd>Seed used to generate the current map.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
+			<a name="setSide"> </a>
+			<div class="fixedFont">
+			<span class="light">{number}</span>
+			<b>setSide</b>(opt_width, opt_height)
+			</div>
+			<div class="description">
+				Calculate the side of the "square" used to generate the random heightmap.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>opt_width</b>
+							<i>Optional</i>
+						</dt>
+						<dd></dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>opt_height</b>
+							<i>Optional</i>
+						</dt>
+						<dd></dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+					<dl class="detailList">
+					<dt class="heading">Returns:</dt>
+					
+						<dd><span class="light fixedFont">{number}</span> calculated side to be used</dd>
+					
+					</dl>
+				
+				
+				
+			<hr />
+		
+			<a name="smooth"> </a>
+			<div class="fixedFont">
+			
+			<b>smooth</b>()
+			</div>
+			<div class="description">
+				Set cells height to be closer to other adjacent cells.
+				
+				
+			</div>
+			
+				
+				
+				
+				
+				
+				
+				
+			
+		
+	
+<!-- ============================== event details ========================= -->		
+	
+	<hr />
+</div>
+<!-- ============================== footer ================================= -->
+<div class="fineprint" style="clear:both">
+Ludovic L. ~ jOWE project ~&nbsp;
+&copy;2010-2012<br />
+Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 18 2012 18:26:27 GMT+0200 (CEST)
+</div>
+</body>
+</html>

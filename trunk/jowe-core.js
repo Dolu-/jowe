@@ -333,8 +333,8 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
      * Crop the current map according to specific size.
      * <br />
      * The internal "item" array will then be reduced.
-     * @param {number} opt_width Width of the cropped map.
-     * @param {number} opt_height Haight of the cropped map.
+     * @param {number} [opt_width] Width of the cropped map.
+     * @param {number} [opt_height] Height of the cropped map.
      * @protected
      */
     this.crop = function (opt_width, opt_height) {
@@ -384,7 +384,7 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
     
     /**
      * Allow you to set a seed used to regenerate identical maps over multiple calls.
-     * @param {*} opt_seed Seed used to generate the current map.
+     * @param {*} [opt_seed] Seed used to generate the current map.
      * @protected
      */
     this.setAleaSeed = function (opt_seed) {
@@ -409,7 +409,7 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
      * oMap.doMap(14, 34);
      * @param {number} p_width
      * @param {number} p_height
-     * @param {boolean} bInitialize Tell to the function to goes through an initialization of the map array.
+     * @param {boolean} [bInitialize=true] Tell to the function to goes through an initialization of the map array.
      *                              Then will call "SetSide", "initialize" and "fillcorners" with default values.
      * @protected
      */
@@ -451,8 +451,8 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
     
     /**
      * Calculate the side of the "square" used to generate the random heightmap.
-     * @param {number} opt_width
-     * @param {number} opt_height
+     * @param {number} [opt_width]
+     * @param {number} [opt_height]
      * @return {number} calculated side to be used
      * @protected
      */
