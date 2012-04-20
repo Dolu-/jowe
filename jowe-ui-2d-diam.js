@@ -101,6 +101,7 @@ function jowe_ui_2d_diam(canvas_id, canvas_width, canvas_height, canvas_backcolo
             x, y,
             // temporarly x,y coordinates.
             tx, ty,
+            mtx, mty,
             wdiv2 = w/2,
             hdiv2 = h/2,
             // distance between tiles.
@@ -141,38 +142,51 @@ function jowe_ui_2d_diam(canvas_id, canvas_width, canvas_height, canvas_backcolo
         // coordinate needs to be processed accordingly.
         this.map.rotate(-angle * Math.PI/180);
         // [step 3]
-        // At last we go to the position of the first tile to be drawn.
-        this.map.translate(-xc * wdiv2, -yc * hdiv2);
-        
-        
+        // At last we go in the center of the current map.
+        switch (alt) {
+          case 1 : // skew map.
+            mtx = - ((xc * (w + dist)) - (yc * (wdiv2 + dist))) / 2;
+            mty = -(yc * (hdiv2 + dist)) / 2;
+            break;
+          case 2 : // saw map.
+            mtx = (3/4*w)-(xc * (w + dist)) / 2;
+            mty = (3/8*h)-(yc * (hdiv2 + dist)) / 2;
+            break;
+          default: // diamond map.
+            mtx = (yc - xc) * (wdiv2 + dist) / 2;
+            mty = -((xc + yc) / 2) * (h + dist) / 2;
+            break;
+        }
+        this.map.translate(mtx, mty);
+
         //
         // TODO : build a smaller rectangle than the canvas and check that at least one of its corner is included
         //        in the rectangle of the map, if not return false.
         //
         
-        
         // Coordinates of the corners of the drawing area.
         // Each tile that's not inside this area won't be drawn.
-        ptx[0] = ptx[3] = -(width  / 2) - x_off - ((w + dist) * 2);
-        pty[0] = pty[1] = -(height / 2) - y_off - ((h + dist) * 2);
-        ptx[1] = ptx[2] =  (width  / 2) - x_off + ((w + dist) * 2);
-        pty[2] = pty[3] =  (height / 2) - y_off + ((h + dist) * 2);
+        ptx[0] = ptx[3] = -(width  / 2) - x_off - (w + dist);
+        pty[0] = pty[1] = -(height / 2) - y_off - (h + dist);
+        ptx[1] = ptx[2] =  (width  / 2) - x_off + (w + dist);
+        pty[2] = pty[3] =  (height / 2) - y_off + (h + dist);
         // Loop to take in account the rotation and the last offset.
         for (var n = 0; n < 4; n += 1) {
             // Rotate the point coordinate.
-            var tx = Math.floor((Math.cos(angle * Math.PI/180) * ptx[n]) - (Math.sin(angle * Math.PI/180) * pty[n])),
-                ty = Math.floor((Math.sin(angle * Math.PI/180) * ptx[n]) + (Math.cos(angle * Math.PI/180) * pty[n]));
+            tx = Math.floor((Math.cos(angle * Math.PI/180) * ptx[n]) - (Math.sin(angle * Math.PI/180) * pty[n]));
+            ty = Math.floor((Math.sin(angle * Math.PI/180) * ptx[n]) + (Math.cos(angle * Math.PI/180) * pty[n]));
             // Then add the dimension of the heightmap according to the last translation (step 3)
-            ptx[n] = tx + (xc * wdiv2);
-            pty[n] = ty + (yc * hdiv2);
+            ptx[n] = tx - mtx;
+            pty[n] = ty - mty;
             
             /* [uncomment for dev only :]
+            */
             this.map.fillStyle = '#00ffff';
             this.map.fillRect(ptx[n] - 2, pty[n] - 2, 4, 4);
-            */
         }
         
         /* [uncomment for dev only :]
+        */
         this.map.beginPath();
         this.map.width = 1;
         this.map.strokeStyle = '#00ffff';
@@ -182,12 +196,12 @@ function jowe_ui_2d_diam(canvas_id, canvas_width, canvas_height, canvas_backcolo
         this.map.lineTo(ptx[3],pty[3]);
         this.map.lineTo(ptx[0],pty[0]);
         this.map.stroke();
-        */
 
         //
         // TODO : simplify (factorize) calculations to speed up the loop.
         //
         
+        //var nb = 0, dr = 0;
         // Going through each tile.
         for (y = 0; y < yc; y += 1) {
             ty = y * ((h + dist) / 2);
@@ -214,9 +228,12 @@ function jowe_ui_2d_diam(canvas_id, canvas_width, canvas_height, canvas_backcolo
                     this.map.lineTo(tx        , ty + hdiv2);
                     this.map.lineTo(tx - wdiv2, ty        );
                     this.map.fill();
+                    //dr += 1;
                 }
+                //nb += 1;
             }
         }
+        //console.log('tiles=',nb,'drawn=',dr);
         // Restores the context.
         this.map.restore();
     };

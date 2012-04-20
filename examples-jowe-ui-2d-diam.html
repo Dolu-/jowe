@@ -99,8 +99,8 @@ How to display a map with diamond tiles from an HeightMap.
   
   <font color="green">// Initialize the UI object and set the size of the canvas to 320x160 pixels.</font>
   <i><font color="blue">var</font></i> oCanvasMap = <i><font color="blue">new</font></i> jowe_ui_2d_diam("cmap", 320, 160, '#000');
-  <font color="green">// Draw the map without rotation, from offset (154, 5) and tile size of 14x28.</font>
-  oCanvasMap.draw(oHMap.item, 0, 154, 5, 14, 28, colors);
+  <font color="green">// Draw the map without rotation, from offset (0, 0) and tile size of 10x30.</font>
+  oCanvasMap.draw(oHMap.item, 0, 0, 0, 10, 30, colors);
   </pre>
 
   <canvas id="tmap" width="1" height="1" style="margin-left:40px;">
@@ -112,14 +112,14 @@ How to display a map with diamond tiles from an HeightMap.
         oCMap  = new jowe_ui_2d_diam("tmap", 320, 160, '#000');
     oHMap.setAleaSeed('jowe');
     oHMap.doMap(10, 12);
-    oCMap.draw(oHMap.item, 0, 154, 5, 14, 28, colors);
+    oCMap.draw(oHMap.item, 0, 0, 0, 10, 30, colors);
   </script>
 
   <p>The draw method allows two other drawing style alternatives, skew and saw :</p>
   <pre>  <font color="green">// "skew" map on the left.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 65, 30, 10, 20, colors, <font color="blue"><b>1</b></font>);
+  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 10, 20, colors, <font color="blue"><b>1</b></font>);
   <font color="green">// "saw" map on the right.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 10, 30, 10, 20, colors, <font color="blue"><b>2</b></font>);
+  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 10, 20, colors, <font color="blue"><b>2</b></font>);
   </pre>
 
   <canvas id="s1map" width="1" height="1" style="margin-left:40px;float:left;">
@@ -130,9 +130,9 @@ How to display a map with diamond tiles from an HeightMap.
   
   <script type="text/javascript">
     oCMap  = new jowe_ui_2d_diam("s1map", 320, 160, '#000');
-    oCMap.draw(oHMap.item, 0, 65, 30, 10, 20, colors, 1);
+    oCMap.draw(oHMap.item, 0, 0, 0, 10, 20, colors, 1);
     oCMap  = new jowe_ui_2d_diam("s2map", 320, 160, '#000');
-    oCMap.draw(oHMap.item, 0, 10, 30, 10, 20, colors, 2);
+    oCMap.draw(oHMap.item, 0, 0, 0, 10, 20, colors, 2);
   </script>
   
   <h1 style="clear:both;">Try it :</h1>
@@ -192,7 +192,7 @@ How to display a map with diamond tiles from an HeightMap.
   var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'],
       oHeightMap,
       oCanvasMap,
-      param = {a : 0, x : 330, y : 10, h : 14, w : 28, s : 0};
+      param = {a : 0, x : 0, y : 0, h : 14, w : 28, s : 0};
 
 function display_values()
 {
