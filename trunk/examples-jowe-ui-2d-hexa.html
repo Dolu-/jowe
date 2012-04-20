@@ -88,7 +88,7 @@ How to display a map with hexagonal tiles from an HeightMap.
     <ul>
       <li>the heightmap array</li>
       <li>the rotation angle used to display the map</li>
-      <li>x and y offset from where display the map</li>
+      <li>x and y offset from where display the map, the (0,0) coordinate correspond to the middle of the map.</li>
       <li>width and height of an hexagonal tile</li>
       <li>array of colors to paint the tiles depending on their height</li>
     </ul>
@@ -99,8 +99,8 @@ How to display a map with hexagonal tiles from an HeightMap.
   
   <font color="green">// Initialize the UI object and set the size of the canvas to 320x160 pixels.</font>
   <i><font color="blue">var</font></i> oCanvasMap = <i><font color="blue">new</font></i> jowe_ui_2d_hexa("cmap", 320, 160, '#000');
-  <font color="green">// Draw the map without rotation, from offset (40,30) and tile size of 17x17.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 40, 30, 17, 17, colors);
+  <font color="green">// Draw the map without rotation, from offset (0,0) and tile size of 16x16.</font>
+  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 16, 16, colors);
   </pre>
 
   <canvas id="tmap" width="1" height="1" style="margin-left:40px;">
@@ -112,20 +112,20 @@ How to display a map with hexagonal tiles from an HeightMap.
         oCMap  = new jowe_ui_2d_hexa("tmap", 320, 160, '#000');
     oHMap.setAleaSeed('jowe');
     oHMap.doMap(10, 12);
-    oCMap.draw(oHMap.item, 0, 40, 30, 17, 17, colors);
+    oCMap.draw(oHMap.item, 0, 0, 0, 16, 16, colors);
   </script>
 
   <p>If you'd rather have a straight map, you can use an optional parameter :</p>
-  <pre>  <font color="green">// Draw a straight map without rotation, from offset (10,30) and tile size of 17x17.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 10, 30, 17, 17, colors, <font color="blue"><b>true</b></font>);
+  <pre>  <font color="green">// Draw a straight map without rotation, from offset (0,0) and tile size of 16x16.</font>
+  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 16, 16, colors, <font color="blue"><b>true</b></font>);
   </pre>
 
   <canvas id="smap" width="1" height="1" style="margin-left:40px;">
   </canvas>
   
   <script type="text/javascript">
-    var oCsMap  = new jowe_ui_2d_hexa("smap", 320, 160, '#000');
-    oCsMap.draw(oHMap.item, 0, 10, 30, 17, 17, colors, true);
+    oCMap = new jowe_ui_2d_hexa("smap", 320, 160, '#000');
+    oCMap.draw(oHMap.item, 0, 0, 0, 16, 16, colors, true);
   </script>
   
   <h1>Try it :</h1>
@@ -181,7 +181,7 @@ How to display a map with hexagonal tiles from an HeightMap.
   var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'],
       oHeightMap,
       oCanvasMap,
-      param = {a : 0, x : 0, y : 35, h : 10, w : 9, s : true};
+      param = {a : 0, x : 0, y : 0, h : 10, w : 9, s : true};
 
 function display_values()
 {
