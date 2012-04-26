@@ -5,7 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="generator" content="JsDoc Toolkit" />
 
-<title>JsDoc Reference - jowe_ui_2d_diam</title>
+<title>JsDoc Reference - jowe_ui_2d_pixel</title>
 <style type="text/css">
 body {font:13px Tahoma, Arial, Helvetica, sans-serif;width:900px}
 .header {clear:both;background-color:#ccc;padding:8px}
@@ -65,16 +65,16 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 <div id="content">
 	<h1 class="classTitle">
 		
-		Class jowe_ui_2d_diam
+		Class jowe_ui_2d_pixel
 	</h1>
 	<p class="description">
 		
 		
-		Draws an map with diamond tiles.
+		Draws a map with each item in the heightmap array being a pixel.
 	</p>
 <!-- ============================== constructor summary ==================== -->			
 	
-	<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class jowe_ui_2d_diam.">
+	<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class jowe_ui_2d_pixel.">
 		<caption>Class Summary</caption>
 		<thead>
 			<tr>
@@ -87,7 +87,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<td class="attributes">&nbsp;</td>
 				<td class="nameDescription" >
 					<div class="fixedFont">
-						<b><a href="../symbols/jowe_ui_2d_diam.html#constructor">jowe_ui_2d_diam</a></b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
+						<b><a href="../symbols/jowe_ui_2d_pixel.html#constructor">jowe_ui_2d_pixel</a></b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
 					</div>
 					<div class="description">Draw a map from a given heightmap object in a canvas tag.</div>
 				</td>
@@ -101,7 +101,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 	
 		
 		
-		<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class jowe_ui_2d_diam.">
+		<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class jowe_ui_2d_pixel.">
 			<caption>Method Summary</caption>
 			<thead>
 				<tr>
@@ -114,18 +114,9 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<tr>
 					<td class="attributes">&nbsp;</td>
 					<td class="nameDescription">
-						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_diam.html#draw">draw</a></b>(items, angle, x_off, x_off, height, width, colors, alt, border)
+						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_pixel.html#draw">draw</a></b>(items, angle, left, top, colors, zoom)
 						</div>
-						<div class="description">This function draws an map with diamond tiles in the canvas.</div>
-					</td>
-				</tr>
-			
-				<tr>
-					<td class="attributes">&lt;private&gt; &nbsp;</td>
-					<td class="nameDescription">
-						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_diam.html#-pnpoly">pnpoly</a></b>(nvert, vertx, verty, testx, testy)
-						</div>
-						<div class="description">This function find if a point lies within a polygon.</div>
+						<div class="description">Draw a pixel map.</div>
 					</td>
 				</tr>
 			
@@ -143,7 +134,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 			Class Detail
 		</div>
 		<div class="fixedFont">
-				<b>jowe_ui_2d_diam</b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
+				<b>jowe_ui_2d_pixel</b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
 		</div>
 		<div class="description">
 			Draw a map from a given heightmap object in a canvas tag.
@@ -189,7 +180,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<dl class="detailList">
 				<dt class="heading">See:</dt>
 				
-					<dd>How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-diam.html">jowe_ui_2d_diam</a> object?</dd>
+					<dd>How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-pixel.html">jowe_ui_2d_pixel</a> object?</dd>
 				
 				</dl>
 			
@@ -206,10 +197,10 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 			<a name="draw"> </a>
 			<div class="fixedFont">
 			
-			<b>draw</b>(items, angle, x_off, x_off, height, width, colors, alt, border)
+			<b>draw</b>(items, angle, left, top, colors, zoom)
 			</div>
 			<div class="description">
-				This function draws an map with diamond tiles in the canvas.
+				Draw a pixel map.<br />The function generates a true image from the heightmap. Each item becomes a pixel.<br />Even if it's possible to zoom in, it's not recommended as it will produce blurred map.
 				
 				
 			</div>
@@ -222,123 +213,43 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 							<span class="light fixedFont">{array}</span> <b>items</b>
 							
 						</dt>
-						<dd>Array of vertices in the polygon.</dd>
+						<dd>Heightmap to display</dd>
 					
 						<dt>
 							<span class="light fixedFont">{number}</span> <b>angle</b>
 							
 						</dt>
-						<dd>Number containing the x-coordinates of the polygon's vertices.</dd>
+						<dd>To rotate the map (in degree).</dd>
 					
 						<dt>
-							<span class="light fixedFont">{number}</span> <b>x_off</b>
+							<span class="light fixedFont">{number}</span> <b>left</b>
 							
 						</dt>
-						<dd>X-coordinate of the offset point.</dd>
+						<dd>Left offset from which starting display</dd>
 					
 						<dt>
-							<span class="light fixedFont">{number}</span> <b>x_off</b>
+							<span class="light fixedFont">{number}</span> <b>top</b>
 							
 						</dt>
-						<dd>Y-coordinate of the offset point.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>height</b>
-							
-						</dt>
-						<dd>Height of the diamond tiles.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>width</b>
-							
-						</dt>
-						<dd>Width of the diamond tiles.</dd>
+						<dd>Top offset from which starting display</dd>
 					
 						<dt>
 							<span class="light fixedFont">{array}</span> <b>colors</b>
 							
 						</dt>
-						<dd>Array of color used to draw the map.</dd>
+						<dd>Array of colors associated to heightmap.</dd>
 					
 						<dt>
-							<span class="light fixedFont">{number}</span> <b>alt</b>
-							<i>Optional, Default: 0</i>
+							<span class="light fixedFont">{number}</span> <b>zoom</b>
+							<i>Optional, Default: 1</i>
 						</dt>
-						<dd>Determines the style of the map (0 : diamond, 1 : skew, 2 : saw).</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>border</b>
-							<i>Optional, Default: 0.4</i>
-						</dt>
-						<dd>Defines the space between tiles.</dd>
+						<dd>Zoom factor (from 0.1 to 4).</dd>
 					
 					</dl>
 				
 				
 				
 				
-				
-				
-				
-			<hr />
-		
-			<a name="-pnpoly"> </a>
-			<div class="fixedFont">&lt;private&gt; 
-			<span class="light">{boolean}</span>
-			<b>pnpoly</b>(nvert, vertx, verty, testx, testy)
-			</div>
-			<div class="description">
-				This function find if a point lies within a polygon.
-				
-				
-			</div>
-			
-				
-					<dl class="detailList">
-					<dt class="heading">Parameters:</dt>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>nvert</b>
-							
-						</dt>
-						<dd>Number of vertices in the polygon.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{array}</span> <b>vertx</b>
-							
-						</dt>
-						<dd>Array containing the x-coordinates of the polygon's vertices.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{array}</span> <b>verty</b>
-							
-						</dt>
-						<dd>Array containing the y-coordinates of the polygon's vertices.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>testx</b>
-							
-						</dt>
-						<dd>X-coordinate of the test point.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>testy</b>
-							
-						</dt>
-						<dd>Y-coordinate of the test point.</dd>
-					
-					</dl>
-				
-				
-				
-				
-				
-					<dl class="detailList">
-					<dt class="heading">Returns:</dt>
-					
-						<dd><span class="light fixedFont">{boolean}</span> </dd>
-					
-					</dl>
 				
 				
 				
