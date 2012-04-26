@@ -57,6 +57,8 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 
 <li><a href="../symbols/jowe_ui_2d_hexa.html">jowe_ui_2d_hexa</a></li>
 
+<li><a href="../symbols/jowe_ui_2d_pixel.html">jowe_ui_2d_pixel</a></li>
+
 </ul>
 <hr />
 </div>
@@ -121,9 +123,27 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<tr>
 					<td class="attributes">&lt;private&gt; &nbsp;</td>
 					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_hexa.html#-fillHexaTile">fillHexaTile</a></b>(m, c, tx, tx, wdiv2, hdiv2, hdiv4)
+						</div>
+						<div class="description">This function draws a filled hexagon.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
 						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_hexa.html#-pnpoly">pnpoly</a></b>(nvert, vertx, verty, testx, testy)
 						</div>
 						<div class="description">This function find if a point lies within a polygon.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&lt;private&gt; &nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_hexa.html#-strokeHexaTile">strokeHexaTile</a></b>(m, c, tx, tx, wdiv2, hdiv2, hdiv4)
+						</div>
+						<div class="description">This function draws an empty hexagon.</div>
 					</td>
 				</tr>
 			
@@ -156,7 +176,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 						<span class="light fixedFont">{string}</span>  <b>canvas_id</b>
 						
 					</dt>
-						<dd>id of the canvas tag to be used to draw the hexagonal map.</dd>
+						<dd>Id of the canvas tag to be used to draw the hexagonal map.</dd>
 				
 					<dt>
 						<span class="light fixedFont">{number}</span>  <b>canvas_width</b>
@@ -280,6 +300,73 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				
 			<hr />
 		
+			<a name="-fillHexaTile"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			
+			<b>fillHexaTile</b>(m, c, tx, tx, wdiv2, hdiv2, hdiv4)
+			</div>
+			<div class="description">
+				This function draws a filled hexagon.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{*}</span> <b>m</b>
+							
+						</dt>
+						<dd>Canvas context to draw on.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{string}</span> <b>c</b>
+							
+						</dt>
+						<dd>Array containing the x-coordinates of the polygon's vertices.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>tx</b>
+							
+						</dt>
+						<dd>X-coordinate of the center of the hexagon.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>tx</b>
+							
+						</dt>
+						<dd>X-coordinate of the center of the hexagon.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>wdiv2</b>
+							
+						</dt>
+						<dd>Width divided by 2.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>hdiv2</b>
+							
+						</dt>
+						<dd>Height divided by 2.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>hdiv4</b>
+							
+						</dt>
+						<dd>Height divided by 4.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
+			<hr />
+		
 			<a name="-pnpoly"> </a>
 			<div class="fixedFont">&lt;private&gt; 
 			<span class="light">{boolean}</span>
@@ -340,6 +427,73 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				
 				
 				
+			<hr />
+		
+			<a name="-strokeHexaTile"> </a>
+			<div class="fixedFont">&lt;private&gt; 
+			
+			<b>strokeHexaTile</b>(m, c, tx, tx, wdiv2, hdiv2, hdiv4)
+			</div>
+			<div class="description">
+				This function draws an empty hexagon.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{*}</span> <b>m</b>
+							
+						</dt>
+						<dd>Canvas context to draw on.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{string}</span> <b>c</b>
+							
+						</dt>
+						<dd>Array containing the x-coordinates of the polygon's vertices.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>tx</b>
+							
+						</dt>
+						<dd>X-coordinate of the center of the hexagon.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>tx</b>
+							
+						</dt>
+						<dd>X-coordinate of the center of the hexagon.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>wdiv2</b>
+							
+						</dt>
+						<dd>Width divided by 2.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>hdiv2</b>
+							
+						</dt>
+						<dd>Height divided by 2.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>hdiv4</b>
+							
+						</dt>
+						<dd>Height divided by 4.</dd>
+					
+					</dl>
+				
+				
+				
+				
+				
+				
+				
 			
 		
 	
@@ -351,7 +505,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 <div class="fineprint" style="clear:both">
 Ludovic L. ~ jOWE project ~&nbsp;
 &copy;2010-2012<br />
-Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Apr 19 2012 18:09:36 GMT+0200 (CEST)
+Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Apr 26 2012 11:45:24 GMT+0200 (CEST)
 </div>
 </body>
 </html>

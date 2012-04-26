@@ -166,6 +166,10 @@ How to display a map with hexagonal tiles from an HeightMap.
       <div id="nfoH"></div>
       <button id="hp" class="inc1">H+1</button><button id="hm" class="inc1">H-1</button>
     </div>
+    <div style="width:115px;float:left;text-align:center;">
+      <div id="nfoD"></div>
+      <button id="dp" class="inc0">D+0.1</button><button id="dm" class="inc0">D-0.1</button>
+    </div>
     <div style="width:100px;float:left;">
       <br />
       <input id="mapType" type="checkbox" value="alt" checked="checked">Straight map
@@ -181,7 +185,7 @@ How to display a map with hexagonal tiles from an HeightMap.
   var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'],
       oHeightMap,
       oCanvasMap,
-      param = {a : 0, x : 0, y : 0, h : 10, w : 9, s : true};
+      param = {a : 0, x : 0, y : 0, h : 10, w : 9, s : true, d : 0.5};
 
 function display_values()
 {
@@ -190,11 +194,12 @@ function display_values()
     $("#nfoY").html('Y:' + param.y);
     $("#nfoH").html('H:' + param.h);
     $("#nfoW").html('W:' + param.w);
+    $("#nfoD").html('D:' + param.d);
     $("#mapType").attr("checked", param.s);
 }
 
 function CanvasDraw() {
-  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, param.h, param.w, height_color, param.s);
+  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, param.h, param.w, height_color, param.s, param.d);
 }
 
 function run_test(w, h)
@@ -241,9 +246,9 @@ $(function () {
     run_test( 1 * $("#twidth").val(), 1 * $("#theight").val() );
   });
 
-  $("#ap, #am, #xp, #xm, #yp, #ym, #hp, #hm, #wp, #wm, #mapType").click(function(){
+  $("#ap, #am, #xp, #xm, #yp, #ym, #hp, #hm, #wp, #wm, #dp, #dm, #mapType").click(function(){
   
-    var inc = (this.className == "inc1" ? 1 : 5);
+    var inc = (this.className == "inc1" ? 1 : (this.className == "inc0" ? 0.1 : 5));
     // According to the id, increase or decrease value of the given parameter.
     if (this.id.substr(1,1) == 'p') {
       param[this.id.substr(0,1)] += inc;
@@ -256,6 +261,8 @@ $(function () {
     if (param.a < 0) param.a = 355;
     if (param.w < 4) param.w = 4;
     if (param.h < 4) param.h = 4;
+    if (param.d < 0) param.d = 0;
+    param.d = 1 * param.d.toFixed(1);
     param.s = $("#mapType").is(':checked');
     // Display values...
     display_values();
@@ -269,7 +276,8 @@ $(function () {
   <h2>What's next?</h2>
 
   <p>
-    You also may be interested by drawing map with <a href="examples-jowe-ui-2d-diam.html">diamond tiles</a>.
+    You also may be interested by drawing map with <a href="examples-jowe-ui-2d-diam.html">diamond tiles</a>.<br />
+    You also may be interested by drawing a <a href="examples-jowe-ui-2d-pixel.html">pixel map</a>.
   </p>
 
 <hr />

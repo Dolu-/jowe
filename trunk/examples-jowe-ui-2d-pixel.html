@@ -5,12 +5,12 @@
     <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <meta charset="UTF-8" />
     
-    <title>jOWE ~ Examples ~ jowe-ui-2d-diam.js</title>
+    <title>jOWE ~ Examples ~ jowe-ui-2d-pixel.js</title>
     
     <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
-    <script type="text/javascript" src="jowe-ui-2d-diam.js"></script>
+    <script type="text/javascript" src="jowe-ui-2d-pixel.js"></script>
 
 <script type="text/javascript">
 var _gaq = _gaq || [];
@@ -51,7 +51,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ********************************************************************************
 
-How to display a map with diamond tiles from an HeightMap.
+How to display a map wity items in HeightMap as pixels.
 
 -->
 <body>
@@ -64,18 +64,28 @@ How to display a map with diamond tiles from an HeightMap.
   
   <h1>Initialization:</h1>
 
-  <p>First of all, we declare and create our heightmap.</p>
+  <p>
+    First of all, we declare and create our heightmap.<br />
+    As we want to generate a pixel map, it has to be the more realistic as possible. We will initialize the borders to '0', it will be considerated as ocean.
+  </p>
 
-<pre>  <font color="green">// Create an object with default values :
-  // pitch = 8, ratio = 3.1, width = 127, height = 127</font>
+<pre>  <font color="green">// Create the heightmap object.</font>
   <i><font color="blue">var</font></i> oHeightMap = <i><font color="blue">new</font></i> HeightMap();
-  <font color="green">// Generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").</font>
-  oHeightMap.doMap(10,12);
+  <font color="green">// Set dimension of the map to 300x140.</font>
+  oHMap.setSide(300, 140);
+  <font color="green">// Initialize the array.</font>
+  oHMap.initialize(-1);
+  <font color="green">// Set a border width of 4 in which the 'height' is initialized to '0'.</font>
+  oHMap.fillBorders(0,4);
+  <font color="green">// Generate the map, smooth it and crop it to the requested size.</font>
+  oHMap.makeMap();
+  oHMap.smooth();
+  oHMap.crop();
 </pre>
 
-  <h1>Drawing a map with diamond tiles:</h1>
+  <h1>Drawing a pixel map:</h1>
 
-  <p>If you want to have a map representation with diamond tiles you can use <b>jowe_ui_2d_diam</b> object.
+  <p>If you want to have a map representation as a simple image (pixels) you can use <b>jowe_ui_2d_pixel</b> object.
   You need to place a CANVAS tag in your HTML code, it will be used to paint the map.
   Don't forget to give it a unique id, other attributes are optionals.</p>
 <pre>  <font color="blue">&lt;canvas</font> <font color="red">id</font>=<font color="purple">"cmap"</font> <font color="red">width</font>=<font color="purple">"1"</font> <font color="red">height</font>=<font color="purple">"1"</font><font color="blue">&gt;</font>
@@ -88,54 +98,42 @@ How to display a map with diamond tiles from an HeightMap.
     <ul>
       <li>the heightmap array</li>
       <li>the rotation angle used to display the map</li>
-      <li>x and y offset from where display the map</li>
-      <li>width and height of a diamond tile</li>
+      <li>left and top offset from where display the map, the (0,0) coordinate correspond to the middle of the map.</li>
       <li>array of colors to paint the tiles depending on their height</li>
     </ul>
   </p>
 
   <pre>  <font color="green">// Initialize the colors used to paint the map (0 to 8), according to the pitch used to generate the heightmap.</font>
-  <i><font color="blue">var</font></i> colors = ['#0000ee', '#0000ee', '#0033dd', '#20F220', '#10D210', '#00B200', '#505050', '#505050', '#DADADA'];
+  <i><font color="blue">var</font></i> colors = ['#0000ee', '#0000ee', '#0033dd', '#20F220', '#10D210', '#10D210', '#00B200', '#505050', '#DADADA'];
   
   <font color="green">// Initialize the UI object and set the size of the canvas to 320x160 pixels.</font>
-  <i><font color="blue">var</font></i> oCanvasMap = <i><font color="blue">new</font></i> jowe_ui_2d_diam("cmap", 320, 160, '#000');
-  <font color="green">// Draw the map without rotation, from offset (0, 0) and tile size of 10x30.</font>
-  oCanvasMap.draw(oHMap.item, 0, 0, 0, 10, 30, colors);
+  <i><font color="blue">var</font></i> oCanvasMap = <i><font color="blue">new</font></i> jowe_ui_2d_pixel("cmap", 320, 160, '#000');
+  <font color="green">// Draw the pixel map without rotation, from offset (0,0).</font>
+  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, colors);
   </pre>
 
   <canvas id="tmap" width="1" height="1" style="margin-left:40px;">
   </canvas>
   
   <script type="text/javascript">
-    var colors = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'],
+    var colors = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#10D210','#00B200','#505050','#DADADA'],
         oHMap  = new HeightMap(),
-        oCMap  = new jowe_ui_2d_diam("tmap", 320, 160, '#000');
-    oHMap.setAleaSeed('jowe');
-    oHMap.doMap(10, 12);
-    oCMap.draw(oHMap.item, 0, 0, 0, 10, 30, colors);
-  </script>
-
-  <p>The draw method allows two other drawing style alternatives, skew and saw :</p>
-  <pre>  <font color="green">// "skew" map on the left.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 10, 20, colors, <font color="blue"><b>1</b></font>);
-  <font color="green">// "saw" map on the right.</font>
-  oCanvasMap.draw(oHeightMap.item, 0, 0, 0, 10, 20, colors, <font color="blue"><b>2</b></font>);
-  </pre>
-
-  <canvas id="s1map" width="1" height="1" style="margin-left:40px;float:left;">
-  </canvas>
-
-  <canvas id="s2map" width="1" height="1" style="margin-left:40px;float:left;">
-  </canvas>
-  
-  <script type="text/javascript">
-    oCMap  = new jowe_ui_2d_diam("s1map", 320, 160, '#000');
-    oCMap.draw(oHMap.item, 0, 0, 0, 10, 20, colors, 1);
-    oCMap  = new jowe_ui_2d_diam("s2map", 320, 160, '#000');
-    oCMap.draw(oHMap.item, 0, 0, 0, 10, 20, colors, 2);
+        oCMap  = new jowe_ui_2d_pixel("tmap", 320, 160, '#000');
+    oHMap.setAleaSeed(81);
+    oHMap.setSide(300, 140);
+    oHMap.initialize(-1);
+    oHMap.fillBorders(0,4);
+    oHMap.makeMap();
+    oHMap.smooth();
+    oHMap.crop();
+    oCMap.draw(oHMap.item, 0, 0, 0, colors);
   </script>
   
-  <h1 style="clear:both;">Try it :</h1>
+  <p>
+    For designing bigger world map you will have to play with the other parameters of the 'jowe_core' object, as pitch or ratio.
+  </p>
+
+  <h1>Try it :</h1>
   
   <p>This simple demo let you interact with all parameters in a very minimalistic way.
   Its sole purpose is to permit you to test the function.</p>
@@ -146,9 +144,9 @@ How to display a map with diamond tiles from an HeightMap.
   <div>
     <div>
       Enter 'width' x 'height' and generate your heightmap.<br />
-      <input id="twidth" type="text" value="25" size="6" maxlength="3" style="text-align:right;">
+      <input id="twidth" type="text" value="425" size="6" maxlength="3" style="text-align:right;">
         x
-      <input id="theight" type="text" value="25" size="6" maxlength="3" style="text-align:right;">
+      <input id="theight" type="text" value="240" size="6" maxlength="3" style="text-align:right;">
       <input id="tsubmit" type="submit" value="Generate"><br /><br />
       Manipulate and navigate the generated map with the buttons below.
     </div>
@@ -166,21 +164,20 @@ How to display a map with diamond tiles from an HeightMap.
       <button id="yp">Y+5</button><button id="ym">Y-5</button>
     </div>
     <div style="width:95px;float:left;text-align:center;">
-      <div id="nfoW"></div>
-      <button id="wp" class="inc1">W+1</button><button id="wm" class="inc1">W-1</button>
+      <div id="nfoZ"></div>
+      <button id="zp" class="inc0">Z+</button><button id="zm" class="inc0">Z-</button>
     </div>
     <div style="width:95px;float:left;text-align:center;">
-      <div id="nfoH"></div>
-      <button id="hp" class="inc1">H+1</button><button id="hm" class="inc1">H-1</button>
+      <div id="nfoB"></div>
+      <button id="bp" class="inc1">B+1</button><button id="bm" class="inc1">B-1</button>
     </div>
-    <div style="width:100px;float:left;">
-      <br />
-      <select id="mapType">
-        <option value="0" selected>diamond</option>
-        <option value="1">skew</option>
-        <option value="2">saw</option>
-      </select>
+    <div style="width:95px;float:left;text-align:center;">
+      <div id="nfoS"></div>
+      <button id="sp" class="inc1">S+1</button><button id="sm" class="inc1">S-1</button>
     </div>
+    
+    <!--// <button id="bsave">Display Canvas as Image</button> //-->
+
   </div>
 
   <div id="tresult" style="clear:both;">
@@ -189,38 +186,41 @@ How to display a map with diamond tiles from an HeightMap.
 
 <script type="text/javascript">
 
-  var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#00B200','#505050','#505050','#DADADA'],
+  var height_color = ['#0000ee','#0000ee','#0033dd','#20F220','#10D210','#10D210','#00B200','#505050','#DADADA'],
       oHeightMap,
       oCanvasMap,
-      param = {a : 0, x : 0, y : 0, h : 14, w : 28, s : 0};
+      param = {a : 0, x : 0, y : 0, z : 1, b : 4, s : 2248};
 
 function display_values()
 {
     $("#nfoAngle").html('Angle:' + param.a);
     $("#nfoX").html('X:' + param.x);
     $("#nfoY").html('Y:' + param.y);
-    $("#nfoH").html('H:' + param.h);
-    $("#nfoW").html('W:' + param.w);
+    $("#nfoZ").html('Zoom:' + param.z);
+    $("#nfoB").html('Border:' + param.b);
+    $("#nfoS").html('Seed:' + param.s);
 }
 
 function CanvasDraw() {
-  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, param.h, param.w, height_color, param.s);
-}
-
-function run_test(w, h)
-{
   var text_dbg;
   // Create object with default values :
   // pitch = 8, ratio = 3.1, width = 127, height = 127
   oHeightMap = new HeightMap();
   // Create UI object.
-  oCanvasMap = new jowe_ui_2d_diam("cmap", 580, 300, '#000');
+  oCanvasMap = new jowe_ui_2d_pixel("cmap", 580, 300, '#000');
   
   // Start debug time calculation.
   var start = new Date().getTime();
   
-  // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
-  oHeightMap.doMap(w, h);
+  // Generate map.
+  oHeightMap.setAleaSeed(param.s);
+  var w = 1 * $("#twidth").val(), h = 1 * $("#theight").val();
+  oHeightMap.setSide(w, h);
+  oHeightMap.initialize(-1);
+  oHeightMap.fillBorders(0,param.b);
+  oHeightMap.makeMap();
+  oHeightMap.smooth();
+  oHeightMap.crop();
   
   // End debug time calculation.
   var end = new Date().getTime();
@@ -230,15 +230,14 @@ function run_test(w, h)
 
   // Start debug time calculation.
   var start = new Date().getTime();
-                     
-  CanvasDraw();
+
+  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, height_color, param.z);
 
   // End debug time calculation.
   var end = new Date().getTime();
   
   // Display processing time.
-  $("#tresult").html(text_dbg + "<em>Map drawn in " + (end - start) + "ms</em></p>");
-
+  $("#tresult").html(text_dbg + "<em>Pixel map drawn in " + (end - start) + "ms</em></p>");
 }
 
 $(function () {
@@ -247,18 +246,13 @@ $(function () {
   display_values();
 
   // Generate and draw map on submit.
-  $("#tsubmit").click(function() {
-    run_test( 1 * $("#twidth").val(), 1 * $("#theight").val() );
-  });
+  $("#tsubmit").click(CanvasDraw);
+  
+  $("#bsave").click(function (){window.location = document.getElementById("cmap").toDataURL("image/png");});
 
+  $("#ap, #am, #xp, #xm, #yp, #ym, #bp, #bm, #zp, #zm, #sp, #sm").click(function(){
   
-  $("#mapType").change(function(){
-    $("#mapType").click();
-  });
-  
-  $("#ap, #am, #xp, #xm, #yp, #ym, #hp, #hm, #wp, #wm, #mapType").click(function(){
-  
-    var inc = (this.className == "inc1" ? 1 : 5);
+    var inc = (this.className == "inc1" ? 1 : (this.className == "inc0" ? 0.1 : 5));
     // According to the id, increase or decrease value of the given parameter.
     if (this.id.substr(1,1) == 'p') {
       param[this.id.substr(0,1)] += inc;
@@ -271,7 +265,9 @@ $(function () {
     if (param.a < 0) param.a = 355;
     if (param.w < 4) param.w = 4;
     if (param.h < 4) param.h = 4;
-    param.s = 1 * $("#mapType").val();
+    if (param.b < 0) param.b = 0;
+    if (param.z < 0.1) param.z = 0.1;
+    param.z = 1 * param.z.toFixed(1);
     // Display values...
     display_values();
     // ...and draw the canvas.
@@ -284,8 +280,8 @@ $(function () {
   <h2>What's next?</h2>
 
   <p>
-    You also may be interested by drawing map with <a href="examples-jowe-ui-2d-hexa.html">hexagonal tiles</a>.<br />
-    You also may be interested by drawing a <a href="examples-jowe-ui-2d-pixel.html">pixel map</a>.
+    You also may be interested by drawing map with <a href="examples-jowe-ui-2d-diam.html">diamond tiles</a>.<br />
+    You also may be interested by drawing map with <a href="examples-jowe-ui-2d-hexa.html">hexagonal tiles</a>.
   </p>
 
 <hr />

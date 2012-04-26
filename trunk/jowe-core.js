@@ -227,7 +227,7 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
     };
 
     /**
-     * Set a specified value for each border of the map.
+     * Initialize each border of the map with the specified value.
      * <br />
      * The item array should be initialized.
      * @param {number} value Default height to be applied.
@@ -237,8 +237,10 @@ function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
     this.fillBorders = function (value, borderwidth) {
         var H = this.item, s = p_side - 1, x, y;
         for (x = 0; x < p_side; x += 1) {
-            for (y = 0; y < borderwidth; y += 1) {
-                H[y][x] = H[s - y][x] = H[x][y] = H[x][s - y] = value;
+            for (y = 0; y < p_side; y += 1) {
+                if ((x < borderwidth) || (y < borderwidth)|| (x > (width - borderwidth)) || (y > (height - borderwidth))) {
+                  H[x][y] = value;
+                }
             }
         }
     };
