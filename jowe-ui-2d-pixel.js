@@ -52,6 +52,8 @@ function jowe_ui_2d_pixel(canvas_id, canvas_width, canvas_height, canvas_backcol
 
     // Handler to the canvas object used to display the map.
     this.map = null;
+    // Callback function when map is completed (before context is restored).
+    this.onCompleted = false;
     
     if ((canvas_width !== undefined) && (canvas_width !== null) && (!isNaN(canvas_width))) {
         width = canvas_width;
@@ -120,7 +122,7 @@ function jowe_ui_2d_pixel(canvas_id, canvas_width, canvas_height, canvas_backcol
                 pixel[i++] = parseInt(color.substr(1, 2), 16);
                 pixel[i++] = parseInt(color.substr(3, 2), 16);
                 pixel[i++] = parseInt(color.substr(5, 2), 16);
-                pixel[i++] = 254; // alpha component.
+                pixel[i++] = 250; // alpha component.
             }
         }
         tmpContext.putImageData(imgmap, 0, 0);
@@ -150,9 +152,24 @@ function jowe_ui_2d_pixel(canvas_id, canvas_width, canvas_height, canvas_backcol
         // Display image on canvas.
         this.map.drawImage(tmpCanvas, 0, 0, xc * zoom, yc * zoom);
         
+        if (this.onCompleted) {
+          this.onCompleted();
+        }
+        
         // Restores the context.
         this.map.restore();
     };
-   
+
+    this.translateXY = function (x, y, angle, left, top, zoom, xc, yc) {
+        var tx = x - (width  / 2) - left,
+            ty = y - (height / 2) - top;
+        x = Math.floor((Math.cos(angle * Math.PI/180) * tx) - (Math.sin(angle * Math.PI/180) * ty));
+        y = Math.floor((Math.sin(angle * Math.PI/180) * tx) + (Math.cos(angle * Math.PI/180) * ty));
+        tx = x + (xc * (zoom / 2));
+        ty = y + (yc * (zoom / 2));
+        return {x:tx,y:ty};
+    }
+
+    
     return (this.map != null);
 }

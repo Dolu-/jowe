@@ -5,7 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="generator" content="JsDoc Toolkit" />
 
-<title>JsDoc Reference - jowe_ui_2d_diam</title>
+<title>JsDoc Reference - CityMap</title>
 <style type="text/css">
 body {font:13px Tahoma, Arial, Helvetica, sans-serif;width:900px}
 .header {clear:both;background-color:#ccc;padding:8px}
@@ -67,16 +67,16 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 <div id="content">
 	<h1 class="classTitle">
 		
-		Class jowe_ui_2d_diam
+		Class CityMap
 	</h1>
 	<p class="description">
 		
 		
-		Draws an map with diamond tiles.
+		Creates an map that represents a city area.
 	</p>
 <!-- ============================== constructor summary ==================== -->			
 	
-	<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class jowe_ui_2d_diam.">
+	<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class CityMap.">
 		<caption>Class Summary</caption>
 		<thead>
 			<tr>
@@ -89,9 +89,9 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<td class="attributes">&nbsp;</td>
 				<td class="nameDescription" >
 					<div class="fixedFont">
-						<b><a href="../symbols/jowe_ui_2d_diam.html#constructor">jowe_ui_2d_diam</a></b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
+						<b><a href="../symbols/CityMap.html#constructor">CityMap</a></b>(opt_width, opt_height)
 					</div>
-					<div class="description">Draw a map from a given heightmap object in a canvas tag.</div>
+					<div class="description">Creates a new random city map object.</div>
 				</td>
 			</tr>
 		</tbody>
@@ -103,7 +103,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 	
 		
 		
-		<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class jowe_ui_2d_diam.">
+		<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class CityMap.">
 			<caption>Method Summary</caption>
 			<thead>
 				<tr>
@@ -116,18 +116,27 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<tr>
 					<td class="attributes">&nbsp;</td>
 					<td class="nameDescription">
-						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_diam.html#draw">draw</a></b>(items, angle, x_off, x_off, height, width, colors, alt, border)
+						<div class="fixedFont"><b><a href="../symbols/CityMap.html#doCityMap">doCityMap</a></b>()
 						</div>
-						<div class="description">This function draws an map with diamond tiles in the canvas.</div>
+						<div class="description">Generate a random city map.</div>
 					</td>
 				</tr>
 			
 				<tr>
 					<td class="attributes">&lt;private&gt; &nbsp;</td>
 					<td class="nameDescription">
-						<div class="fixedFont"><b><a href="../symbols/jowe_ui_2d_diam.html#-pnpoly">pnpoly</a></b>(nvert, vertx, verty, testx, testy)
+						<div class="fixedFont"><b><a href="../symbols/CityMap.html#-p_randomMinMax">p_randomMinMax</a></b>(min, max)
 						</div>
-						<div class="description">This function find if a point lies within a polygon.</div>
+						<div class="description">Generate a random value between min and max (both included), result is floored.</div>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="attributes">&nbsp;</td>
+					<td class="nameDescription">
+						<div class="fixedFont"><b><a href="../symbols/CityMap.html#setSeeds">setSeeds</a></b>(height, fertility, rainfall, temperature, city)
+						</div>
+						<div class="description">Set seed for every heightmap that will be used in the doCityMap process.</div>
 					</td>
 				</tr>
 			
@@ -145,10 +154,10 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 			Class Detail
 		</div>
 		<div class="fixedFont">
-				<b>jowe_ui_2d_diam</b>(canvas_id, canvas_width, canvas_height, canvas_backcolor)
+				<b>CityMap</b>(opt_width, opt_height)
 		</div>
 		<div class="description">
-			Draw a map from a given heightmap object in a canvas tag.
+			Creates a new random city map object.<br />A "City" is composed of 5 HeightMap objects :<br />  - height<br />  - fertility<br />  - rainfall<br />  - temperature<br />  - population<br /><br />The object represents a large area that contains the city.<br />Beware, if you request large city map, it will required 4x the size in memory as it will generate 4 heightmap with the same size.<br />
 			
 		</div>
 		
@@ -157,28 +166,16 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<dt class="heading">Parameters:</dt>
 				
 					<dt>
-						<span class="light fixedFont">{string}</span>  <b>canvas_id</b>
-						
+						<span class="light fixedFont">{number}</span>  <b>opt_width</b>
+						<i>Optional, Default: 100</i>
 					</dt>
-						<dd>Id of the canvas tag to be used to draw the map.</dd>
+						<dd>Width of the map to be generated (between 50 and 500).</dd>
 				
 					<dt>
-						<span class="light fixedFont">{number}</span>  <b>canvas_width</b>
-						
+						<span class="light fixedFont">{number}</span>  <b>opt_height</b>
+						<i>Optional, Default: 100</i>
 					</dt>
-						<dd>Width of the canvas.</dd>
-				
-					<dt>
-						<span class="light fixedFont">{number}</span>  <b>canvas_height</b>
-						
-					</dt>
-						<dd>Height of the canvas.</dd>
-				
-					<dt>
-						<span class="light fixedFont">{string}</span>  <b>canvas_backcolor</b>
-						<i>Optional, Default: "#000"</i>
-					</dt>
-						<dd>Background color to be used when drawing the canvas.</dd>
+						<dd>Height of the map to be generated (between 50 and 500).</dd>
 				
 				</dl>
 			
@@ -191,7 +188,7 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				<dl class="detailList">
 				<dt class="heading">See:</dt>
 				
-					<dd>How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-diam.html">jowe_ui_2d_diam</a> object?</dd>
+					<dd>How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-city.html">CityMap</a> object?</dd>
 				
 				</dl>
 			
@@ -205,76 +202,17 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 			Method Detail
 		</div>
 		
-			<a name="draw"> </a>
+			<a name="doCityMap"> </a>
 			<div class="fixedFont">
 			
-			<b>draw</b>(items, angle, x_off, x_off, height, width, colors, alt, border)
+			<b>doCityMap</b>()
 			</div>
 			<div class="description">
-				This function draws an map with diamond tiles in the canvas.
+				Generate a random city map.
 				
 				
 			</div>
 			
-				
-					<dl class="detailList">
-					<dt class="heading">Parameters:</dt>
-					
-						<dt>
-							<span class="light fixedFont">{array}</span> <b>items</b>
-							
-						</dt>
-						<dd>Array of vertices in the polygon.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>angle</b>
-							
-						</dt>
-						<dd>Number containing the x-coordinates of the polygon's vertices.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>x_off</b>
-							
-						</dt>
-						<dd>X-coordinate of the offset point.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>x_off</b>
-							
-						</dt>
-						<dd>Y-coordinate of the offset point.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>height</b>
-							
-						</dt>
-						<dd>Height of the diamond tiles.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>width</b>
-							
-						</dt>
-						<dd>Width of the diamond tiles.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{array}</span> <b>colors</b>
-							
-						</dt>
-						<dd>Array of color used to draw the map.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>alt</b>
-							<i>Optional, Default: 0</i>
-						</dt>
-						<dd>Determines the style of the map (0 : diamond, 1 : skew, 2 : saw).</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>border</b>
-							<i>Optional, Default: 0.4</i>
-						</dt>
-						<dd>Defines the space between tiles.</dd>
-					
-					</dl>
 				
 				
 				
@@ -284,13 +222,13 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 				
 			<hr />
 		
-			<a name="-pnpoly"> </a>
+			<a name="-p_randomMinMax"> </a>
 			<div class="fixedFont">&lt;private&gt; 
-			<span class="light">{boolean}</span>
-			<b>pnpoly</b>(nvert, vertx, verty, testx, testy)
+			<span class="light">{number}</span>
+			<b>p_randomMinMax</b>(min, max)
 			</div>
 			<div class="description">
-				This function find if a point lies within a polygon.
+				Generate a random value between min and max (both included), result is floored.
 				
 				
 			</div>
@@ -300,34 +238,16 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 					<dt class="heading">Parameters:</dt>
 					
 						<dt>
-							<span class="light fixedFont">{number}</span> <b>nvert</b>
+							<span class="light fixedFont">{number}</span> <b>min</b>
 							
 						</dt>
-						<dd>Number of vertices in the polygon.</dd>
+						<dd></dd>
 					
 						<dt>
-							<span class="light fixedFont">{array}</span> <b>vertx</b>
+							<span class="light fixedFont">{number}</span> <b>max</b>
 							
 						</dt>
-						<dd>Array containing the x-coordinates of the polygon's vertices.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{array}</span> <b>verty</b>
-							
-						</dt>
-						<dd>Array containing the y-coordinates of the polygon's vertices.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>testx</b>
-							
-						</dt>
-						<dd>X-coordinate of the test point.</dd>
-					
-						<dt>
-							<span class="light fixedFont">{number}</span> <b>testy</b>
-							
-						</dt>
-						<dd>Y-coordinate of the test point.</dd>
+						<dd></dd>
 					
 					</dl>
 				
@@ -338,9 +258,64 @@ ul.inheritsList {list-style:square;margin-left:20px;padding-left:0}
 					<dl class="detailList">
 					<dt class="heading">Returns:</dt>
 					
-						<dd><span class="light fixedFont">{boolean}</span> </dd>
+						<dd><span class="light fixedFont">{number}</span> Random value.</dd>
 					
 					</dl>
+				
+				
+				
+			<hr />
+		
+			<a name="setSeeds"> </a>
+			<div class="fixedFont">
+			
+			<b>setSeeds</b>(height, fertility, rainfall, temperature, city)
+			</div>
+			<div class="description">
+				Set seed for every heightmap that will be used in the doCityMap process.
+				
+				
+			</div>
+			
+				
+					<dl class="detailList">
+					<dt class="heading">Parameters:</dt>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>height</b>
+							
+						</dt>
+						<dd>Seed to be used for height map.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>fertility</b>
+							<i>Optional, Default: height</i>
+						</dt>
+						<dd>Seed to be used for fertility map.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>rainfall</b>
+							<i>Optional, Default: height+1</i>
+						</dt>
+						<dd>Seed to be used for rainfall map.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>temperature</b>
+							<i>Optional, Default: height</i>
+						</dt>
+						<dd>Seed to be used for temperature map.</dd>
+					
+						<dt>
+							<span class="light fixedFont">{number}</span> <b>city</b>
+							<i>Optional, Default: height</i>
+						</dt>
+						<dd>Seed to be used for city map.</dd>
+					
+					</dl>
+				
+				
+				
+				
 				
 				
 				

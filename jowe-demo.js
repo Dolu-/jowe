@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010-2011 Ludovic L.
+Copyright (c) 2010-2012 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -50,6 +50,9 @@ var dInfo,
     lblCellHeight, lblCellFertility, lblCellRainfall, lblCellTemperature, lblCellPopulation;
 
 var joweGrid;
+
+// Create city object (as global).
+var myCity;
 
 // For debug purpose only - speed tests.
 var dbg_date = [];
@@ -119,12 +122,12 @@ function grid_onMouseMove(event)
             lblCursorX.html(cursor.x < 0 ? '-' : cursor.x);
             lblCursorY.html(cursor.y < 0 ? '-' : cursor.y);
             if ((cursor.x >= 0) && (cursor.y >= 0)) {
-                lblCellType.html(c[myCity.height.item[cursor.x][cursor.y]][3]);
-                lblCellHeight.html(myCity.height.item[cursor.x][cursor.y]);
-                lblCellFertility.html(myCity.fertility.item[cursor.x][cursor.y]);
-                lblCellRainfall.html(myCity.rainfall.item[cursor.x][cursor.y]);
-                lblCellTemperature.html(myCity.temperature.item[cursor.x][cursor.y]);
-                lblCellPopulation.html(myCity.population.item[cursor.x][cursor.y]);
+                lblCellType.html(c[myCity.map.height[cursor.x][cursor.y]][3]);
+                lblCellHeight.html(myCity.map.height[cursor.x][cursor.y]);
+                lblCellFertility.html(myCity.map.fertility[cursor.x][cursor.y]);
+                lblCellRainfall.html(myCity.map.rainfall[cursor.x][cursor.y]);
+                lblCellTemperature.html(myCity.map.temperature[cursor.x][cursor.y]);
+                lblCellPopulation.html(myCity.map.population[cursor.x][cursor.y]);
              }
         }
     }
@@ -183,19 +186,27 @@ function bCreateWorld_onClick()
 
     var w = $("#txtWorldWidth").val() * 1,
         h = $("#txtWorldHeight").val() * 1,
-        p = $("#txtWorldPitch").val() * 1,
-        r = $("#txtWorldRatio").val() * 1;
+        p = 8,    //$("#txtWorldPitch").val() * 1,
+        r = 3.1;  //$("#txtWorldRatio").val() * 1;
 
     myCity = new CityMap(w, h, p, r);
+    myCity.setSeeds(1 * $("#txtMapSeed").val());
+    myCity.doCityMap();
 
     // For debug purpose.
     if (isdebug) dbg_date[11] = new Date();
     
-    joweGrid.initialize(myCity.height.item
-                       ,myCity.fertility.item
-                       ,myCity.rainfall.item
-                       ,myCity.temperature.item
-                       ,myCity.population.item);
+    joweGrid.initialize(myCity.map.height
+                       ,myCity.map.fertility
+                       ,myCity.map.rainfall
+                       ,myCity.map.temperature
+                       ,myCity.map.population);
+    
+    $("#lblAvgHeight").html(myCity.average_height.toFixed(1));
+    $("#lblAvgFertility").html(myCity.average_fertility.toFixed(1));
+    $("#lblAvgRainfall").html(myCity.average_rainfall.toFixed(1));
+    $("#lblAvgTemperature").html(myCity.average_temperature.toFixed(1));
+    $("#lblSumPopulation").html(myCity.total_population.toFixed(0));
     
     // For debug purpose.
     if (isdebug) dbg_date[12] = new Date();
@@ -321,7 +332,12 @@ function iBrick_onClick()
         // alert(data);
     // }
   // });
-  $("#dSaveJSON").html(JSON.stringify(myCity));
+  
+  // Display JSON result.
+  $("#tJSON").html('<textarea style="width:98%;min-height:240px;font:11px DejaVu Sans Mono;">// Size : ' + JSON.stringify(myCity).length + ' octets\n' +
+                   'var myCity = ' + JSON.stringify(myCity).replace(/,"/gi, '\n            ,"') + ';\n' +
+                   '</textarea>');
+
 }
 
 $(
@@ -349,6 +365,15 @@ function ()
     // Set the input values.
     $("#txtGridWidth").val(w);
     $("#txtGridHeight").val(h);
+    
+    $("#pMapSeed, #nMapSeed").click(function (){
+      if (this.id.substr(0,1) == 'p') {
+        $("#txtMapSeed").val((1 * $("#txtMapSeed").val()) - 1);
+      } else {
+        $("#txtMapSeed").val((1 * $("#txtMapSeed").val()) + 1);
+      }
+      bCreateWorld_onClick();
+    });
 
     // Try to initialize grid (only if "canvas" is supported by the browser).
     if (joweGrid = new jowe_grid("cGrid", w, h, "#000")) {
@@ -365,10 +390,9 @@ function ()
         
         cMap.mousedown(map_onMouseDown);
         
-        $("#dCreateWorld").click(iBrick_onClick);
-        
         // Assign action to toolbar buttons.
         $("#bCreateWorld").click(bCreateWorld_onClick);
+        $("#bWorldJSON").click(iBrick_onClick);
         
         $("#bModeNormal").click(bMode_onClick);
         $("#bModeFertility").click(bMode_onClick);

@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 http://code.google.com/p/jowe/
 ********************************************************************************
 
-Copyright (c) 2010-2011 Ludovic L.
+Copyright (c) 2010-2012 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ********************************************************************************
 
-This is the CSS for the HTML demo file of the jOWE project.
+This is the CSS for the HTML demo files of the jOWE project.
 
 */
 
@@ -32,13 +32,15 @@ body{font:11px Tahoma;margin:0px;padding:0px;}
 
 #dToolbar{position:fixed;background-color:#eee;padding-bottom:0px;height:auto;width:100%;}
 #dGrid{padding-top:0px;}
-#dMap{padding-top:0;float:left;}
+#dMap{padding-top:0;float:left;background:#000;}
 
 #dDisplayInformation{padding-top:58px;background-color:#f0f0e0;}
 .leftinfo{width:160px;float:left;}
 
 .info{margin:0px;padding:2px; width:640px;height:180px;float:left;border:1px black solid;}
 .info div{height:18px;padding-left:19px;background-position:top left;background-repeat:no-repeat;}
+
+#tJSON{border-top:1px dotted #bbb;font:10px "DejaVu Sans Mono";width:100%;}
 
 .button{
 margin-top:2px;margin-right:1px;
@@ -67,6 +69,13 @@ margin:4px 2px 1px 1px;
 border-top:1px #999 solid;border-left:1px #999 solid;
 border-right:1px #ddd solid;border-bottom:1px #ddd solid;
 width:34px;height:16px;float:left;text-align:right;font-size:11px;
+}
+
+.inputtext{
+margin:4px 2px 1px 1px;
+border-top:1px #999 solid;border-left:1px #999 solid;
+border-right:1px #ddd solid;border-bottom:1px #ddd solid;
+width:120px;height:16px;float:left;text-align:left;font-size:11px;
 }
 
 .checkbutton{
@@ -117,3 +126,11 @@ clear: both;
 
 #bRotateLeft{background-image:url(images/arrow_turn_left.png);}
 #bRotateRight{background-image:url(images/arrow_turn_right.png);}
+
+.bMoveNext{background-image:url(images/resultset_next.png);}
+.bMovePrev{background-image:url(images/resultset_previous.png);}
+.bJSONCode{background-image:url(images/script_code.png);}
+.bAdd{background-image:url(images/add.png);}
+.bDel{background-image:url(images/delete.png);}
+
+#bHexa{background-image:url(images/hexa_tiles.png);}

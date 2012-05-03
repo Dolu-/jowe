@@ -41,7 +41,7 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * Draw a map from a given heightmap object in a canvas tag.
  * @class Draws an map with diamond tiles.
  * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-diam.html">jowe_ui_2d_diam</a> object?
- * @param {string} canvas_id          id of the canvas tag to be used to draw the map.
+ * @param {string} canvas_id          Id of the canvas tag to be used to draw the map.
  * @param {number} canvas_width       Width of the canvas.
  * @param {number} canvas_height      Height of the canvas.
  * @param {string} [canvas_backcolor="#000"] Background color to be used when drawing the canvas.
@@ -57,6 +57,16 @@ function jowe_ui_2d_diam(canvas_id, canvas_width, canvas_height, canvas_backcolo
     // Handler to the canvas object used to display the map.
     this.map = null;
         
+    //
+    this.cursor = {
+                    visible: false,
+                    x: -1,
+                    y: -1,
+                    mX: -1,
+                    mY: -1,
+                    color: "#ff0000"
+                  };
+
     if ((canvas_width !== undefined) && (canvas_width !== null) && (!isNaN(canvas_width))) {
         width = canvas_width;
     } else {
