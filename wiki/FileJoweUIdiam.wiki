@@ -1,4 +1,5 @@
 #summary About "jowe-ui-2d-diam.js"
+#labels Phase-Implementation
 #sidebar TableOfContents
 
 = Introduction =
