@@ -15,5 +15,8 @@ However, the files described below are stable enough to have some explanations.
 
   * [FileJoweAlea jowe-alea.js]
   * [FileJoweCore jowe-core.js]
+  * [FileJoweUIdiam jowe-ui-2d-diam.js]
+  * [FileJoweUIhexa jowe-ui-2d-hexa.js]
+  * [FileJoweUIpixel jowe-ui-2d-pixel.js]
   * jowe-ui.js
   * ...
