@@ -1,0 +1,15 @@
+#summary About "jowe-ui-2d-hexa.js"
+#labels Phase-Implementation
+#sidebar TableOfContents
+
+= Introduction =
+
+This file contains the jowe-ui-2d-hexa object used to draw map with hexagonal tiles.
+
+== Notice ==
+
+For an online help on how to use the jowe-ui-2d-hexa.js file, follow that [http://jowe.ouebfrance.com/examples-jowe-ui-2d-hexa.html link]
+
+== Documentation ==
+
+[http://jowe.ouebfrance.com/jsdoc/symbols/jowe_ui_2d_hexa.html Online] documentation for the jowe-ui-2d-hexa object.
