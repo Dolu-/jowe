@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
+    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
+    <meta charset="UTF-8" />
+    
+    <title>jOWE ~ Demo ~ World map generation</title>
+    
+    <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="jowe-alea.js"></script>
+    
+    <script type="text/javascript" src="jowe-core.js"></script>
+    <script type="text/javascript" src="jowe-ui-2d-pixel.js"></script>
+    <script type="text/javascript" src="jowe-demo-worldmap.js"></script>
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-20897630-2']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<style type="text/css")>
+#cities{float:left;width:203px;background:#444;min-height:28px}
+#cities .city{width:100%;background:#888;border-bottom:1px dotted #0000ff;min-height:28px;}
+#cities .c-sel{width:100%;background:#ccc;min-height:28px;}
+.xy{float:left;background:#fff;padding:1px;margin-top:4px;border:1px solid #bbb;min-height:16px;}
+</style>
+
+</head>
+<!--
+********************************************************************************
+jOWE - javascript Opensource Word Engine
+http://code.google.com/p/jowe/
+********************************************************************************
+
+Copyright (c) 2010-2012 Ludovic L.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+********************************************************************************
+Icons used in demo are from : "Silk icon set 1.3" by Mark James
+http://www.famfamfam.com/lab/icons/silk/
+This work is licensed under a Creative Commons Attribution 2.5 License.
+[ http://creativecommons.org/licenses/by/2.5/ ]
+Any other questions about this icon set please contact mjames@gmail.com
+
+********************************************************************************
+
+This is part of the demo of the jOWE project.
+
+About jQuery :
+  I'm using jQuery to manage the user interface but it can be done with
+  every other framework.
+-->
+<body>
+
+<!--// The toolbar with all the buttons and input text. //-->
+<div id="dToolbar">
+
+  <label id="lblWorldName" class="labelbutton" for="wname">Name your world:</label>
+  <input id="wname" class="inputtext" type="text" value="jowe" size="8" maxlength="7" />
+  
+  <div class="filler separator"></div>
+
+  <label id="lblMapSize"  class="labelbutton" for="twidth">Map:</label>
+  <input id="twidth"      class="inputbutton" type="text" value="425" size="4" maxlength="3" />
+  <label id="lblMapSizeX" class="labelbutton" for="theight"> x </label>
+  <input id="theight"     class="inputbutton" type="text" value="240" size="4" maxlength="3" />
+
+  <div class="filler separator"></div>
+
+  <div id="bCreateWorld"  class="button"           tabindex="50" title="Create world"></div>
+  <div id="bWorldJSON"    class="button bJSONCode" tabindex="51" title="Display JSON"></div>
+
+  <div class="newline"></div>
+  <div class="filler"></div>
+
+  <label id="lblMapSeed"  class="labelbutton" for="mseed">Seed:</label>
+  <button id="sm"         class="inc1 button bMovePrev"></button>
+  <input id="mseed"       class="inputbutton" type="text" value="2010" size="9" maxlength="8" />
+  <button id="sp"         class="inc1 button bMoveNext"></button>
+    
+  <div class="filler separator"></div>
+
+  <label id="lblMapBorder"  class="labelbutton" for="mborder">Border:</label>
+  <button id="bm"           class="inc1 button bMovePrev"></button>
+  <input id="mborder"       class="inputbutton" type="text" value="10" size="3" maxlength="2" />
+  <button id="bp"           class="inc1 button bMoveNext"></button>
+
+  <div class="filler separator"></div>
+
+  <label id="lblMapNoise" class="labelbutton" for="mnoise">Noise:</label>
+  <button id="nm"         class="inc0 button bMovePrev"></button>
+  <input id="mnoise"      class="inputbutton" type="text" value="1.5" size="4" maxlength="3" />
+  <button id="np"         class="inc0 button bMoveNext"></button>
+
+  <div class="filler separator"></div>
+
+  <input id="showCities" type="checkbox" checked="checked">Show Cities
+
+</div>
+
+<!--// Display Information about the current map.//-->
+<div id="dDisplayInformation" width="100%">
+</div>  
+
+<!--// Canvas for the World map. //-->
+<canvas id="dMap" width="425" height="240" style="float:left;">
+</canvas>
+
+<div id="cities">
+  <div class="city c-sel">
+    <input class="city-n inputtext" type="text" value="" />
+    <span class="xy">(<span class="city-x">xxx</span>,<span class="city-y">yyy</span>)</span>
+    <button class="b-add button bAdd" style="float:right;margin-top:3px;"></button>
+  </div>
+</div>
+
+<!--// Various time information for map generation and display. //-->
+<div id="tresult" style="clear:both;">
+  
+</div>
+
+<p><em><a href="http://code.google.com/p/jowe/">Want to know more ? Have a look on the project page</a></em></p>
+
+<!--// JSON area. Display current object as a JSON structure. //-->
+<div id="tJSON">
+
+</div>
+
+</body>
+</html>

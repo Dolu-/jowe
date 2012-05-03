@@ -5,11 +5,10 @@
     <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <meta charset="UTF-8" />
     
-    <title>jOWE ~ Demo</title>
+    <title>jOWE ~ Demo ~ City map generation</title>
     
     <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
     <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="js/json2.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
     
     <script type="text/javascript" src="jowe-core.js"></script>
@@ -84,11 +83,21 @@ Resources about IE9 :
 <!--// The toolbar with all the buttons and input text. //-->
 <div id="dToolbar">
 
-  <label id="lblWorldWidth" class="labelbutton" for="txtWorldWidth">World size:</label>
+  <div id="bSeparator00" class="filler"></div>
+
+  <label id="lblMapSeed" class="labelbutton" for="mseed">Seed:</label>
+  <button id="pMapSeed"  class="inc1 button bMovePrev"></button>
+  <input id="txtMapSeed" class="inputbutton" type="text" value="1000" size="9" maxlength="8" />
+  <button id="nMapSeed"  class="inc1 button bMoveNext"></button>
+    
+  <div id="bSeparator10"  class="filler separator"></div>
+
+  <label id="lblWorldWidth" class="labelbutton" for="txtWorldWidth">Map size:</label>
   <input id="txtWorldWidth" class="inputbutton" type="text" value="80" tabindex="20" />
   <label id="lblWorldHeight" class="labelbutton" for="txtWorldHeight">x</label>
   <input id="txtWorldHeight" class="inputbutton" type="text" value="80" tabindex="30" />
 
+<!-- Temporarly disabled, no code behind...
   <div id="bSeparator10" class="filler separator"></div>
 
   <label id="lblWorldPitch" class="labelbutton" for="txtWorldPitch">Height:</label>
@@ -98,7 +107,6 @@ Resources about IE9 :
 
   <label id="lblWorldRatio" class="labelbutton" for="txtWorldRatio">Noise:</label>
   <input id="txtWorldRatio" class="inputbutton" type="text" value="3.1" tabindex="45" />
-<!-- Temporarly disabled, no code behind...
   <div id="bSeparator15" class="filler separator"></div>
   
   <input id="chkFertility" class="checkbutton" type="checkbox" tabindex="46" value="true" />
@@ -116,17 +124,26 @@ Resources about IE9 :
   <div id="bSeparator20" class="filler separator"></div>
   
   <div id="bCreateWorld" class="button" tabindex="50" title="Create world"></div>
+  <div id="bWorldJSON"   class="button bJSONCode" tabindex="51" title="Display JSON"></div>
+  
+  <div id="bSeparator40" class="filler separator"></div>
+  
+  <div id="bModeNormal" class="button selected" tabindex="52" title="Display height map"></div>
+  <div id="bModeFertility" class="button" tabindex="53" title="Display fertility map"></div>
+  <div id="bModeRainfall" class="button" tabindex="54" title="Display rainfall map"></div>
+  <div id="bModeTemperature" class="button" tabindex="55" title="Display temperature map"></div>
+  <div id="bModePopulation" class="button" tabindex="56" title="Display population map"></div>
+
+  <div id="bSeparator40" class="filler separator"></div>
+
+  <!--//
+  <div id="bHexa" class="button" tabindex="57" title="Map with hexagonal tiles"></div>
+ 
+ <div id="bSeparator31" class="separator filler"></div>
+  //!-->
   
   <div id="bSeparator30" class="newline"></div>
   <div id="bSeparator31" class="filler"></div>
-  
-  <div id="bModeNormal" class="button selected" tabindex="52"></div>
-  <div id="bModeFertility" class="button" tabindex="53"></div>
-  <div id="bModeRainfall" class="button" tabindex="54"></div>
-  <div id="bModeTemperature" class="button" tabindex="55"></div>
-  <div id="bModePopulation" class="button" tabindex="56"></div>
- 
-  <div id="bSeparator40" class="filler separator"></div>
   
   <div id="bShowGrid" class="button active" tabindex="58"></div>
   <label id="lblGridWidth" class="labelbutton" for="txtGridWidth">Grid:</label>
@@ -174,11 +191,11 @@ Resources about IE9 :
 <div id="dDisplayInformation" width="100%">
   <div id="dDetailInformation" style="display: none;">
       <div id="dOverallInformation" class="leftinfo">
-      Average height : (N/A)<br />
-      Average fertility : (N/A)<br />
-      Average rainfall : (N/A)<br />
-      Average temperature : (N/A)<br />
-      Population : (N/A)<br />
+      Average height : <span id="lblAvgHeight">(N/A)</span><br />
+      Average fertility : <span id="lblAvgFertility">(N/A)</span><br />
+      Average rainfall : <span id="lblAvgRainfall">(N/A)</span><br />
+      Average temperature : <span id="lblAvgTemperature">(N/A)</span><br />
+      Population : <span id="lblSumPopulation">(N/A)</span><br />
       </div>
       <div id="dCursorXYZInformation" class="leftinfo">
       X : <span id="lblCursorX">-</span><br />
@@ -240,7 +257,12 @@ Resources about IE9 :
 
     <p><em><a href="http://code.google.com/p/jowe/">Want to know more ? Have a look on the project page</a></em></p>
 
-    <div id="dSaveJSON"></div>
 </div>
+
+<!--// JSON area. Display current object as a JSON structure. //-->
+<div id="tJSON">
+
+</div>
+
 </body>
 </html>

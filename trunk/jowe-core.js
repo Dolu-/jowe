@@ -78,6 +78,8 @@ NOTICE :
 
 */
 
+"use strict";
+
 /**
  * @fileOverview This file contains the HeightMap object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
  * @author Ludovic Lefebvre
@@ -94,7 +96,6 @@ NOTICE :
  * @param {number} [opt_height=127] Height of the map to be generated.
  */ 
 function HeightMap(opt_pitch, opt_ratio, opt_width, opt_height) {
-    "use strict";
     
     /**
      * Set minimum size for the side value of the working square.

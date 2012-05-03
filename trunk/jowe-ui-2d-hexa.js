@@ -41,7 +41,7 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * Draws an hexagonal map from a given heightmap object in a canvas tag.
  * @class Draws an map with hexagonal tiles.
  * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-hexa.html">jowe_ui_2d_hexa</a> object?
- * @param {string} canvas_id          id of the canvas tag to be used to draw the hexagonal map.
+ * @param {string} canvas_id          Id of the canvas tag to be used to draw the hexagonal map.
  * @param {number} canvas_width       Width of the canvas.
  * @param {number} canvas_height      Height of the canvas.
  * @param {string} [canvas_backcolor="#000"] Background color to be used when drawing the canvas.
@@ -56,6 +56,16 @@ function jowe_ui_2d_hexa(canvas_id, canvas_width, canvas_height, canvas_backcolo
 
     // Handler to the canvas object used to display the map.
     this.map = null;
+    
+    //
+    this.cursor = {
+                    visible: false,
+                    x: -1,
+                    y: -1,
+                    mX: -1,
+                    mY: -1,
+                    color: "#ff0000"
+                  };
         
     if ((canvas_width !== undefined) && (canvas_width !== null) && (!isNaN(canvas_width))) {
         width = canvas_width;
@@ -206,26 +216,79 @@ function jowe_ui_2d_hexa(canvas_id, canvas_width, canvas_height, canvas_backcolo
                   // Straight map.
                   tx = x * (w + dist) - ((y % 2) * ((w + dist) / 2));
                 }
-                
                 // Draws the tile only if it's inside the drawing area.
                 // (original method from http://stackoverflow.com/questions/3990343/3d-drawing-in-canvas-with-htmljs)
                 if (pnpoly(4, ptx, pty, tx, ty)) {
-                    this.map.fillStyle = colors[items[x][y]];
-                    this.map.beginPath();
-                    this.map.moveTo(tx        , ty - hdiv2);
-                    this.map.lineTo(tx + wdiv2, ty - h/4);
-                    this.map.lineTo(tx + wdiv2, ty + h/4);
-                    this.map.lineTo(tx        , ty + hdiv2);
-                    this.map.lineTo(tx - wdiv2, ty + h/4);
-                    this.map.lineTo(tx - wdiv2, ty - h/4);
-                    this.map.fill();
+                
+                    fillHexaTile(this.map, colors[items[x][y]], tx, ty, wdiv2, hdiv2, hdiv4);
+                    
+                    if (this.map.isPointInPath(this.cursor.mX, this.cursor.mY)) {
+                      this.cursor.x = x;
+                      this.cursor.y = y;
+                      this.cursor.mX = tx;
+                      this.cursor.mY = ty;
+                    }
                 }
             }
+        }
+        
+        if (this.cursor.visible == true) {
+          this.map.lineWidth = 2;
+          strokeHexaTile(this.map, this.cursor.color, this.cursor.mX, this.cursor.mY, wdiv2, hdiv2, hdiv4);
         }
         
         // Restores the context.
         this.map.restore();
     };
+    
+    /**
+     * This function draws a filled hexagon.
+     * @param {*} m Canvas context to draw on.
+     * @param {string} c Array containing the x-coordinates of the polygon's vertices.
+     * @param {number} tx X-coordinate of the center of the hexagon.
+     * @param {number} tx X-coordinate of the center of the hexagon.
+     * @param {number} wdiv2 Width divided by 2.
+     * @param {number} hdiv2 Height divided by 2.
+     * @param {number} hdiv4 Height divided by 4.
+     * @private
+     */
+    function fillHexaTile(m, c, tx, ty, wdiv2, hdiv2, hdiv4)
+    {
+        m.beginPath();
+        m.fillStyle = c;
+        m.moveTo(tx        , ty - hdiv2);
+        m.lineTo(tx + wdiv2, ty - hdiv4);
+        m.lineTo(tx + wdiv2, ty + hdiv4);
+        m.lineTo(tx        , ty + hdiv2);
+        m.lineTo(tx - wdiv2, ty + hdiv4);
+        m.lineTo(tx - wdiv2, ty - hdiv4);
+        m.fill();
+    }
+
+    /**
+     * This function draws an empty hexagon.
+     * @param {*} m Canvas context to draw on.
+     * @param {string} c Array containing the x-coordinates of the polygon's vertices.
+     * @param {number} tx X-coordinate of the center of the hexagon.
+     * @param {number} tx X-coordinate of the center of the hexagon.
+     * @param {number} wdiv2 Width divided by 2.
+     * @param {number} hdiv2 Height divided by 2.
+     * @param {number} hdiv4 Height divided by 4.
+     * @private
+     */
+    function strokeHexaTile(m, c, tx, ty, wdiv2, hdiv2, hdiv4)
+    {
+        m.beginPath();
+        m.strokeStyle = c;
+        m.moveTo(tx        , ty - hdiv2);
+        m.lineTo(tx + wdiv2, ty - hdiv4);
+        m.lineTo(tx + wdiv2, ty + hdiv4);
+        m.lineTo(tx        , ty + hdiv2);
+        m.lineTo(tx - wdiv2, ty + hdiv4);
+        m.lineTo(tx - wdiv2, ty - hdiv4);
+        m.closePath();
+        m.stroke();
+    }
     
     /**
      * This function find if a point lies within a polygon.
