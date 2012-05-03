@@ -1,9 +1,13 @@
 #summary Table of contents
 
   * [http://code.google.com/p/jowe/ Project page]
-  * [http://jowe.ouebfrance.com/jowe-demo.html Online Demo]
+  * [http://jowe.ouebfrance.com/jowe-demo.html Online Demo (city map)]
+  * [http://jowe.ouebfrance.com/jowe-demo-worldmap.html Online Demo (world map)]
   * [JoweContent Content]
     * [FileJoweAlea "jowe-alea.js"]
     * [FileJoweCore "jowe-core.js"]
+    * [FileJoweUIdiam "jowe-ui-2d-diam.js"]
+    * [FileJoweUIhexa "jowe-ui-2d-hexa.js"]
+    * [FileJoweUIpixel "jowe-ui-2d-pixel.js"]
 
   * [http://jowe.ouebfrance.com/jsdoc/index.html Online Help]
