@@ -29,26 +29,33 @@ This is the Javascript file for the demo world map generator of the jOWE project
 TODO :
 - More comments...
 
+960-640-320-160- 80
+540-360-180- 90- 45
+
 */
 
-var height_color = [  // From ocean to coastal sea.
-                      '#1B60B5','#1F6ECF','#2577D9','#2D81E6','#338DF3','#3A9BFF',
-                      '#46AAFF','#53BAFF','#65C9FF','#79DBFF',
-                      //'#9FE2FF',//'#4EC6A7',
-
-                      // Green variations (plains).
-                      '#5EA953','#4EA546','#3FA139','#2F9D2C','#209920','#33932C',
-                      '#468E38','#5F9737','#819D3A','#A1B252','#C0C85C','#BFAA43',
-                      //'#E1D468',//'#D3BE5D',
-                      
-                      // Yellow/brown/gray (from hills to high moutains).
-                      '#AD9743','#A27D24','#996415','#8B530F','#764310',
-                      '#72572E','#836F4C','#9B8C75','#BDB8AA','#E5E4DC'],
+var height_color = [ // From ocean to coastal sea (21).
+                    '#195A9C','#195AA0','#195AA4','#195AA8','#195BAC',
+                    '#1A5DAF','#1A5EB2','#1B60B5','#1C63BB','#1D67C2',
+                    '#1E6BC9','#2070D1','#2272D4','#2577D9','#297CDF',
+                    '#2D81E6','#338DF3','#3A9BFF','#46AAFF','#53BAFF',
+                    '#79DBFF',
+                    // Green variations (plains) (9)
+                    '#5EA953','#4EA546','#3FA139','#2F9D2C','#209920',
+                    '#209920','#33932C','#468E38','#5F9737',
+                    // Green/yellow (hills) (3)
+                    '#819D3A','#A1B252','#C0C85C',
+                    // Brown (Mountains) (4)
+                    '#AD9743','#A27D24','#996415','#8B530F',
+                    // Gray (High mountains) (3)
+                    '#836F4C','#9B8C75','#BDB8AA'
+                    ],
     oHeightMap = null,
     oCanvasMap = null,
-    param = {a : 0, w : 425, h : 240, x : 0, y : 0, z : 1, b : 10, s : 2010, n : 1.5},
-    text_dbg;
-
+    param = {a : 0, w : 960, h : 540, x : 0, y : 0, z : 1, b : 10, s : 2010, n : 1.5},
+    text_dbg,
+    hcolor = [];
+   
 function DrawCities() {
   if ($("#showCities").attr('checked') == "checked") {
     oCanvasMap.map.font = "11px Arial";
@@ -86,7 +93,9 @@ function CanvasDraw(bWithoutCities) {
   // Start debug time calculation.
   var start = new Date().getTime();
 
-  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, height_color, param.z);
+  setHcolor();
+
+  oCanvasMap.draw(oHeightMap.item, param.a, param.x, param.y, hcolor, param.z);
 
   // End debug time calculation.
   var end = new Date().getTime();
@@ -107,8 +116,10 @@ function GenerateMap() {
   if (param.b < 1) param.b = 1;
   param.n = 1 * param.n.toFixed(1);
   
+  setHcolor();
+  
   // Create heightmap object (pitch is equal to the size of the color array) :
-  oHeightMap = new HeightMap(height_color.length - 1, param.n);
+  oHeightMap = new HeightMap(hcolor.length - 1, param.n);
   
   // Start debug time calculation.
   var start = new Date().getTime();
@@ -120,6 +131,7 @@ function GenerateMap() {
   oHeightMap.fillBorders(0,param.b);
   oHeightMap.makeMap();
   oHeightMap.smooth();
+  //oHeightMap.sink(1);
   oHeightMap.crop();
   
   // End debug time calculation.
@@ -156,10 +168,30 @@ function setValue() {
     CanvasDraw();
   }
 
+function setHcolor() {
+  hcolor = [];
+  var i = 0;
+  $("#listColor input").each(function () {
+    if ($(this).attr('checked') == 'checked') {
+      hcolor[i++] = $(this).val();
+    }
+  });
+  //alert(JSON.stringify(hcolor));
+}
+  
 $(function (){
 
   //$("#bsave").click(function (){window.location = document.getElementById("dMap").toDataURL("image/png");});
-
+  
+  // Create the color list.
+  var ctxt = "";
+  for(var c = 0; c < height_color.length; c += 1) {
+    ctxt += '<div style="background:' + height_color[c] + '">'
+          + '<input type="checkbox" checked="checked" value="' + height_color[c] + '" />'
+          + '<div>' + height_color[c] + '</div></div>';
+  }
+  $("#listColor").html(ctxt);
+  
   // Generate and draw map on submit.
   $("#bCreateWorld").click(function () {
     // Get values.
@@ -232,7 +264,8 @@ $(function (){
           seed   : param.s,
           noise  : param.n,
           border : param.b,
-          pitch  : height_color.length - 1,
+          pitch  : hcolor.length - 1,
+          colors : hcolor,
           width  : 1 * $("#twidth").val(),
           height : 1 * $("#theight").val(),
           cities : [],
@@ -240,12 +273,17 @@ $(function (){
       }
       
       // Goes through each city to get its name and coordinates and add it to the world.
-      var i = 0;
+      var i = 0, bHasIssue = false;
       $(".city").each(function (){
         var cx = $(".city-x", this).text(),
             cy = $(".city-y", this).text();
         if (!isNaN(cx) && !isNaN(cy)) {
           world.cities[i++] = {name : $(".city-n", this).val(), x : cx, y : cy};
+        } else if (!bHasIssue) {
+          bHasIssue = true;
+          alert("Don't forget to locate each city on the world map (by pointing it with your mouse),\n" +
+                "otherwise it won't be included in the JSON result structure.\n\n" +
+                "'" + $(".city-n", this).val() + "' has no coordinates!");
         }
       });
 
@@ -257,6 +295,5 @@ $(function (){
       CanvasDraw();
     }
   });
-
   
 });

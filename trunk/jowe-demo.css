@@ -42,6 +42,11 @@ body{font:11px Tahoma;margin:0px;padding:0px;}
 
 #tJSON{border-top:1px dotted #bbb;font:10px "DejaVu Sans Mono";width:100%;}
 
+#listColor{float:left;width:55px}
+#listColor div{float:left;width:100%;height:13px;font:7pt "DejaVu Sans Mono"}
+#listColor div input{float:left;padding-top:0px;margin:0px 0px 0px 1px}
+#listColor div div{float:right;padding-top:2px;width:38px}
+
 .button{
 margin-top:2px;margin-right:1px;
 width:21px;height:21px;float:left;text-align:center;
