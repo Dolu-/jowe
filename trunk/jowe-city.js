@@ -78,7 +78,7 @@ Have to split jowe-ui to 2 (or more) objects ?
  */ 
 function CityMap(opt_width, opt_height) {
 
-  var rand;
+  var rand, width, height;
 
   /**
    * Generate a random value between min and max (both included), result is floored.
@@ -138,6 +138,36 @@ function CityMap(opt_width, opt_height) {
     elevation.setAleaSeed(this.height_seed);
     // makeMap() includes calls to initialize() and fillCorners().
     elevation.makeMap();
+
+    /*
+     * TODO : Variations to reduce water :
+     * 1/2, 2/3, 3/4 of the map without water (straight or skew)
+     *
+    for(x = 0; x < width / 2; x += 1) {
+      for(y = 0; y <= height; y += 1) {
+        if (elevation.item[x][y] < 3) {
+          elevation.item[x][y] += 3;
+        }
+      }
+    }
+
+    for(x = 0; x <= width * 3 / 4; x += 1) {
+      for(y = 0; y <= height + 1; y += 1) {
+        if (elevation.item[x][y] < 3) {
+          elevation.item[x][y] += 3;
+        }
+      }
+    }
+    
+    for(x = 0; x <= width + 1; x += 1) {
+        for(y = 0; y <= height / 2; y += 1) {
+        if (elevation.item[x][y] < 3) {
+          elevation.item[x][y] += 3;
+        }
+      }
+    }
+    */
+    
     elevation.smooth();
     elevation.crop();
     /**
