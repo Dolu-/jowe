@@ -1,10 +1,10 @@
 /*
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
-http://code.google.com/p/jowe/
+https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2012 Ludovic L.
+Copyright (c) 2010-2015 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  */
  
 /**
- * @fileOverview This file contains the jowe_ui_2d_hexa object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
+ * @fileOverview This file contains the jowe_ui_2d_hexa object (<a href="https://github.com/Dolu-/jowe">jOWE</a>).
  * @author Ludovic Lefebvre
  * @version 1.0
  */
@@ -40,7 +40,7 @@ http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 /**
  * Draws an hexagonal map from a given heightmap object in a canvas tag.
  * @class Draws an map with hexagonal tiles.
- * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-hexa.html">jowe_ui_2d_hexa</a> object?
+ * @see How to use the <a href="http://jowe.dolu.fr/examples-jowe-ui-2d-hexa.html">jowe_ui_2d_hexa</a> object?
  * @param {string} canvas_id          Id of the canvas tag to be used to draw the hexagonal map.
  * @param {number} canvas_width       Width of the canvas.
  * @param {number} canvas_height      Height of the canvas.
