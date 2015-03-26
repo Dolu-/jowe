@@ -1,10 +1,10 @@
 /*
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
-http://code.google.com/p/jowe/
+https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2012 Ludovic L.
+Copyright (c) 2010-2015 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
  
 /**
- * @fileOverview This file contains the jowe_ui_2d_pixel object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
+ * @fileOverview This file contains the jowe_ui_2d_pixel object (<a href="https://github.com/Dolu-/jowe">jOWE</a>).
  * @author Ludovic Lefebvre
  * @version 1.0
  */
@@ -36,7 +36,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /**
  * Draw a map from a given heightmap object in a canvas tag.
  * @class Draws a map with each item in the heightmap array being a pixel.
- * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-2d-pixel.html">jowe_ui_2d_pixel</a> object?
+ * @see How to use the <a href="http://jowe.dolu.fr/examples-jowe-ui-2d-pixel.html">jowe_ui_2d_pixel</a> object?
  * @param {string} canvas_id          Id of the canvas tag to be used to draw the map.
  * @param {number} canvas_width       Width of the canvas.
  * @param {number} canvas_height      Height of the canvas.
