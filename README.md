@@ -24,11 +24,11 @@ _(click the image for full size)_
 
 Here it is, http://jowe.dolu.fr/jowe-demo.html (Firefox, Chrome, Opera, IE9 and every other "canvas compliant" browser).
 
-For IE users below version 9, you can try [http://www.google.com/chromeframe](ChromeFrame),
+For IE users below version 9, you can try [ChromeFrame](http://www.google.com/chromeframe),
 it's a free plug-in for Internet Explorer (from version 6 to 9) that let you have Chrome functionnalities
 inside Internet Explorer.
 
-At last, if you can't use it there is a specific demo, http://jowe.dolu.fr/jowe-demo-ie.html, using [http://code.google.com/p/explorercanvas/](ExplorerCanvas). It will work for very small maps, and unfortunately, after loading, moving will take too much time to be usable.
+At last, if you can't use it there is a specific demo, http://jowe.dolu.fr/jowe-demo-ie.html, using [ExplorerCanvas](http://code.google.com/p/explorercanvas/). It will work for very small maps, and unfortunately, after loading, moving will take too much time to be usable.
 
 ----
 
@@ -71,7 +71,7 @@ Content:
  * jowe-ui-2d-diam.js: Object for displaying map with diamond tiles.
  * jowe-ui-2d-pixel.js: Object for displaying a pixel map from an heightmap.
  * jowe-demo.html : HTML demo file.
- * jowe-demo-ie.html : HTML demo file for Internet Explorer with [http://code.google.com/p/explorercanvas/](ExplorerCanvas).
+ * jowe-demo-ie.html : HTML demo file for Internet Explorer with [ExplorerCanvas](http://code.google.com/p/explorercanvas/).
  * jowe-demo-worldmap.html : HTML demo file for world map generation.
  * jowe-demo.css : style sheet demo file.
  * jowe-world.js : world object to be used in the demo.
