@@ -1,10 +1,10 @@
 /*
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
-http://code.google.com/p/jowe/
+https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2012 Ludovic L.
+Copyright (c) 2010-2015 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -81,7 +81,7 @@ NOTICE :
 "use strict";
 
 /**
- * @fileOverview This file contains the HeightMap object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
+ * @fileOverview This file contains the HeightMap object (<a href="https://github.com/Dolu-/jowe">jOWE</a>).
  * @author Ludovic Lefebvre
  * @version 1.0
  */
@@ -89,7 +89,7 @@ NOTICE :
 /**
  * Creates a new random height map generator object.
  * @class Represents an HeightMap.
- * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-core.html">HeightMap</a> object?
+ * @see How to use the <a href="http://jowe.dolu.fr/examples-jowe-core.html">HeightMap</a> object?
  * @param {number} [opt_pitch=8]    Maximum elevation to be used. Items in the map will have a value between 0 and opt_pitch.
  * @param {number} [opt_ratio=3.1]  Ratio to be used.
  * @param {number} [opt_width=127]  Width of the map to be generated.
