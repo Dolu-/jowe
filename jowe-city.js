@@ -1,10 +1,10 @@
 /*
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
-http://code.google.com/p/jowe/
+https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2012 Ludovic L.
+Copyright (c) 2010-2015 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -54,7 +54,7 @@ Have to split jowe-ui to 2 (or more) objects ?
 "use strict";
 
 /**
- * @fileOverview This file contains the CityMap object (<a href="http://code.google.com/p/jowe/">jOWE</a>).
+ * @fileOverview This file contains the CityMap object (<a href="https://github.com/Dolu-/jowe">jOWE</a>).
  * @author Ludovic Lefebvre
  * @version 1.0
  */
@@ -72,7 +72,7 @@ Have to split jowe-ui to 2 (or more) objects ?
  * Beware, if you request large city map, it will required 4x the size in memory as it will generate 4 heightmap with the same size.<br />
  * 
  * @class Creates an map that represents a city area.
- * @see How to use the <a href="http://jowe.ouebfrance.com/examples-jowe-ui-city.html">CityMap</a> object?
+ * @see How to use the <a href="http://jowe.dolu.fr/examples-jowe-ui-city.html">CityMap</a> object?
  * @param {number} [opt_width=100]  Width of the map to be generated (between 50 and 500).
  * @param {number} [opt_height=100] Height of the map to be generated (between 50 and 500).
  */ 
@@ -221,8 +221,8 @@ function CityMap(opt_width, opt_height) {
     
     /********************************************************************************
      * STEP 4 :
-     * Temperature process. Average temperature goes from 0 (5°C) to 20 (25°C)
-     * [0 => 5°C, 5 => 10°C, 10 => 15°C, 15 => 20°C, 20 => 25°C]
+     * Temperature process. Average temperature goes from 0 (5Â°C) to 20 (25Â°C)
+     * [0 => 5Â°C, 5 => 10Â°C, 10 => 15Â°C, 15 => 20Â°C, 20 => 25Â°C]
      * This could be changed later, user could decide to move up or down the limits.
      */
     temperature = new HeightMap(this.temperature_pitch, this.temperature_ratio, width, height);
@@ -274,7 +274,7 @@ function CityMap(opt_width, opt_height) {
 
     /********************************************************************************
      * STEP 6 :
-     * Population process. Population goes from 0 to 100 (eq. 1000 people/km²).
+     * Population process. Population goes from 0 to 100 (eq. 1000 people/kmÂ²).
      * City size is user-defined and fit in the current map.
      */
     // Temporary heightmap object used to generate a populated area.
