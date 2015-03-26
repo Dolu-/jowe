@@ -1,7 +1,7 @@
 /*
 ********************************************************************************
 jOWE - javascript Opensource Word Engine
-http://code.google.com/p/jowe/
+https://github.com/Dolu-/jowe
 ********************************************************************************
 
 Copyright (C) 2010 by Johannes Baagøe <baagoe@baagoe.org>
