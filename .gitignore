@@ -1,0 +1,13 @@
+﻿################################################################################
+# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Jowe/v17/.wsuo
+/.vs/Jowe/FileContentIndex/read.lock
+/.vs/Jowe/FileContentIndex/6014b973-3d4f-4de3-a387-95abf81a31f5.vsidx
+/.vs/Jowe/config/applicationhost.config
+/.vs/Jowe/FileContentIndex/e9ea6912-1b72-46cd-8c0c-da14edb39e97.vsidx
+*.vsidx
