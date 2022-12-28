@@ -1,32 +1,16 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
-    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <meta charset="UTF-8" />
     
     <title>jOWE ~ Demo ~ City map generation</title>
     
     <link rel="stylesheet" type="text/css" href="jowe-demo.css" />
-    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
-    
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-city.js"></script>
     <script type="text/javascript" src="jowe-ui.js"></script>
     <script type="text/javascript" src="jowe-demo.js"></script>
-
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-20897630-2']);
-_gaq.push(['_trackPageview']);
-(function() {
-var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
-
 </head>
 <!--
 ********************************************************************************
@@ -34,7 +18,7 @@ jOWE - javascript Opensource Word Engine
 https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2015 Ludovic L.
+Copyright (c) 2010-2022 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -64,19 +48,6 @@ Any other questions about this icon set please contact mjames@gmail.com
 
 This is the HTML demo file of the jOWE project.
 
-NOTICE:
-  I feel sorry for IE users (below version 9), but even with "ExplorerCanvas",
-  you won't be able to run this code properly. IE is really slow on displaying map,
-  and even after loading, moving takes too much time to be usable.
-  Please, update your internet explorer to version 9, or use an html5 compliant
-  browser (Chrome, Opera, Firefox, ...).
-
-About jQuery :
-  I'm using jQuery to manage the user interface. The whole process can be done with
-  another framework. It means that "jowe-core.js" and "jowe-ui.js" don't need it.
-
-Resources about IE9 :
-  http://blogs.msdn.com/b/ie/archive/2010/06/16/ie-s-compatibility-features-for-site-developers.aspx
 -->
 <body>
 
@@ -87,15 +58,15 @@ Resources about IE9 :
 
   <label id="lblMapSeed" class="labelbutton" for="mseed">Seed:</label>
   <button id="pMapSeed"  class="inc1 button bMovePrev"></button>
-  <input id="txtMapSeed" class="inputbutton" type="text" value="1000" size="9" maxlength="8" />
+  <input id="txtMapSeed" class="inputbutton" type="number" value="1000" size="9" maxlength="8" />
   <button id="nMapSeed"  class="inc1 button bMoveNext"></button>
     
   <div id="bSeparator10"  class="filler separator"></div>
 
   <label id="lblWorldWidth" class="labelbutton" for="txtWorldWidth">Map size:</label>
-  <input id="txtWorldWidth" class="inputbutton" type="text" value="80" tabindex="20" />
+  <input id="txtWorldWidth" class="inputbutton" type="number" value="80" tabindex="20" />
   <label id="lblWorldHeight" class="labelbutton" for="txtWorldHeight">x</label>
-  <input id="txtWorldHeight" class="inputbutton" type="text" value="80" tabindex="30" />
+  <input id="txtWorldHeight" class="inputbutton" type="number" value="80" tabindex="30" />
 
 <!-- Temporarly disabled, no code behind...
   <div id="bSeparator10" class="filler separator"></div>
@@ -128,11 +99,11 @@ Resources about IE9 :
   
   <div id="bSeparator40" class="filler separator"></div>
   
-  <div id="bModeNormal" class="button selected" tabindex="52" title="Display height map"></div>
-  <div id="bModeFertility" class="button" tabindex="53" title="Display fertility map"></div>
-  <div id="bModeRainfall" class="button" tabindex="54" title="Display rainfall map"></div>
-  <div id="bModeTemperature" class="button" tabindex="55" title="Display temperature map"></div>
-  <div id="bModePopulation" class="button" tabindex="56" title="Display population map"></div>
+  <div data-mode="h" id="bModeNormal" class="button selected" tabindex="52" title="Display height map"></div>
+  <div data-mode="f" id="bModeFertility" class="button" tabindex="53" title="Display fertility map"></div>
+  <div data-mode="r" id="bModeRainfall" class="button" tabindex="54" title="Display rainfall map"></div>
+  <div data-mode="t" id="bModeTemperature" class="button" tabindex="55" title="Display temperature map"></div>
+  <div data-mode="p" id="bModePopulation" class="button" tabindex="56" title="Display population map"></div>
 
   <div id="bSeparator40" class="filler separator"></div>
 
@@ -147,18 +118,18 @@ Resources about IE9 :
   
   <div id="bShowGrid" class="button active" tabindex="58"></div>
   <label id="lblGridWidth" class="labelbutton" for="txtGridWidth">Grid:</label>
-  <input id="txtGridWidth" class="inputbutton" type="text" value="540" maxlength="4" tabindex="60" />
+  <input id="txtGridWidth" class="inputbutton" type="number" value="540" maxlength="4" tabindex="60" />
   <label id="lblGridHeight" class="labelbutton" for="txtGridHeight">x</label>
-  <input id="txtGridHeight" class="inputbutton" type="text" value="300" maxlength="4" tabindex="70" />
+  <input id="txtGridHeight" class="inputbutton" type="number" value="300" maxlength="4" tabindex="70" />
   <div id="bUpdateGrid" class="button" tabindex="80"></div>
   
   <div id="bSeparator45" class="filler separator"></div>
 
   <div id="bShowMap" class="button" tabindex="90"></div>
   <label id="lblMapWidth" class="labelbutton" for="txtMapWidth">Map:</label>
-  <input id="txtMapWidth" class="inputbutton" type="text" value="100" maxlength="4" tabindex="100" />
+  <input id="txtMapWidth" class="inputbutton" type="number" value="100" maxlength="4" tabindex="100" />
   <label id="lblMapHeight" class="labelbutton" for="txtMapHeight">x</label>
-  <input id="txtMapHeight" class="inputbutton" type="text" value="100" maxlength="4" tabindex="110" />
+  <input id="txtMapHeight" class="inputbutton" type="number" value="100" maxlength="4" tabindex="110" />
   <div id="bUpdateMap" class="button" tabindex="120"></div>
   
   <div id="bSeparator50" class="filler separator"></div>
@@ -189,7 +160,7 @@ Resources about IE9 :
 
 <!--// Display Information about the current map.//-->
 <div id="dDisplayInformation" width="100%">
-  <div id="dDetailInformation" style="display: none;">
+  <div id="dDetailInformation" class="d-none">
       <div id="dOverallInformation" class="leftinfo">
       Average height : <span id="lblAvgHeight">(N/A)</span><br />
       Average fertility : <span id="lblAvgFertility">(N/A)</span><br />
@@ -215,14 +186,14 @@ Resources about IE9 :
 </div>
 
 <!--// Canvas for the Map. //-->
-<div id="dMap" tabindex="400" style="display: none;">
+<div id="dMap" tabindex="400" class="d-none">
   <canvas id="cMap" width="0" height="0">
   </canvas>
 </div>
 
 <!--// Canvas for the Grid. //-->
 <div id="dGrid" tabindex="600">
-  <canvas id="cGrid" width="540" height="300">
+  <canvas id="cGrid" width="840" height="500" style="cursor:grab">
       <p>I feel sorry for IE users (below version 9), but even with "ExplorerCanvas", you won't be able to run this code properly.<br />
       IE is really slow on displaying map, and even after loading, moving takes too much time to be usable.<br/>
       Below, you may see the toolbar to be used with the Map Object Generator, but all functions are disabled.<br />

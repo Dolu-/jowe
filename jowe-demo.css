@@ -28,19 +28,20 @@ This is the CSS for the HTML demo files of the jOWE project.
 
 */
 
-body{font:11px Tahoma;margin:0px;padding:0px;}
+body{font:11px Tahoma;margin:0px;padding:0px}
 
-#dToolbar{position:fixed;background-color:#eee;padding-bottom:0px;height:auto;width:100%;}
-#dGrid{padding-top:0px;}
-#dMap{padding-top:0;float:left;background:#000;}
+#dToolbar{position:fixed;background-color:#eee;padding-bottom:0px;height:auto;width:100%}
+#dGrid{padding-top:0px}
+#dMap{padding-top:0;float:left;background:#000}
 
-#dDisplayInformation{padding-top:58px;background-color:#f0f0e0;}
-.leftinfo{width:160px;float:left;}
+#dDisplayInformation{padding-top:58px;background-color:#f0f0e0}
+.leftinfo{width:160px;float:left}
 
-.info{margin:0px;padding:2px; width:640px;height:180px;float:left;border:1px black solid;}
-.info div{height:18px;padding-left:19px;background-position:top left;background-repeat:no-repeat;}
+.info{margin:0px;padding:2px;width:640px;height:180px;float:left;border:1px black solid}
+.info div{height:18px;padding-left:19px;background-position:top left;background-repeat:no-repeat}
+.d-none{display:none}
 
-#tJSON{border-top:1px dotted #bbb;font:10px "DejaVu Sans Mono";width:100%;}
+#tJSON{border-top:1px dotted #bbb;font:10px "DejaVu Sans Mono";width:100%}
 
 #listColor{float:left;width:55px}
 #listColor div{float:left;width:100%;height:13px;font:7pt "DejaVu Sans Mono"}
@@ -73,7 +74,7 @@ margin:1px;
 margin:4px 2px 1px 1px;
 border-top:1px #999 solid;border-left:1px #999 solid;
 border-right:1px #ddd solid;border-bottom:1px #ddd solid;
-width:34px;height:16px;float:left;text-align:right;font-size:11px;
+width:46px;height:16px;float:left;text-align:right;font-size:11px;
 }
 
 .inputtext{
@@ -106,36 +107,36 @@ border-bottom:1px #fff solid;
 clear: both;
 }
 
-#bCreateWorld, #dCreateWorld{background-image:url(images/brick_go.png);}
+#bCreateWorld, #dCreateWorld{background-image:url(images/brick_go.png)}
 
-#bModeNormal{background-image:url(images/world.png);}
-#bModeFertility{background-image:url(images/rainbow.png);}
-#bModeRainfall{background-image:url(images/weather_rain.png);}
-#bModeTemperature{background-image:url(images/chart_curve.png);}
-#bModePopulation{background-image:url(images/group.png);}
+#bModeNormal{background-image:url(images/world.png)}
+#bModeFertility{background-image:url(images/rainbow.png)}
+#bModeRainfall{background-image:url(images/weather_rain.png)}
+#bModeTemperature{background-image:url(images/chart_curve.png)}
+#bModePopulation{background-image:url(images/group.png)}
 
-#bShowGrid, #dShowGrid{background-image:url(images/page_world.png);}
-#bUpdateGrid, #dUpdateGrid{background-image:url(images/arrow_refresh.png);}
+#bShowGrid, #dShowGrid{background-image:url(images/page_world.png)}
+#bUpdateGrid, #dUpdateGrid{background-image:url(images/arrow_refresh.png)}
 
-#bShowMap, #dShowMap{background-image:url(images/map.png);}
-#bUpdateMap, #dUpdateMap{background-image:url(images/arrow_refresh.png);}
+#bShowMap, #dShowMap{background-image:url(images/map.png)}
+#bUpdateMap, #dUpdateMap{background-image:url(images/arrow_refresh.png)}
 
-#bInformation, #dInformation{background-image:url(images/information.png);}
-#bShowCursor, #dShowCursor{background-image:url(images/shading.png);}
-#bWaterDetails, #dWaterDetails{background-image:url(images/layers.png);}
-#bCenter, #dCenter{background-image:url(images/arrow_inout.png);}
+#bInformation, #dInformation{background-image:url(images/information.png)}
+#bShowCursor, #dShowCursor{background-image:url(images/shading.png)}
+#bWaterDetails, #dWaterDetails{background-image:url(images/layers.png)}
+#bCenter, #dCenter{background-image:url(images/arrow_inout.png)}
 
-#bZoomIn, #dZoomIn{background-image:url(images/zoom_in.png);}
-#bZoomLabel p{margin:0px;padding-top:3px;}
-#bZoomOut, #dZoomOut{background-image:url(images/zoom_out.png);}
+#bZoomIn, #dZoomIn{background-image:url(images/zoom_in.png)}
+#bZoomLabel p{margin:0px;padding-top:3px}
+#bZoomOut, #dZoomOut{background-image:url(images/zoom_out.png)}
 
-#bRotateLeft{background-image:url(images/arrow_turn_left.png);}
-#bRotateRight{background-image:url(images/arrow_turn_right.png);}
+#bRotateLeft{background-image:url(images/arrow_turn_left.png)}
+#bRotateRight{background-image:url(images/arrow_turn_right.png)}
 
-.bMoveNext{background-image:url(images/resultset_next.png);}
-.bMovePrev{background-image:url(images/resultset_previous.png);}
-.bJSONCode{background-image:url(images/script_code.png);}
-.bAdd{background-image:url(images/add.png);}
-.bDel{background-image:url(images/delete.png);}
+.bMoveNext{background-image:url(images/resultset_next.png)}
+.bMovePrev{background-image:url(images/resultset_previous.png)}
+.bJSONCode{background-image:url(images/script_code.png)}
+.bAdd{background-image:url(images/add.png)}
+.bDel{background-image:url(images/delete.png)}
 
-#bHexa{background-image:url(images/hexa_tiles.png);}
+#bHexa{background-image:url(images/hexa_tiles.png)}

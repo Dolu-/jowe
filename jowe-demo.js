@@ -4,7 +4,7 @@ jOWE - javascript Opensource Word Engine
 https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2015 Ludovic L.
+Copyright (c) 2010-2022 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -63,7 +63,7 @@ var isdebug = false;
  */
 
 var iZoom = 1;
- 
+
 /*
  * Global variables to manage grid dragging.
  */
@@ -73,8 +73,7 @@ var bDrag = false, xDrag = 0, yDrag = 0;
 /*
  *
  */
-function grid_onMouseDown(event)
-{
+function grid_onMouseDown(event) {
     var obj,
         x = event.pageX - this.offsetLeft,
         y = event.pageY - this.offsetTop;
@@ -86,14 +85,23 @@ function grid_onMouseDown(event)
             y += obj.offsetTop;
         } while (obj = obj.offsetParent);
     }
-
+    this.style.cursor = "grabbing";
     bDrag = true;
     xDrag = x;
     yDrag = y;
 }
 
-function grid_onMouseMove(event)
-{
+function grid_onMouseUp(event) {
+    this.style.cursor = "grab";
+    // End of grid dragging.
+    bDrag = false;
+    // If cursor is visible, refresh its state.
+    if (joweGrid.displayCursor === true) {
+        joweGrid.drawCursor(-1, -1, true);
+    }
+}
+
+function grid_onMouseMove(event) {
     var obj,
         x = event.pageX - this.offsetLeft,
         y = event.pageY - this.offsetTop;
@@ -109,8 +117,7 @@ function grid_onMouseMove(event)
     // For debug purpose, display mouse position.
     //dInfo.html('Mouse (x, y) = (' + event.pageX + ', ' + event.pageY + ') => (' + x + ', ' + y + ')');
     if (bDrag === true) {
-        if ((Math.abs(x - xDrag) > 10) || (Math.abs(y - yDrag) > 10))
-        {
+        if ((Math.abs(x - xDrag) > 10) || (Math.abs(y - yDrag) > 10)) {
             joweGrid.move((x - xDrag), (y - yDrag));
             xDrag = x;
             yDrag = y;
@@ -128,32 +135,20 @@ function grid_onMouseMove(event)
                 lblCellRainfall.html(myCity.map.rainfall[cursor.x][cursor.y]);
                 lblCellTemperature.html(myCity.map.temperature[cursor.x][cursor.y]);
                 lblCellPopulation.html(myCity.map.population[cursor.x][cursor.y]);
-             }
+            }
         }
     }
 }
 
-function grid_onKeyPress(event)
-{
+function grid_onKeyPress(event) {
     // For debug purpose, display code of key pressed.
     //dInfo.html('b-Keycode = (' + event.keyCode + ')');
-}
-
-function grid_onMouseUp(event)
-{
-    // End of grid dragging.
-    bDrag = false;
-    // If cursor is visible, refresh its state.
-    if (joweGrid.displayCursor === true) {
-        joweGrid.drawCursor(-1, -1, true);
-    }
 }
 
 /*
  *
  */
-function map_onMouseDown(event)
-{
+function map_onMouseDown(event) {
     var obj,
         x = event.pageX - this.offsetLeft,
         y = event.pageY - this.offsetTop;
@@ -170,57 +165,55 @@ function map_onMouseDown(event)
     joweGrid.Minimap_onClick(x, y);
 }
 
-function bUpdateGrid_onClick()
-{
-    var w = $("#txtGridWidth").val() * 1,
-        h = $("#txtGridHeight").val() * 1;
-    
+function bUpdateGrid_onClick() {
+    var w = document.getElementById('txtGridWidth').valueAsNumber,
+        h = document.getElementById('txtGridHeight').valueAsNumber;
+
     joweGrid.resize(w, h);
 }
 
-function bCreateWorld_onClick()
-{
+function bCreateWorld_onClick() {
     // For debug purpose.
     if (isdebug) dbg_date[0] = new Date();
     if (isdebug) dInfo.html("");
 
-    var w = $("#txtWorldWidth").val() * 1,
-        h = $("#txtWorldHeight").val() * 1,
-        p = 8,    //$("#txtWorldPitch").val() * 1,
-        r = 3.1;  //$("#txtWorldRatio").val() * 1;
+    var w = document.getElementById('txtWorldWidth').valueAsNumber,
+        h = document.getElementById('txtWorldHeight').valueAsNumber,
+        p = 8,    // document.getElementById('txtWorldPitch').valueAsNumber,
+        r = 3.1;  // document.getElementById('txtWorldRatio').valueAsNumber;
 
     myCity = new CityMap(w, h, p, r);
-    myCity.setSeeds(1 * $("#txtMapSeed").val());
+    myCity.setSeeds(document.getElementById('txtMapSeed').valueAsNumber);
     myCity.doCityMap();
 
     // For debug purpose.
     if (isdebug) dbg_date[11] = new Date();
-    
+
     joweGrid.initialize(myCity.map.height
-                       ,myCity.map.fertility
-                       ,myCity.map.rainfall
-                       ,myCity.map.temperature
-                       ,myCity.map.population);
-    
-    $("#lblAvgHeight").html(myCity.average_height.toFixed(1));
-    $("#lblAvgFertility").html(myCity.average_fertility.toFixed(1));
-    $("#lblAvgRainfall").html(myCity.average_rainfall.toFixed(1));
-    $("#lblAvgTemperature").html(myCity.average_temperature.toFixed(1));
-    $("#lblSumPopulation").html(myCity.total_population.toFixed(0));
-    
+        , myCity.map.fertility
+        , myCity.map.rainfall
+        , myCity.map.temperature
+        , myCity.map.population);
+
+    document.getElementById('lblAvgHeight').innerHTML = myCity.average_height.toFixed(1);
+    document.getElementById('lblAvgFertility').innerHTML = myCity.average_fertility.toFixed(1);
+    document.getElementById('lblAvgRainfall').innerHTML = myCity.average_rainfall.toFixed(1);
+    document.getElementById('lblAvgTemperature').innerHTML = myCity.average_temperature.toFixed(1);
+    document.getElementById('lblSumPopulation').innerHTML = myCity.total_population.toFixed(0);
+
     // For debug purpose.
     if (isdebug) dbg_date[12] = new Date();
-    
+
     joweGrid.initializeCells();
 
     // For debug purpose.
     if (isdebug) dbg_date[13] = new Date();
-    
+
     bUpdateGrid_onClick();
 
     // For debug purpose.
     if (isdebug) dbg_date[100] = new Date();
-    
+
     if (isdebug) dInfo.append("initialize=" + (dbg_date[3].getTime() - dbg_date[2].getTime()) + "<br />");
     if (isdebug) dInfo.append("generate=" + (dbg_date[4].getTime() - dbg_date[3].getTime()) + "<br />");
     if (isdebug) dInfo.append("smooth=" + (dbg_date[5].getTime() - dbg_date[4].getTime()) + "<br />");
@@ -233,80 +226,70 @@ function bCreateWorld_onClick()
     if (isdebug) dInfo.append("bCreateGrid_onClick (Total)=" + (dbg_date[100].getTime() - dbg_date[0].getTime()) + "<br />");
 }
 
-/*
- * Toggle water details on/off
+/**
+ * Toggle water details on/off.
  */
-function bWaterDetails_onClick()
-{
-    $("#bWaterDetails").toggleClass('active')
+function bWaterDetails_onClick() {
+    this.classList.toggle('active');
     joweGrid.waterDetails = !joweGrid.waterDetails;
     joweGrid.initializeCells(true);
     bUpdateGrid_onClick();
 }
 
-/*
+/**
  * Set level of zoom in the grid.
+ * @param {int} i zoom level.
  */
-function btnZoom(i)
-{
+function btnZoom(i) {
     iZoom += i;
-    lblZoom.html('<p>'+iZoom+'</p>');
+    lblZoom.innerHTML = '<p>' + iZoom + '</p>';
     joweGrid.setZoom(iZoom);
 }
 
-function bMode_onClick()
-{
-    $(".selected").toggleClass('selected');
-    $(this).toggleClass('selected');
-    if (($(this).attr('id') === 'bModeNormal') && (joweGrid.mode != 'h')) {
-        joweGrid.mode = 'h'
-        joweGrid.initializeCells(true);
-        bUpdateGrid_onClick();
-    } else if (($(this).attr('id') === 'bModeFertility') && (joweGrid.mode != 'f')) {
-        joweGrid.mode = 'f'
-        joweGrid.initializeCells(true);
-        bUpdateGrid_onClick();
-    } else if (($(this).attr('id') === 'bModeRainfall') && (joweGrid.mode != 'r')) {
-        joweGrid.mode = 'r'
-        joweGrid.initializeCells(true);
-        bUpdateGrid_onClick();
-    } else if (($(this).attr('id') === 'bModeTemperature') && (joweGrid.mode != 't')) {
-        joweGrid.mode = 't'
-        joweGrid.initializeCells(true);
-        bUpdateGrid_onClick();
-    } else if (($(this).attr('id') === 'bModePopulation') && (joweGrid.mode != 'p')) {
-        joweGrid.mode = 'p'
+function grid_onWheel(event) {
+    event.preventDefault();
+    iZoom += event.deltaY * -0.01;
+    // Restrict zoom.
+    iZoom = Math.min(Math.max(1, iZoom), 12);
+    lblZoom.innerHTML = '<p>' + iZoom + '</p>';
+    joweGrid.setZoom(iZoom);
+}
+
+function bMode_onClick() {
+    document.getElementsByClassName('selected')[0].classList.toggle('selected');
+    this.classList.toggle('selected');
+    var selectedMode = this.dataset.mode;
+
+    if (joweGrid.mode != selectedMode) {
+        joweGrid.mode = selectedMode;
         joweGrid.initializeCells(true);
         bUpdateGrid_onClick();
     }
 }
 
-function bUpdateMap_onClick()
-{
-    var w = $("#txtMapWidth").val() * 1,
-        h = $("#txtMapHeight").val() * 1;
-        
-    joweGrid.InitializeMinimap("cMap", w, h, "#000");
+function bUpdateMap_onClick() {
+    var w = document.getElementById('txtMapWidth').valueAsNumber,
+        h = document.getElementById('txtMapHeight').valueAsNumber;
+
+    joweGrid.InitializeMinimap('cMap', w, h, '#000');
     joweGrid.drawminimap();
 }
 
-function bShowGrid_onClick()
-{
-    dGrid.toggle();
-    $("#bShowGrid").toggleClass('active')
-    
+function bShowGrid_onClick() {
+    this.classList.toggle('active');
+    dGrid.classList.toggle('d-none');
+
     // if (joweGrid.Minimap !== null) {
-        // joweGrid.Mnimap = null;
+    // joweGrid.Mnimap = null;
     // } else {
-        bUpdateGrid_onClick();
+    bUpdateGrid_onClick();
     // }
 }
 
-function bShowMap_onClick()
-{
-    dMap.toggle();
-    $("#bShowMap").toggleClass('active')
-    
+function bShowMap_onClick() {
+    this.classList.toggle('active');
+    dMap.classList.toggle('d-none');
+
     if (joweGrid.Minimap !== null) {
         joweGrid.Mnimap = null;
     } else {
@@ -314,110 +297,112 @@ function bShowMap_onClick()
     }
 }
 
-function bShowInformation_onClick()
-{
-    $("#bInformation").toggleClass('active')
-    $("#dDetailInformation").toggle();
+function bShowInformation_onClick() {
+    document.getElementById('dDetailInformation').classList.toggle('d-none');
+    document.getElementById('bInformation').classList.toggle('active');
 }
 
-function iBrick_onClick()
-{
-  //alert(JSON.stringify(myCity.height.item));
-  //$("#dSaveJSON").html(JSON.stringify(myCity.height.item));
-  // $.ajax({
+function iBrick_onClick() {
+    //alert(JSON.stringify(myCity.height.item));
+    //$("#dSaveJSON").html(JSON.stringify(myCity.height.item));
+    // $.ajax({
     // type : 'POST',
     // url  : 'jowe-savejson.php',
     // data : {json : JSON.stringify(myCity)},
     // success : function(data) {
-        // alert(data);
+    // alert(data);
     // }
-  // });
-  
-  // Display JSON result.
-  $("#tJSON").html('<textarea style="width:98%;min-height:240px;font:11px DejaVu Sans Mono;">// Size : ' + JSON.stringify(myCity).length + ' octets\n' +
-                   'var myCity = ' + JSON.stringify(myCity).replace(/,"/gi, '\n            ,"') + ';\n' +
-                   '</textarea>');
+    // });
+
+    // Display JSON result.
+    document.getElementById('tJSON').innerHTML = '<textarea style="width:98%;min-height:240px;font:11px DejaVu Sans Mono;">// Size : ' + JSON.stringify(myCity).length + ' octets\n' +
+        'var myCity = ' + JSON.stringify(myCity).replace(/,"/gi, '\n            ,"') + ';\n' +
+        '</textarea>';
 
 }
 
-$(
-function ()
-{
+function MapSeed_onClick() {
+    var mapSeed = document.getElementById('txtMapSeed');
+    var seed = mapSeed.valueAsNumber;
+    if (this.id.substr(0, 1) == 'p') {
+        mapSeed.value = seed - 1;
+    } else {
+        mapSeed.value = seed + 1;
+    }
+    bCreateWorld_onClick();
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
     // Initialize objects.
-    dInfo = $("#dHelp");
-    cGrid = $("#cGrid");
-    dGrid = $("#dGrid");
-    cMap = $("#cMap");
-    dMap = $("#dMap");
-    lblZoom = $("#bZoomLabel");
-    lblCursorX = $("#lblCursorX");
-    lblCursorY = $("#lblCursorY");
-    lblCellType = $("#lblCellType");
-    lblCellHeight = $("#lblCellHeight");
-    lblCellFertility = $("#lblCellFertility");
-    lblCellRainfall = $("#lblCellRainfall");
-    lblCellTemperature = $("#lblCellTemperature");
-    lblCellPopulation = $("#lblCellPopulation");
-    
+    dInfo = document.getElementById('dHelp');
+    cGrid = document.getElementById('cGrid');
+    dGrid = document.getElementById('dGrid');
+    cMap = document.getElementById("cMap");
+    dMap = document.getElementById("dMap");
+
+    lblZoom = document.getElementById('bZoomLabel');
+    lblCursorX = document.getElementById('lblCursorX');
+    lblCursorY = document.getElementById('lblCursorY');
+    lblCellType = document.getElementById('lblCellType');
+    lblCellHeight = document.getElementById('lblCellHeight');
+    lblCellFertility = document.getElementById('lblCellFertility');
+    lblCellRainfall = document.getElementById('lblCellRainfall');
+    lblCellTemperature = document.getElementById('lblCellTemperature');
+    lblCellPopulation = document.getElementById('lblCellPopulation');
+
     // Get the canvas size.
-    var w = cGrid.attr("width") * 1,
-        h = cGrid.attr("height") * 1;
+    var w = cGrid.width,
+        h = cGrid.height;
     // Set the input values.
-    $("#txtGridWidth").val(w);
-    $("#txtGridHeight").val(h);
-    
-    $("#pMapSeed, #nMapSeed").click(function (){
-      if (this.id.substr(0,1) == 'p') {
-        $("#txtMapSeed").val((1 * $("#txtMapSeed").val()) - 1);
-      } else {
-        $("#txtMapSeed").val((1 * $("#txtMapSeed").val()) + 1);
-      }
-      bCreateWorld_onClick();
-    });
+    document.getElementById('txtGridWidth').valueAsNumber = w;
+    document.getElementById('txtGridHeight').valueAsNumber = h;
+
+    document.getElementById('pMapSeed').onclick = MapSeed_onClick;
+    document.getElementById('nMapSeed').onclick = MapSeed_onClick;
 
     // Try to initialize grid (only if "canvas" is supported by the browser).
-    if (joweGrid = new jowe_grid("cGrid", w, h, "#000")) {
+    if (joweGrid = new jowe_grid('cGrid', w, h, '#000')) {
 
         // Set initial zoom.
-        iZoom = lblZoom.text() * 1;
+        iZoom = lblZoom.innerText * 1;
         btnZoom(0);
-    
-        cGrid.mousedown(grid_onMouseDown);
-        cGrid.mousemove(grid_onMouseMove);
-        cGrid.mouseup(grid_onMouseUp);
 
-        dGrid.keypress(grid_onKeyPress);
-        
-        cMap.mousedown(map_onMouseDown);
-        
+        cGrid.onmousedown = grid_onMouseDown;
+        cGrid.onmousemove = grid_onMouseMove;
+        cGrid.onmouseup = grid_onMouseUp;
+        cGrid.onwheel = grid_onWheel;
+
+        dGrid.onkeypress = grid_onKeyPress;
+
+        cMap.onmousedown = map_onMouseDown;
+
         // Assign action to toolbar buttons.
-        $("#bCreateWorld").click(bCreateWorld_onClick);
-        $("#bWorldJSON").click(iBrick_onClick);
-        
-        $("#bModeNormal").click(bMode_onClick);
-        $("#bModeFertility").click(bMode_onClick);
-        $("#bModeRainfall").click(bMode_onClick);
-        $("#bModeTemperature").click(bMode_onClick);
-        $("#bModePopulation").click(bMode_onClick);
-        
-        $("#bShowGrid").click(bShowGrid_onClick);
-        $("#bUpdateGrid").click(bUpdateGrid_onClick);
-        
-        $("#bShowMap").click(bShowMap_onClick);
-        $("#bUpdateMap").click(bUpdateMap_onClick);
+        document.getElementById('bCreateWorld').onclick = bCreateWorld_onClick;
+        document.getElementById('bWorldJSON').onclick = iBrick_onClick;
 
-        $("#bInformation").click(bShowInformation_onClick);
-        $("#bShowCursor").click(function () { $("#bShowCursor").toggleClass('active'); joweGrid.toggleCursor(); });
-        $("#bWaterDetails").click(bWaterDetails_onClick);
-        $("#bCenter").click(function () { joweGrid.center(); joweGrid.draw(); });
-        $("#bZoomIn").click(function () { if (iZoom < 15) btnZoom(1); });
-        $("#bZoomOut").click(function () { if (iZoom > 1) btnZoom(-1); });
-        
+        document.getElementById('bModeNormal').onclick = bMode_onClick;
+        document.getElementById('bModeFertility').onclick = bMode_onClick;
+        document.getElementById('bModeRainfall').onclick = bMode_onClick;
+        document.getElementById('bModeTemperature').onclick = bMode_onClick;
+        document.getElementById('bModePopulation').onclick = bMode_onClick;
+
+        document.getElementById('bShowGrid').onclick = bShowGrid_onClick;
+        document.getElementById('bUpdateGrid').onclick = bUpdateGrid_onClick;
+
+        document.getElementById('bShowMap').onclick = bShowMap_onClick;
+        document.getElementById('bUpdateMap').onclick = bUpdateMap_onClick;
+
+        document.getElementById('bInformation').onclick = bShowInformation_onClick;
+        document.getElementById('bShowCursor').onclick = function () { this.classList.toggle('active'); joweGrid.toggleCursor(); };
+        document.getElementById('bWaterDetails').onclick = bWaterDetails_onClick;
+        document.getElementById('bCenter').onclick = function () { joweGrid.center(); joweGrid.draw(); };
+        document.getElementById('bZoomIn').onclick = function () { if (iZoom < 12) btnZoom(1); };
+        document.getElementById('bZoomOut').onclick = function () { if (iZoom > 1) btnZoom(-1); };
+
         // Capture "enter" and do click on each toolbar button.
-        $(".button").bind('keypress', function (event) { if (event.keyCode === 13) $(this).click(); });
-        
+        //$(".button").bind('keypress', function (event) { if (event.keyCode === 13) $(this).click(); });
+
         //$("#bRotateLeft").click(function () {joweGrid.rotate(-1);});
         //$("#bRotateRight").click(function () {joweGrid.rotate(1);});
     }
-}
-);
+});
