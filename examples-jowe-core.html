@@ -1,27 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <!--[if lt IE 9]><meta http-equiv="X-UA-Compatible" content="chrome=1" /><![endif]-->
-    <!--[if IE 9]><meta http-equiv="X-UA-Compatible" content="IE9" /><![endif]-->
     <meta charset="UTF-8" />
     
     <title>jOWE ~ Examples ~ jowe-core.js (part 1)</title>
     
-    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="jowe-core.js"></script>
     <script type="text/javascript" src="jowe-alea.js"></script>
-
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-20897630-2']);
-_gaq.push(['_trackPageview']);
-(function() {
-var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
-
 </head>
 <!--
 ********************************************************************************
@@ -29,7 +14,7 @@ jOWE - javascript Opensource Word Engine
 https://github.com/Dolu-/jowe
 ********************************************************************************
 
-Copyright (c) 2010-2015 Ludovic L.
+Copyright (c) 2010-2022 Ludovic L.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -232,50 +217,44 @@ How to use the HeightMap object.
 
   <p>
     Enter 'Pitch' and 'Ratio' :<br />
-    <input id="tpitch" type="text" value="8" size="6" maxlength="2" style="text-align:right;">
+    <input id="tpitch" type="number" value="8" size="6" maxlength="2" style="text-align:right;">
       &
-    <input id="tratio" type="text" value="3.1" size="6" maxlength="4" style="text-align:right;"><br />
+    <input id="tratio" type="number" value="3.1" size="6" maxlength="4" style="text-align:right;"><br />
     Enter 'width' x 'height' :<br />
-    <input id="twidth" type="text" value="10" size="6" maxlength="3" style="text-align:right;">
+    <input id="twidth" type="number" value="10" size="6" maxlength="3" style="text-align:right;">
       x
-    <input id="theight" type="text" value="12" size="6" maxlength="3" style="text-align:right;">
+    <input id="theight" type="number" value="12" size="6" maxlength="3" style="text-align:right;">
     <input id="tsubmit" type="submit" value="Generate">
   </p>
 
 <script type="text/javascript">
 
-function run_test(p, r, w, h)
-{
-  var oMap;
+function run_test() {
+    var p = document.getElementById('tpitch').valueAsNumber,
+        r = document.getElementById('tratio').valueAsNumber,
+        w = document.getElementById('twidth').valueAsNumber,
+        h = document.getElementById('theight').valueAsNumber,
+        // Create object with default values :
+        // pitch = 8, ratio = 3.1, width = 127, height = 127
+        oMap = new HeightMap(p, r);
+  
+    // Uncomment line below only if you want to have same result as example.
+    //oMap.setAleaSeed('jowe');
+  
+    var start = new Date().getTime();
+  
+    // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
+    oMap.doMap(w, h);
+  
+    var end = new Date().getTime();
 
-  // Create object with default values :
-  // pitch = 8, ratio = 3.1, width = 127, height = 127
-  oMap = new HeightMap(p, r);
-  
-  // Uncomment line below only if you want to have same result as example.
-  //oMap.setAleaSeed('jowe');
-  
-  var start = new Date().getTime();
-  
-  // Shortcut to generate a map (direct calls to "setSide", "makeMap", "smooth" and "crop").
-  oMap.doMap(w, h);
-  
-  var end = new Date().getTime();
-
-  $("#tresult").html("<pre>" +
-                     "oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";" +
-                     "</pre>" +
-                     "<p><em>Heightmap processed in " + (end - start) + "ms</em></p>");
+    document.getElementById('tresult').innerHTML =
+        "<pre>oMap.item = " + JSON.stringify(oMap.item).replace(/],/g,"]<br />            ,") + ";</pre>" +
+        "<p><em>Heightmap processed in " + (end - start) + "ms</em></p>";
 }
 
-$(function () {
+document.getElementById('tsubmit').onclick = run_test;
 
-  $("#tsubmit").click(function() {
-    run_test( 1 * $("#tpitch").val(), 1.0 * $("#tratio").val(), 1 * $("#twidth").val(), 1 * $("#theight").val() );
-  });
-
-});
-  
 </script>
 
   <h2>What's next?</h2>
